@@ -93,25 +93,46 @@
 - (void)didReceiveTextDidChangeNotification:(NSNotification *)notification {
     
     CGFloat currentHeight = [self getTextViewContentH:self.viewInput];
-
+    
     if (currentHeight == _oldContentHeight) {
+        return ;
+    }
+    
+    if ([self getTextViewLineCount:self.viewInput] >= 3) {
+        
+        [self.viewInput scrollRangeToVisible:NSMakeRange(self.viewInput.text.length - 2, 1)];
+        
         return ;
     }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarInputViewContentHeightChanged:)]) {
         [self.delegate chatToolBarInputViewContentHeightChanged:currentHeight - _oldContentHeight];
     }
-    
+
     CGPoint bottomOffset = CGPointMake(0.0f, self.viewInput.contentSize.height - self.viewInput.bounds.size.height);
     [self.viewInput setContentOffset:bottomOffset animated:YES];
     [self.viewInput scrollRangeToVisible:NSMakeRange(self.viewInput.text.length - 2, 1)];
     
     _oldContentHeight = currentHeight;
+    
 }
 
 /// 获取Text View 内容 高度
 - (CGFloat)getTextViewContentH:(UITextView *)textView {
     return ceilf([textView sizeThatFits:textView.frame.size].height);
+}
+
+/// 获取当前TextView 行数
+- (NSInteger)getTextViewLineCount:(UITextView *)textView {
+    
+    NSString *text = textView.text;
+    UIFont *font = [UIFont systemFontOfSize:16.0f];
+    
+    CGSize size = [text boundingRectWithSize:CGSizeMake(textView.bounds.size.width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: font} context:nil].size;
+  
+    NSInteger lines = (NSInteger)(size.height / font.lineHeight);
+    
+    return lines;
 }
 
 #pragma mark- UITextViewDelegate
@@ -130,6 +151,7 @@
             [self.delegate chatToolBarSendText:textView.text];
         }
         textView.text = @"";
+        _oldContentHeight = [self getTextViewContentH:textView];
         return NO;
     }
     return YES;

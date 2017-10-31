@@ -7,12 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <Hyphenate/Hyphenate.h>
 
 @interface ChatController : UIViewController
-
-- (instancetype)initWithConversationChatter:(NSString *)conversationChatter
-                           conversationType:(EMConversationType)conversationType;
 
 
 @end

@@ -12,6 +12,7 @@
 		8606ED521FA80B390023B9DE /* ChatToolBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 8606ED511FA80B390023B9DE /* ChatToolBarItem.m */; };
 		8606ED551FA81B360023B9DE /* UIColor+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 8606ED541FA81B360023B9DE /* UIColor+Utils.m */; };
 		8606ED5B1FA830D80023B9DE /* ChatToolInputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8606ED5A1FA830D80023B9DE /* ChatToolInputView.m */; };
+		8606ED611FA87B380023B9DE /* UIView+Sugar.m in Sources */ = {isa = PBXBuildFile; fileRef = 8606ED601FA87B380023B9DE /* UIView+Sugar.m */; };
 		862F49341FA6F9A600D0526C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 862F49331FA6F9A600D0526C /* AppDelegate.m */; };
 		862F49371FA6F9A600D0526C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 862F49361FA6F9A600D0526C /* ViewController.m */; };
 		862F493A1FA6F9A600D0526C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 862F49381FA6F9A600D0526C /* Main.storyboard */; };
@@ -55,6 +56,8 @@
 		8606ED541FA81B360023B9DE /* UIColor+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Utils.m"; sourceTree = "<group>"; };
 		8606ED591FA830D80023B9DE /* ChatToolInputView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatToolInputView.h; sourceTree = "<group>"; };
 		8606ED5A1FA830D80023B9DE /* ChatToolInputView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatToolInputView.m; sourceTree = "<group>"; };
+		8606ED5F1FA87B370023B9DE /* UIView+Sugar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Sugar.h"; sourceTree = "<group>"; };
+		8606ED601FA87B380023B9DE /* UIView+Sugar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Sugar.m"; sourceTree = "<group>"; };
 		862F492F1FA6F9A600D0526C /* ChatDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		862F49321FA6F9A600D0526C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		862F49331FA6F9A600D0526C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -170,6 +173,8 @@
 				862F49361FA6F9A600D0526C /* ViewController.m */,
 				8606ED531FA81B360023B9DE /* UIColor+Utils.h */,
 				8606ED541FA81B360023B9DE /* UIColor+Utils.m */,
+				8606ED5F1FA87B370023B9DE /* UIView+Sugar.h */,
+				8606ED601FA87B380023B9DE /* UIView+Sugar.m */,
 				862F49381FA6F9A600D0526C /* Main.storyboard */,
 				862F493B1FA6F9A600D0526C /* Assets.xcassets */,
 				862F493D1FA6F9A600D0526C /* LaunchScreen.storyboard */,
@@ -437,6 +442,7 @@
 				8689589C1FA72D2A00BC0619 /* ChatController.m in Sources */,
 				862F49341FA6F9A600D0526C /* AppDelegate.m in Sources */,
 				8606ED521FA80B390023B9DE /* ChatToolBarItem.m in Sources */,
+				8606ED611FA87B380023B9DE /* UIView+Sugar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

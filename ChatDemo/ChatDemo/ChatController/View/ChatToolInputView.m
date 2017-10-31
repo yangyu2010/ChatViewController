@@ -29,9 +29,8 @@
 - (void)viewConfig {
     
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    //    self.txtV.scrollIndicatorInsets = UIEdgeInsetsMake(8.0f, 8.0f, 8.0f, 8.0f);
-    //    self.txtV.contentInset = UIEdgeInsetsZero;
+//    self.scrollIndicatorInsets = UIEdgeInsetsMake(8.0f, 8.0f, 8.0f, 8.0f);
+//    self.contentInset = UIEdgeInsetsZero;
     self.scrollEnabled = YES;
     self.scrollsToTop = NO;
     self.userInteractionEnabled = YES;
