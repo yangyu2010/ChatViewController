@@ -10,6 +10,7 @@
 #import "ChatToolBar.h"
 #import "UIColor+Utils.h"
 #import "UIView+Sugar.h"
+#import "VoiceRecordView.h"
 
 #define kChatToolBarHeight 49.0
 

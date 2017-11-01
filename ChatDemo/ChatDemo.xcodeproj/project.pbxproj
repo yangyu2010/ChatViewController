@@ -21,8 +21,12 @@
 		862F49421FA6F9A600D0526C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 862F49411FA6F9A600D0526C /* main.m */; };
 		862F494C1FA6F9A600D0526C /* ChatDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 862F494B1FA6F9A600D0526C /* ChatDemoTests.m */; };
 		862F49571FA6F9A600D0526C /* ChatDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 862F49561FA6F9A600D0526C /* ChatDemoUITests.m */; };
-		8666EA381FA9693B007A995B /* ChatToolBarVoiceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666EA371FA9693B007A995B /* ChatToolBarVoiceView.m */; };
 		8666EA3B1FA97E07007A995B /* ChatToolBarMoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666EA3A1FA97E07007A995B /* ChatToolBarMoreView.m */; };
+		867B14B81FA9AC8500437544 /* UIImage+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 867B14B61FA9AC8500437544 /* UIImage+Category.m */; };
+		867B14BB1FA9BF7000437544 /* VoiceRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 867B14BA1FA9BF7000437544 /* VoiceRecordButton.m */; };
+		867B14BE1FA9BFCF00437544 /* VoiceRecordContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 867B14BD1FA9BFCF00437544 /* VoiceRecordContentView.m */; };
+		867B14C11FA9BFDB00437544 /* VoiceRecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 867B14C01FA9BFDB00437544 /* VoiceRecordView.m */; };
+		867B14C41FA9C43C00437544 /* VoiceRecordPowerAnimationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 867B14C31FA9C43C00437544 /* VoiceRecordPowerAnimationView.m */; };
 		8689588F1FA70D7A00BC0619 /* TabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8689588E1FA70D7A00BC0619 /* TabBarViewController.m */; };
 		868958921FA70DAE00BC0619 /* ConversationListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 868958911FA70DAE00BC0619 /* ConversationListController.m */; };
 		8689589C1FA72D2A00BC0619 /* ChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8689589B1FA72D2A00BC0619 /* ChatController.m */; };
@@ -76,10 +80,19 @@
 		862F49521FA6F9A600D0526C /* ChatDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		862F49561FA6F9A600D0526C /* ChatDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDemoUITests.m; sourceTree = "<group>"; };
 		862F49581FA6F9A600D0526C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8666EA361FA9693B007A995B /* ChatToolBarVoiceView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatToolBarVoiceView.h; sourceTree = "<group>"; };
-		8666EA371FA9693B007A995B /* ChatToolBarVoiceView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatToolBarVoiceView.m; sourceTree = "<group>"; };
 		8666EA391FA97E07007A995B /* ChatToolBarMoreView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatToolBarMoreView.h; sourceTree = "<group>"; };
 		8666EA3A1FA97E07007A995B /* ChatToolBarMoreView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatToolBarMoreView.m; sourceTree = "<group>"; };
+		867B14B21FA9A8C600437544 /* VoiceRecordHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoiceRecordHeader.h; sourceTree = "<group>"; };
+		867B14B61FA9AC8500437544 /* UIImage+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Category.m"; sourceTree = "<group>"; };
+		867B14B71FA9AC8500437544 /* UIImage+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Category.h"; sourceTree = "<group>"; };
+		867B14B91FA9BF6F00437544 /* VoiceRecordButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoiceRecordButton.h; sourceTree = "<group>"; };
+		867B14BA1FA9BF7000437544 /* VoiceRecordButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoiceRecordButton.m; sourceTree = "<group>"; };
+		867B14BC1FA9BFCF00437544 /* VoiceRecordContentView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoiceRecordContentView.h; sourceTree = "<group>"; };
+		867B14BD1FA9BFCF00437544 /* VoiceRecordContentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoiceRecordContentView.m; sourceTree = "<group>"; };
+		867B14BF1FA9BFDB00437544 /* VoiceRecordView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoiceRecordView.h; sourceTree = "<group>"; };
+		867B14C01FA9BFDB00437544 /* VoiceRecordView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoiceRecordView.m; sourceTree = "<group>"; };
+		867B14C21FA9C43C00437544 /* VoiceRecordPowerAnimationView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoiceRecordPowerAnimationView.h; sourceTree = "<group>"; };
+		867B14C31FA9C43C00437544 /* VoiceRecordPowerAnimationView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoiceRecordPowerAnimationView.m; sourceTree = "<group>"; };
 		8689588D1FA70D7A00BC0619 /* TabBarViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TabBarViewController.h; sourceTree = "<group>"; };
 		8689588E1FA70D7A00BC0619 /* TabBarViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TabBarViewController.m; sourceTree = "<group>"; };
 		868958901FA70DAE00BC0619 /* ConversationListController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationListController.h; sourceTree = "<group>"; };
@@ -208,9 +221,28 @@
 			path = ChatDemoUITests;
 			sourceTree = "<group>";
 		};
+		867B14AE1FA9A80F00437544 /* VoiceRecord */ = {
+			isa = PBXGroup;
+			children = (
+				867B14B21FA9A8C600437544 /* VoiceRecordHeader.h */,
+				867B14B71FA9AC8500437544 /* UIImage+Category.h */,
+				867B14B61FA9AC8500437544 /* UIImage+Category.m */,
+				867B14B91FA9BF6F00437544 /* VoiceRecordButton.h */,
+				867B14BA1FA9BF7000437544 /* VoiceRecordButton.m */,
+				867B14BF1FA9BFDB00437544 /* VoiceRecordView.h */,
+				867B14C01FA9BFDB00437544 /* VoiceRecordView.m */,
+				867B14BC1FA9BFCF00437544 /* VoiceRecordContentView.h */,
+				867B14BD1FA9BFCF00437544 /* VoiceRecordContentView.m */,
+				867B14C21FA9C43C00437544 /* VoiceRecordPowerAnimationView.h */,
+				867B14C31FA9C43C00437544 /* VoiceRecordPowerAnimationView.m */,
+			);
+			path = VoiceRecord;
+			sourceTree = "<group>";
+		};
 		868958931FA7164300BC0619 /* ChatController */ = {
 			isa = PBXGroup;
 			children = (
+				867B14AE1FA9A80F00437544 /* VoiceRecord */,
 				868958991FA72D2A00BC0619 /* Controller */,
 				868958981FA72D2A00BC0619 /* View */,
 				868958971FA72D2A00BC0619 /* Model */,
@@ -234,8 +266,6 @@
 				8606ED511FA80B390023B9DE /* ChatToolBarItem.m */,
 				8606ED591FA830D80023B9DE /* ChatToolInputView.h */,
 				8606ED5A1FA830D80023B9DE /* ChatToolInputView.m */,
-				8666EA361FA9693B007A995B /* ChatToolBarVoiceView.h */,
-				8666EA371FA9693B007A995B /* ChatToolBarVoiceView.m */,
 				8666EA391FA97E07007A995B /* ChatToolBarMoreView.h */,
 				8666EA3A1FA97E07007A995B /* ChatToolBarMoreView.m */,
 			);
@@ -445,9 +475,11 @@
 				860631841FA7022F00D4542A /* FriendListViewController.m in Sources */,
 				862F49371FA6F9A600D0526C /* ViewController.m in Sources */,
 				8606ED4F1FA80B1C0023B9DE /* ChatToolBar.m in Sources */,
+				867B14C11FA9BFDB00437544 /* VoiceRecordView.m in Sources */,
 				862F49421FA6F9A600D0526C /* main.m in Sources */,
 				8606ED5B1FA830D80023B9DE /* ChatToolInputView.m in Sources */,
-				8666EA381FA9693B007A995B /* ChatToolBarVoiceView.m in Sources */,
+				867B14C41FA9C43C00437544 /* VoiceRecordPowerAnimationView.m in Sources */,
+				867B14B81FA9AC8500437544 /* UIImage+Category.m in Sources */,
 				8606ED551FA81B360023B9DE /* UIColor+Utils.m in Sources */,
 				868958921FA70DAE00BC0619 /* ConversationListController.m in Sources */,
 				8689589C1FA72D2A00BC0619 /* ChatController.m in Sources */,
@@ -455,6 +487,8 @@
 				8606ED521FA80B390023B9DE /* ChatToolBarItem.m in Sources */,
 				8606ED611FA87B380023B9DE /* UIView+Sugar.m in Sources */,
 				8666EA3B1FA97E07007A995B /* ChatToolBarMoreView.m in Sources */,
+				867B14BE1FA9BFCF00437544 /* VoiceRecordContentView.m in Sources */,
+				867B14BB1FA9BF7000437544 /* VoiceRecordButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

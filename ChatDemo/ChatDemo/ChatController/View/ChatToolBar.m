@@ -9,7 +9,7 @@
 #import "ChatToolBar.h"
 #import "ChatToolBarItem.h"
 #import "UIColor+Utils.h"
-#import "ChatToolBarVoiceView.h"
+#import "VoiceRecordButton.h"
 
 @interface ChatToolBar () <UITextViewDelegate, ChatToolBarItemDelegate>
 {
@@ -36,7 +36,7 @@
 @property (nonatomic, strong) ChatToolInputView *viewInput;
 
 /// 语音输入按钮
-@property (nonatomic, strong) ChatToolBarVoiceView *viewVoice;
+@property (nonatomic, strong) VoiceRecordButton *btnVoice;
 
 
 @end
@@ -55,6 +55,7 @@
     }
     return self;
 }
+
 
 - (void)dealloc {
 
@@ -78,9 +79,9 @@
     self.viewInput = [[ChatToolInputView alloc] init];
     [self addSubview:self.viewInput];
     
-    self.viewVoice = [[ChatToolBarVoiceView alloc] init];
-    [self addSubview:self.viewVoice];
-    self.viewVoice.hidden = YES;
+    self.btnVoice = [VoiceRecordButton creatVoiceButton];
+    [self addSubview:self.btnVoice];
+    self.btnVoice.hidden = YES;
 }
 
 - (void)layoutSubviews {
@@ -92,8 +93,8 @@
     self.itemVoice.frame = CGRectMake(0, 0, itemW, itemH);
     self.itemMore.frame = CGRectMake(self.bounds.size.width - itemW, 0, itemW, itemH);
     self.itemFace.frame = CGRectMake(self.bounds.size.width - itemW * 2, 0, itemW, itemH);
-    self.viewInput.frame = CGRectMake(itemW + 3, 8, self.bounds.size.width - itemW * 3 - 6, itemH - 16);
-    self.viewVoice.frame = self.viewInput.frame;
+    self.viewInput.frame = CGRectMake(itemW + 3, 6, self.bounds.size.width - itemW * 3 - 6, itemH - 12);
+    self.btnVoice.frame = self.viewInput.frame;
 }
 
 #pragma mark- Data
@@ -107,6 +108,9 @@
     self.viewInput.delegate = self;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveTextDidChangeNotification) name:UITextViewTextDidChangeNotification object:nil];
+    
+    
+    [self actionAddRecordButtonAction];
 }
 
 #pragma mark- Text View 相关
@@ -154,6 +158,50 @@
     return lines;
 }
 
+#pragma mark- 录音 相关
+
+/// 录音按钮点击事件
+- (void)actionAddRecordButtonAction {
+    
+    [self.btnVoice addTarget:self action:@selector(actionHoldDownButtonTouchDown) forControlEvents:UIControlEventTouchDown];
+    [self.btnVoice addTarget:self action:@selector(actionHoldDownButtonTouchUpOutside) forControlEvents:UIControlEventTouchUpOutside];
+    [self.btnVoice addTarget:self action:@selector(actionHoldDownButtonTouchUpInside) forControlEvents:UIControlEventTouchUpInside];
+    [self.btnVoice addTarget:self action:@selector(actionHoldDownDragOutside) forControlEvents:UIControlEventTouchDragExit];
+    [self.btnVoice addTarget:self action:@selector(actionHoldDownDragInside) forControlEvents:UIControlEventTouchDragEnter];
+}
+
+/// 开始录制
+- (void)actionHoldDownButtonTouchDown {
+    
+    NSLog(@"开始录制");
+    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateRecording];
+}
+
+/// 取消了
+- (void)actionHoldDownButtonTouchUpOutside {
+    NSLog(@"取消了");
+    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateNoraml];
+}
+
+/// 录制完成
+- (void)actionHoldDownButtonTouchUpInside {
+    NSLog(@"录制完成");
+    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateNoraml];
+}
+
+/// 上滑
+- (void)actionHoldDownDragOutside {
+    NSLog(@"上滑");
+    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateReleaseToCancel];
+
+}
+
+/// 继续录制
+- (void)actionHoldDownDragInside {
+    NSLog(@"继续录制");
+    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateRecording];
+}
+
 #pragma mark- Item 事件监听
 - (void)chatToolBarDidSelected:(ChatToolBarItem *)item {
     if (item == self.itemVoice) {
@@ -165,7 +213,7 @@
 - (void)actionItemVoice {
     _isRecording = !_isRecording;
     self.viewInput.hidden = _isRecording;
-    self.viewVoice.hidden = !_isRecording;
+    self.btnVoice.hidden = !_isRecording;
     
     if (_isRecording) {
         [self.viewInput resignFirstResponder];
