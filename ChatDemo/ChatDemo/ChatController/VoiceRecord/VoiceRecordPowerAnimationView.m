@@ -27,7 +27,7 @@
         [self addSubview:_imgContent];
     }
     
-    CGSize _originSize = CGSizeMake(18, 56);
+    CGSize _originSize = CGSizeMake(18, 55);
     _imgContent.frame = CGRectMake(0, 0, _originSize.width, _originSize.height);
     
     int viewCount = ceil(fabs(power)*10);

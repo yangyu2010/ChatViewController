@@ -173,33 +173,43 @@
 /// 开始录制
 - (void)actionHoldDownButtonTouchDown {
     
-    NSLog(@"开始录制");
-    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateRecording];
+    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateStart];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordStart)]) {
+        [self.delegate chatToolBarVoiceRecordStart];
+    }
 }
 
 /// 取消了
 - (void)actionHoldDownButtonTouchUpOutside {
-    NSLog(@"取消了");
+
     [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateNoraml];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordCancle)]) {
+        [self.delegate chatToolBarVoiceRecordCancle];
+    }
 }
 
 /// 录制完成
 - (void)actionHoldDownButtonTouchUpInside {
-    NSLog(@"录制完成");
     [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateNoraml];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordFinish)]) {
+        [self.delegate chatToolBarVoiceRecordFinish];
+    }
 }
 
 /// 上滑
 - (void)actionHoldDownDragOutside {
-    NSLog(@"上滑");
-    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateReleaseToCancel];
-
+    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateCancel];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordOutside)]) {
+        [self.delegate chatToolBarVoiceRecordOutside];
+    }
 }
 
 /// 继续录制
 - (void)actionHoldDownDragInside {
-    NSLog(@"继续录制");
-    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateRecording];
+    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateStart];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordInside)]) {
+        [self.delegate chatToolBarVoiceRecordInside];
+    }
 }
 
 #pragma mark- Item 事件监听

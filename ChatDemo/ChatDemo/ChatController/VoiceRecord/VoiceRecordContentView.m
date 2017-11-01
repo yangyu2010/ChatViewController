@@ -43,13 +43,13 @@
         _lblContent.text = @"Slide up to cancel";
         _lblContent.textColor = [UIColor whiteColor];
         _lblContent.textAlignment = NSTextAlignmentCenter;
-        _lblContent.font = [UIFont systemFontOfSize:14];
+        _lblContent.font = [UIFont boldSystemFontOfSize:14.0];
         [self addSubview:_lblContent];
     }
     if (_imgVRecord == nil) {
         _imgVRecord = [[UIImageView alloc] init];
         _imgVRecord.backgroundColor = [UIColor clearColor];
-        _imgVRecord.image = [UIImage imageNamed:@"RecordingBkg"];
+        _imgVRecord.image = [UIImage imageNamed:@"ic_record"];
         [self addSubview:_imgVRecord];
     }
     if (_powerView == nil) {
@@ -66,11 +66,13 @@
     [super layoutSubviews];
     
     CGFloat lblContentHeight = 26.0;
-    _lblContent.frame = CGRectMake(0, self.bounds.size.width - lblContentHeight, self.bounds.size.width, lblContentHeight);
+    _lblContent.frame = CGRectMake(0, self.bounds.size.width - lblContentHeight - 5, self.bounds.size.width, lblContentHeight);
     
-    _imgVRecord.frame = CGRectMake(40, 30, _imgVRecord.image.size.width, _imgVRecord.image.size.height);
+    _imgVRecord.frame = CGRectMake(0, 0, _imgVRecord.image.size.width, _imgVRecord.image.size.height);
+    _imgVRecord.center = CGPointMake(self.bounds.size.width * 0.5 - 15, self.bounds.size.height * 0.5);
     
-    _powerView.frame = CGRectMake(CGRectGetMaxX(_imgVRecord.frame), CGRectGetMaxY(_imgVRecord.frame) - 56, 18, 56);
+    _powerView.frame = CGRectMake(CGRectGetMaxX(_imgVRecord.frame) + 10, CGRectGetMaxY(_imgVRecord.frame) - 55, 18, 55);
+
 }
 
 #pragma mark- Public
@@ -132,7 +134,8 @@
     CGFloat lblContentHeight = 26.0;
     _lblContent.frame = CGRectMake(0, self.bounds.size.width - lblContentHeight, self.bounds.size.width, lblContentHeight);
     
-    _imgVRecord.frame = CGRectMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5, _imgVRecord.image.size.width, _imgVRecord.image.size.height);
+    _imgVRecord.frame = CGRectMake(0, 0, _imgVRecord.image.size.width, _imgVRecord.image.size.height);
+    _imgVRecord.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
 }
 
 @end
@@ -178,6 +181,7 @@
         _lblRemainTime.backgroundColor = [UIColor clearColor];
         _lblRemainTime.font = [UIFont boldSystemFontOfSize:80];
         _lblRemainTime.textColor = [UIColor whiteColor];
+        _lblRemainTime.textAlignment = NSTextAlignmentCenter;
         [self addSubview:_lblRemainTime];
     }
 }
@@ -189,7 +193,8 @@
     CGFloat lblContentHeight = 26.0;
     _lblContent.frame = CGRectMake(0, self.bounds.size.width - lblContentHeight, self.bounds.size.width, lblContentHeight);
     
-    _lblRemainTime.frame = CGRectMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5, self.bounds.size.width, 25);
+    _lblRemainTime.frame = CGRectMake(0, 0, self.bounds.size.width, 80);
+    _lblRemainTime.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
 }
 
 #pragma mark- Public

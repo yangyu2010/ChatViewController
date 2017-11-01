@@ -11,11 +11,11 @@
 
 typedef NS_ENUM(NSUInteger, VoiceRecordState) {
     VoiceRecordStateNoraml,                ///< 初始状态
-    VoiceRecordStateRecording,            ///< 正在录音
-    VoiceRecordStateReleaseToCancel,      ///< 上滑取消（也在录音状态，UI显示有区别）
-    VoiceRecordStateRecordCounting,       ///< 最后10s倒计时（也在录音状态，UI显示有区别）
-    VoiceRecordStateRecordTooShort,       ///< 录音时间太短（录音结束了）
-};
+    VoiceRecordStateStart,            ///< 正在录音
+    VoiceRecordStateCancel,      ///< 上滑取消（也在录音状态，UI显示有区别）
+    VoiceRecordStateCounting,       ///< 最后10s倒计时（也在录音状态，UI显示有区别）
+    VoiceRecordStateTooShort,       ///< 录音时间太短（录音结束了）
+}; 
 
 
 #endif /* VoiceRecordHeader_h */

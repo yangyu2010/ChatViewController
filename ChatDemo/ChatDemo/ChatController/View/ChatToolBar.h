@@ -19,6 +19,11 @@
 - (void)chatToolBarSendText:(NSString *)text;
 
 
+- (void)chatToolBarVoiceRecordStart;
+- (void)chatToolBarVoiceRecordCancle;
+- (void)chatToolBarVoiceRecordFinish;
+- (void)chatToolBarVoiceRecordOutside;
+- (void)chatToolBarVoiceRecordInside;
 
 
 @end

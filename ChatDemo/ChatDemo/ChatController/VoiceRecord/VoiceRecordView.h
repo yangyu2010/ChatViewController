@@ -13,4 +13,8 @@
 
 - (void)updateUIWithRecordState:(VoiceRecordState)state;
 
+- (void)updateRecordingPower:(float)power;
+
+- (void)updateCountingRemainTime:(float)remainTime;
+
 @end

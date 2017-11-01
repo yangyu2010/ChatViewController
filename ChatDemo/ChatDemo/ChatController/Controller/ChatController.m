@@ -12,18 +12,33 @@
 #import "UIView+Sugar.h"
 #import "VoiceRecordView.h"
 
-#define kChatToolBarHeight 49.0
+#define kChatToolBarHeight                   49.0
+
+/// 录音定时器 间隔
+#define KRecordTimerDuration                 0.2
+/// 最多录制时间
+#define kRecordMaxRecordDurtion              10
+/// 剩余多少s开始提示用户
+#define kRecordRemainCountingDuration        5
 
 @interface ChatController () <ChatToolBarDelegate>
 {
-
+    /// 底部toolbar的高度
     CGFloat _toolBarViewHeight;
-    
+    /// 底部toolbar y值
     CGFloat _toolBarViewY;
+
+    /// 定时器
+    NSTimer *_timerVoice;
+    /// 当前录制的时间
+    float _recordCurrentDuration;
 }
 
+/// 底部toolbar
 @property (nonatomic, strong) ChatToolBar *toolBar;
 
+/// 录制显示的View
+@property (nonatomic, strong) VoiceRecordView *viewRecord;
 
 @end
 
@@ -56,6 +71,10 @@
     
     _toolBarViewHeight = kChatToolBarHeight;
     _toolBarViewY = [[UIScreen mainScreen] bounds].size.height - _toolBarViewHeight;
+    
+    self.viewRecord = [[VoiceRecordView alloc] init];
+    [self.view addSubview:self.viewRecord];
+    [self.viewRecord updateUIWithRecordState:VoiceRecordStateNoraml];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -63,16 +82,17 @@
     
     self.toolBar.frame = CGRectMake(0, _toolBarViewY, self.view.bounds.size.width, _toolBarViewHeight);
     
-    
-//    self.toolBar.frame = CGRectMake(0, 100, self.view.bounds.size.width, _toolBarViewHeight);
+    self.viewRecord.frame = CGRectMake(0, 0, 150, 150);
+    self.viewRecord.center = CGPointMake(self.view.bounds.size.width * 0.5, self.view.bounds.size.height * 0.5);
 }
 
 #pragma mark- Data
 
 - (void)dataConfig {
     
-   
     self.toolBar.delegate = self;
+    
+    _recordCurrentDuration = 0;
 }
 
 
@@ -127,7 +147,7 @@
     [self.view endEditing:YES];
 }
 
-#pragma mark- ChatToolBarDelegate
+#pragma mark- 输入框处理 相关
 - (void)chatToolBarInputViewContentHeightChanged:(CGFloat)height {
 
     _toolBarViewHeight += height;
@@ -151,5 +171,85 @@
     [self actionResetToolBarFrame];
 }
 
+#pragma mark- 录制语音 相关
+/// 开始定时器 录制
+- (void)actionStartRecordVoice {
+    if (_timerVoice) {
+        [_timerVoice invalidate];
+        _timerVoice = nil;
+    }
+    
+    _timerVoice = [NSTimer scheduledTimerWithTimeInterval:KRecordTimerDuration target:self selector:@selector(actionRecordVoiceTimeOut) userInfo:nil repeats:YES];
+    [_timerVoice fire];
+}
+
+/// 结束定时器
+- (void)actionStopRecordVoice {
+    if (_timerVoice) {
+        [_timerVoice invalidate];
+        _timerVoice = nil;
+    }
+    
+    _recordCurrentDuration = 0;
+}
+
+/// 循环调用的方法
+- (void)actionRecordVoiceTimeOut {
+    
+    _recordCurrentDuration += KRecordTimerDuration;
+    float remainTime = kRecordMaxRecordDurtion - _recordCurrentDuration;
+    if ((int)remainTime == 0) {
+        // 录制结束
+        [self actionStopRecordVoice];
+        [self.viewRecord updateUIWithRecordState:VoiceRecordStateNoraml];
+        
+    } else if ([self actionRecordVoiceViewShouldCounting]) {
+        // 倒计时
+        [self.viewRecord updateUIWithRecordState:VoiceRecordStateCounting];
+        [self.viewRecord updateCountingRemainTime:remainTime];
+    } else {
+        // 正在录制
+        float fakePower = (float)(1 + arc4random() % 99) / 100;
+        [self.viewRecord updateRecordingPower:fakePower];
+    }
+
+}
+
+/// 判断当前录制的view 是否需要显示 倒计时
+- (BOOL)actionRecordVoiceViewShouldCounting {
+    
+    if ((_recordCurrentDuration >= (kRecordMaxRecordDurtion - kRecordRemainCountingDuration)) &&
+        (_recordCurrentDuration < kRecordMaxRecordDurtion)) {
+        
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (void)chatToolBarVoiceRecordStart {
+    [self.viewRecord updateUIWithRecordState:VoiceRecordStateStart];
+    [self actionStartRecordVoice];
+}
+
+- (void)chatToolBarVoiceRecordCancle {
+    [self.viewRecord updateUIWithRecordState:VoiceRecordStateNoraml];
+    [self actionStopRecordVoice];
+}
+
+- (void)chatToolBarVoiceRecordFinish {
+    [self.viewRecord updateUIWithRecordState:VoiceRecordStateNoraml];
+    [self actionStopRecordVoice];
+}
+
+- (void)chatToolBarVoiceRecordOutside {
+    [self.viewRecord updateUIWithRecordState:VoiceRecordStateCancel];
+
+}
+
+- (void)chatToolBarVoiceRecordInside {
+    [self.viewRecord updateUIWithRecordState:VoiceRecordStateStart];
+
+}
 
 @end
