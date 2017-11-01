@@ -139,6 +139,10 @@
     }];
 }
 
+- (void)chatToolBarResetInputViewHeight {
+    [self actionResetToolBarFrame];
+}
+
 - (void)chatToolBarSendText:(NSString *)text {
     
     NSLog(@"发送消息: %@", text);

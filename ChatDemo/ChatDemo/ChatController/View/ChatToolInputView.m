@@ -61,31 +61,4 @@
 }
 
 
-#pragma mark - Text view overrides
-
-- (void)setText:(NSString *)text {
-    [super setText:text];
-    [self setNeedsDisplay];
-}
-
-- (void)setAttributedText:(NSAttributedString *)attributedText {
-    [super setAttributedText:attributedText];
-    [self setNeedsDisplay];
-}
-
-- (void)setContentInset:(UIEdgeInsets)contentInset {
-    [super setContentInset:contentInset];
-    [self setNeedsDisplay];
-}
-
-- (void)setFont:(UIFont *)font {
-    [super setFont:font];
-    [self setNeedsDisplay];
-}
-
-- (void)setTextAlignment:(NSTextAlignment)textAlignment {
-    [super setTextAlignment:textAlignment];
-    [self setNeedsDisplay];
-}
-
 @end

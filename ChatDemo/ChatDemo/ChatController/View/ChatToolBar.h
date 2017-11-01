@@ -14,6 +14,9 @@
 /// 每次换行时通知外面改变高度 height是每次变化的高度
 - (void)chatToolBarInputViewContentHeightChanged:(CGFloat)height;
 
+/// 重置当前inputView高度
+- (void)chatToolBarResetInputViewHeight;
+
 - (void)chatToolBarSendText:(NSString *)text;
 
 @end

@@ -33,7 +33,8 @@
     _btn = [UIButton buttonWithType:UIButtonTypeCustom];
     [_btn setImage:[UIImage imageNamed:iconName] forState:UIControlStateNormal];
     [_btn setImage:[UIImage imageNamed:[NSString stringWithFormat:@"%@_HL", iconName]] forState:UIControlStateHighlighted];
-    [_btn addTarget:self action:@selector(actionBtnTouchUp) forControlEvents:UIControlEventTouchUpInside];
+    [_btn setImage:[UIImage imageNamed:@"keyboard"] forState:UIControlStateSelected];
+    [_btn addTarget:self action:@selector(actionBtnTouchUp:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_btn];
 }
 
@@ -45,7 +46,8 @@
 
 #pragma mark- Action
 
-- (void)actionBtnTouchUp {
+- (void)actionBtnTouchUp:(UIButton *)btn {
+    btn.selected = !btn.selected;
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarDidSelected:)]) {
         [self.delegate chatToolBarDidSelected:self];

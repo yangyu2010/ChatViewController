@@ -21,6 +21,8 @@
 		862F49421FA6F9A600D0526C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 862F49411FA6F9A600D0526C /* main.m */; };
 		862F494C1FA6F9A600D0526C /* ChatDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 862F494B1FA6F9A600D0526C /* ChatDemoTests.m */; };
 		862F49571FA6F9A600D0526C /* ChatDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 862F49561FA6F9A600D0526C /* ChatDemoUITests.m */; };
+		8666EA381FA9693B007A995B /* ChatToolBarVoiceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666EA371FA9693B007A995B /* ChatToolBarVoiceView.m */; };
+		8666EA3B1FA97E07007A995B /* ChatToolBarMoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666EA3A1FA97E07007A995B /* ChatToolBarMoreView.m */; };
 		8689588F1FA70D7A00BC0619 /* TabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8689588E1FA70D7A00BC0619 /* TabBarViewController.m */; };
 		868958921FA70DAE00BC0619 /* ConversationListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 868958911FA70DAE00BC0619 /* ConversationListController.m */; };
 		8689589C1FA72D2A00BC0619 /* ChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8689589B1FA72D2A00BC0619 /* ChatController.m */; };
@@ -74,6 +76,10 @@
 		862F49521FA6F9A600D0526C /* ChatDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		862F49561FA6F9A600D0526C /* ChatDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDemoUITests.m; sourceTree = "<group>"; };
 		862F49581FA6F9A600D0526C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8666EA361FA9693B007A995B /* ChatToolBarVoiceView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatToolBarVoiceView.h; sourceTree = "<group>"; };
+		8666EA371FA9693B007A995B /* ChatToolBarVoiceView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatToolBarVoiceView.m; sourceTree = "<group>"; };
+		8666EA391FA97E07007A995B /* ChatToolBarMoreView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatToolBarMoreView.h; sourceTree = "<group>"; };
+		8666EA3A1FA97E07007A995B /* ChatToolBarMoreView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatToolBarMoreView.m; sourceTree = "<group>"; };
 		8689588D1FA70D7A00BC0619 /* TabBarViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TabBarViewController.h; sourceTree = "<group>"; };
 		8689588E1FA70D7A00BC0619 /* TabBarViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TabBarViewController.m; sourceTree = "<group>"; };
 		868958901FA70DAE00BC0619 /* ConversationListController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConversationListController.h; sourceTree = "<group>"; };
@@ -175,9 +181,9 @@
 				8606ED541FA81B360023B9DE /* UIColor+Utils.m */,
 				8606ED5F1FA87B370023B9DE /* UIView+Sugar.h */,
 				8606ED601FA87B380023B9DE /* UIView+Sugar.m */,
-				862F49381FA6F9A600D0526C /* Main.storyboard */,
 				862F493B1FA6F9A600D0526C /* Assets.xcassets */,
 				862F493D1FA6F9A600D0526C /* LaunchScreen.storyboard */,
+				862F49381FA6F9A600D0526C /* Main.storyboard */,
 				862F49401FA6F9A600D0526C /* Info.plist */,
 				862F49411FA6F9A600D0526C /* main.m */,
 			);
@@ -228,6 +234,10 @@
 				8606ED511FA80B390023B9DE /* ChatToolBarItem.m */,
 				8606ED591FA830D80023B9DE /* ChatToolInputView.h */,
 				8606ED5A1FA830D80023B9DE /* ChatToolInputView.m */,
+				8666EA361FA9693B007A995B /* ChatToolBarVoiceView.h */,
+				8666EA371FA9693B007A995B /* ChatToolBarVoiceView.m */,
+				8666EA391FA97E07007A995B /* ChatToolBarMoreView.h */,
+				8666EA3A1FA97E07007A995B /* ChatToolBarMoreView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -437,12 +447,14 @@
 				8606ED4F1FA80B1C0023B9DE /* ChatToolBar.m in Sources */,
 				862F49421FA6F9A600D0526C /* main.m in Sources */,
 				8606ED5B1FA830D80023B9DE /* ChatToolInputView.m in Sources */,
+				8666EA381FA9693B007A995B /* ChatToolBarVoiceView.m in Sources */,
 				8606ED551FA81B360023B9DE /* UIColor+Utils.m in Sources */,
 				868958921FA70DAE00BC0619 /* ConversationListController.m in Sources */,
 				8689589C1FA72D2A00BC0619 /* ChatController.m in Sources */,
 				862F49341FA6F9A600D0526C /* AppDelegate.m in Sources */,
 				8606ED521FA80B390023B9DE /* ChatToolBarItem.m in Sources */,
 				8606ED611FA87B380023B9DE /* UIView+Sugar.m in Sources */,
+				8666EA3B1FA97E07007A995B /* ChatToolBarMoreView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

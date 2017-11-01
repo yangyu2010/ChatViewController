@@ -9,12 +9,20 @@
 #import "ChatToolBar.h"
 #import "ChatToolBarItem.h"
 #import "UIColor+Utils.h"
+#import "ChatToolBarVoiceView.h"
 
-@interface ChatToolBar () <UITextViewDelegate>
+@interface ChatToolBar () <UITextViewDelegate, ChatToolBarItemDelegate>
 {
-    
+    /// 保存输入框的内容高度
     CGFloat _oldContentHeight;
+    
+    /// 没有文字的时候 输入框的高度
+    CGFloat _originContentHeight;
+    
+    /// 是否正在录音
+    BOOL _isRecording;
 }
+
 /// 语音item
 @property (nonatomic, strong) ChatToolBarItem *itemVoice;
 
@@ -26,6 +34,9 @@
 
 /// 输入框
 @property (nonatomic, strong) ChatToolInputView *viewInput;
+
+/// 语音输入按钮
+@property (nonatomic, strong) ChatToolBarVoiceView *viewVoice;
 
 
 @end
@@ -55,6 +66,7 @@
 
 - (void)viewConfig {
     self.itemVoice = [[ChatToolBarItem alloc] initWithIconName:@"voice"];
+    self.itemVoice.delegate = self;
     [self addSubview:self.itemVoice];
     
     self.itemFace = [[ChatToolBarItem alloc] initWithIconName:@"face"];
@@ -65,6 +77,10 @@
     
     self.viewInput = [[ChatToolInputView alloc] init];
     [self addSubview:self.viewInput];
+    
+    self.viewVoice = [[ChatToolBarVoiceView alloc] init];
+    [self addSubview:self.viewVoice];
+    self.viewVoice.hidden = YES;
 }
 
 - (void)layoutSubviews {
@@ -77,20 +93,25 @@
     self.itemMore.frame = CGRectMake(self.bounds.size.width - itemW, 0, itemW, itemH);
     self.itemFace.frame = CGRectMake(self.bounds.size.width - itemW * 2, 0, itemW, itemH);
     self.viewInput.frame = CGRectMake(itemW + 3, 8, self.bounds.size.width - itemW * 3 - 6, itemH - 16);
+    self.viewVoice.frame = self.viewInput.frame;
 }
 
 #pragma mark- Data
 
 - (void)dataConfig {
     
+    _oldContentHeight = 0;
+    _isRecording = NO;
+    _originContentHeight = [self getTextViewContentH:self.viewInput];
+    
     self.viewInput.delegate = self;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveTextDidChangeNotification:) name:UITextViewTextDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didReceiveTextDidChangeNotification) name:UITextViewTextDidChangeNotification object:nil];
 }
 
 #pragma mark- Text View 相关
 
-- (void)didReceiveTextDidChangeNotification:(NSNotification *)notification {
+- (void)didReceiveTextDidChangeNotification {
     
     CGFloat currentHeight = [self getTextViewContentH:self.viewInput];
     
@@ -98,10 +119,8 @@
         return ;
     }
     
-    if ([self getTextViewLineCount:self.viewInput] >= 3) {
-        
+    if ([self getTextViewLineCount:self.viewInput] >= 5) {
         [self.viewInput scrollRangeToVisible:NSMakeRange(self.viewInput.text.length - 2, 1)];
-        
         return ;
     }
     
@@ -133,6 +152,35 @@
     NSInteger lines = (NSInteger)(size.height / font.lineHeight);
     
     return lines;
+}
+
+#pragma mark- Item 事件监听
+- (void)chatToolBarDidSelected:(ChatToolBarItem *)item {
+    if (item == self.itemVoice) {
+        [self actionItemVoice];
+    }
+}
+
+/// voice事件
+- (void)actionItemVoice {
+    _isRecording = !_isRecording;
+    self.viewInput.hidden = _isRecording;
+    self.viewVoice.hidden = !_isRecording;
+    
+    if (_isRecording) {
+        [self.viewInput resignFirstResponder];
+        
+        if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarResetInputViewHeight)]) {
+            [self.delegate chatToolBarResetInputViewHeight];
+        }
+        
+    } else {
+        [self.viewInput becomeFirstResponder];
+        _oldContentHeight = _originContentHeight;
+        
+        [self didReceiveTextDidChangeNotification];
+    }
+    
 }
 
 #pragma mark- UITextViewDelegate
