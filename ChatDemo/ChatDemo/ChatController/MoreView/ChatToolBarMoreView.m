@@ -42,10 +42,8 @@
 - (void)viewConfig {
     
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
-    layout.minimumInteritemSpacing = 0;
     layout.minimumLineSpacing = 0;
-    layout.sectionInset = UIEdgeInsetsMake(0, 10, 0, 10);
-    layout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
+    layout.scrollDirection = UICollectionViewScrollDirectionVertical;
     
     self.collectionMore = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
     self.collectionMore.pagingEnabled = YES;
@@ -65,9 +63,14 @@
     
     UICollectionViewFlowLayout *layout = (UICollectionViewFlowLayout *)self.collectionMore.collectionViewLayout;
     
-    CGFloat w = (self.bounds.size.width - layout.sectionInset.left - layout.sectionInset.right) / 4;
-    CGFloat h = self.bounds.size.height / 2;
-    layout.itemSize = CGSizeMake(w, h);
+    CGFloat width = 60;
+    CGFloat height = 100;
+    
+    CGFloat margin = (self.bounds.size.width - 4 * width) / 5;
+    layout.minimumInteritemSpacing = margin;
+    layout.sectionInset = UIEdgeInsetsMake(0, margin, 0, margin);
+    
+    layout.itemSize = CGSizeMake(width, height);
     
     [self.collectionMore setCollectionViewLayout:layout];
     

@@ -45,16 +45,18 @@
     self.lblTitle.textAlignment = NSTextAlignmentCenter;
     [self.contentView addSubview:self.lblTitle];
     
+//    self.lblTitle.backgroundColor = [UIColor yellowColor];
+//    self.contentView.backgroundColor = [UIColor redColor];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    CGFloat w = self.bounds.size.width - 15;
-    self.btnIcon.frame = CGRectMake(0, 0, w, w);
+//    CGFloat w = self.bounds.size.width - 15;
+    self.btnIcon.frame = CGRectMake(0, 0, self.bounds.size.width, self.bounds.size.width);
     self.btnIcon.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5 - 5);
     
-    self.lblTitle.frame = CGRectMake(0, self.bounds.size.height - 25, self.bounds.size.width, 20);
+    self.lblTitle.frame = CGRectMake(0, CGRectGetMaxY(self.btnIcon.frame), self.bounds.size.width, 20);
 }
 
 #pragma mark- Data

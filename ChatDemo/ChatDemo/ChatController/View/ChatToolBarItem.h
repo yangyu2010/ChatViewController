@@ -12,7 +12,7 @@
 
 @protocol ChatToolBarItemDelegate <NSObject>
 
-- (void)chatToolBarDidSelected:(ChatToolBarItem *)item;
+- (void)chatToolBarDidSelected:(ChatToolBarItem *)item isSelected:(BOOL)isSelected;
 
 @end
 

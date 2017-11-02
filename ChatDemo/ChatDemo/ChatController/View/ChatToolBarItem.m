@@ -49,8 +49,8 @@
 - (void)actionBtnTouchUp:(UIButton *)btn {
     btn.selected = !btn.selected;
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarDidSelected:)]) {
-        [self.delegate chatToolBarDidSelected:self];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarDidSelected:isSelected:)]) {
+        [self.delegate chatToolBarDidSelected:self isSelected:btn.selected];
     }
 }
 

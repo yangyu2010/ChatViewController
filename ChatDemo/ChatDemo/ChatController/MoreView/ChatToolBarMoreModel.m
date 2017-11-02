@@ -17,7 +17,7 @@
 
 + (NSArray *)getChatToolBarMoreModels {
     
-    NSArray *arrTitles = @[@"照片", @"拍摄", @"位置", @"红包", @"语言输入", @"个人名片", @"收藏", @"转账", @"卡券"];
+    NSArray *arrTitles = @[@"照片", @"拍摄", @"位置", @"红包", @"语言输入", @"个人名片", @"收藏", @"转账"];
     NSArray *arrIcons = @[@"sharemore_pic", @"sharemore_video", @"sharemore_location", @"sharemore_multitalk", @"sharemore_voiceinput", @"sharemore_friendcard", @"sharemore_myfav", @"sharemorePay", @"sharemore_wallet"];
     
     NSMutableArray *arrModels = [[NSMutableArray alloc] init];

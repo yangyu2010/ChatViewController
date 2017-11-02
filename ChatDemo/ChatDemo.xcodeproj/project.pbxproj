@@ -83,6 +83,7 @@
 		862F49521FA6F9A600D0526C /* ChatDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		862F49561FA6F9A600D0526C /* ChatDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDemoUITests.m; sourceTree = "<group>"; };
 		862F49581FA6F9A600D0526C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8652F7F21FAB2D99005421BB /* ChatToolBarHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatToolBarHeader.h; sourceTree = "<group>"; };
 		8666FD971FAAD3CC00CD12C7 /* ChatToolBarMoreView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatToolBarMoreView.h; sourceTree = "<group>"; };
 		8666FD981FAAD3CC00CD12C7 /* ChatToolBarMoreView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatToolBarMoreView.m; sourceTree = "<group>"; };
 		8666FD9A1FAAD3FF00CD12C7 /* ChatToolBarMoreCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatToolBarMoreCell.h; sourceTree = "<group>"; };
@@ -285,6 +286,7 @@
 		868958981FA72D2A00BC0619 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				8652F7F21FAB2D99005421BB /* ChatToolBarHeader.h */,
 				8606ED4D1FA80B1C0023B9DE /* ChatToolBar.h */,
 				8606ED4E1FA80B1C0023B9DE /* ChatToolBar.m */,
 				8606ED501FA80B390023B9DE /* ChatToolBarItem.h */,

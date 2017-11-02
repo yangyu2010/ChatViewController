@@ -12,6 +12,7 @@
 #import "UIView+Sugar.h"
 #import "VoiceRecordController.h"
 #import "ChatToolBarMoreView.h"
+#import "ChatToolBarHeader.h"
 
 #define kChatToolBarHeight                   49.0
 
@@ -32,7 +33,8 @@
     CGFloat _toolBarViewY;
     /// 底部moreView y值
     CGFloat _toolBarMoreViewY;
-    
+    /// 当前toolbar的状态
+    CGFloat _chatToolBarState;
     
     /// 定时器
     NSTimer *_timerVoice;
@@ -108,6 +110,8 @@
     _toolBarViewY = [[UIScreen mainScreen] bounds].size.height - _toolBarViewHeight;
     _toolBarMoreViewY = [[UIScreen mainScreen] bounds].size.height;
     
+    _chatToolBarState = ChatToolBarStateNoraml;
+    
     self.toolBar.delegate = self;
     
     _recordCurrentDuration = 0;
@@ -157,14 +161,24 @@
     _toolBarViewHeight = kChatToolBarHeight;
     _toolBarViewY = CGRectGetMaxY(self.toolBar.frame) - _toolBarViewHeight;
     
-    [self.view setNeedsLayout];
-    [UIView animateWithDuration:0.15f animations:^{
-        [self.view layoutIfNeeded];
-    }];
+    [self actionUpdateLayoutDuration:0.15f];
 }
 
 - (void)actionViewTap {
     [self.view endEditing:YES];
+}
+
+/// 刷新界面 duration为0则是默认值
+- (void)actionUpdateLayoutDuration:(CGFloat)duration {
+    
+    if (duration <= 0) {
+        duration = 0.25f;
+    }
+    
+    [self.view setNeedsLayout];
+    [UIView animateWithDuration:duration animations:^{
+        [self.view layoutIfNeeded];
+    }];
 }
 
 #pragma mark- 输入框处理 相关
@@ -173,11 +187,7 @@
     _toolBarViewHeight += height;
     _toolBarViewY = self.toolBar.y - height;
     
-    [self.view setNeedsLayout];
-    
-    [UIView animateWithDuration:0.10f animations:^{
-        [self.view layoutIfNeeded];
-    }];
+    [self actionUpdateLayoutDuration:0.10f];
 }
 
 - (void)chatToolBarResetInputViewHeight {
@@ -192,14 +202,20 @@
 }
 
 #pragma mark- More View 相关
-- (void)chatToolBarMoreViewAction {
+- (void)chatToolBarMoreViewActionState:(BOOL)isSelected {
     
-    _toolBarMoreViewY = self.view.height - KChatToolBarMoreViewHeight;
-    _toolBarViewY = _toolBarMoreViewY - _toolBarViewHeight;
-    [self.view setNeedsLayout];
-    [UIView animateWithDuration:0.25f animations:^{
-        [self.view layoutIfNeeded];
-    }];
+    if (isSelected) {
+        _chatToolBarState = ChatToolBarStateMore;
+        _toolBarMoreViewY = self.view.height - KChatToolBarMoreViewHeight;
+        _toolBarViewY = _toolBarMoreViewY - _toolBarViewHeight;
+        
+    } else {
+        _chatToolBarState = ChatToolBarStateInput;
+        
+    }
+    
+    
+    [self actionUpdateLayoutDuration:0];
 }
 
 #pragma mark- 录制语音 相关

@@ -10,6 +10,8 @@
 #import "ChatToolInputView.h"
 #import "VoiceRecordHeader.h"
 
+
+
 @protocol ChatToolBarDelegate <NSObject>
 
 /// 每次换行时通知外面改变高度 height是每次变化的高度
@@ -23,7 +25,7 @@
 - (void)chatToolBarVoiceRecordState:(VoiceRecordState)state;
 
 /// 点击moreView
-- (void)chatToolBarMoreViewAction;
+- (void)chatToolBarMoreViewActionState:(BOOL)isSelected;
 
 @end
 

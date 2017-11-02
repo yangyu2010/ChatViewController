@@ -215,11 +215,11 @@
 }
 
 #pragma mark- Item 事件监听
-- (void)chatToolBarDidSelected:(ChatToolBarItem *)item {
+- (void)chatToolBarDidSelected:(ChatToolBarItem *)item isSelected:(BOOL)isSelected {
     if (item == self.itemVoice) {
         [self actionItemVoice];
     } else if (item == self.itemMore) {
-        [self actionItemMore];
+        [self actionItemMore:isSelected];
     }
 }
 
@@ -245,9 +245,9 @@
 }
 
 /// 点击moreView
-- (void)actionItemMore {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarMoreViewAction)]) {
-        [self.delegate chatToolBarMoreViewAction];
+- (void)actionItemMore:(BOOL)isSelected {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarMoreViewActionState:)]) {
+        [self.delegate chatToolBarMoreViewActionState:isSelected];
     }
 }
 
