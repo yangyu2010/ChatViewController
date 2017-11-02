@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ChatToolInputView.h"
+#import "VoiceRecordHeader.h"
 
 @protocol ChatToolBarDelegate <NSObject>
 
@@ -19,12 +20,13 @@
 - (void)chatToolBarSendText:(NSString *)text;
 
 
-- (void)chatToolBarVoiceRecordStart;
-- (void)chatToolBarVoiceRecordCancle;
-- (void)chatToolBarVoiceRecordFinish;
-- (void)chatToolBarVoiceRecordOutside;
-- (void)chatToolBarVoiceRecordInside;
+//- (void)chatToolBarVoiceRecordStart;
+//- (void)chatToolBarVoiceRecordCancle;
+//- (void)chatToolBarVoiceRecordFinish;
+//- (void)chatToolBarVoiceRecordOutside;
+//- (void)chatToolBarVoiceRecordInside;
 
+- (void)chatToolBarVoiceRecordState:(VoiceRecordState)state;
 
 @end
 

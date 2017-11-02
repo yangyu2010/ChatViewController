@@ -88,7 +88,7 @@
     
     _state = state;
     
-    if (state == VoiceRecordStateNoraml) {
+    if (state == VoiceRecordStateNoraml || state == VoiceRecordStateCanceled || state == VoiceRecordStateFinished) {
         self.viewRecording.hidden = YES;
         self.viewCancle.hidden = YES;
         self.viewCount.hidden = YES;
@@ -98,12 +98,12 @@
         self.viewCancle.hidden = YES;
         self.viewCount.hidden = YES;
     }
-    else if (state == VoiceRecordStateCancel) {
+    else if (state == VoiceRecordStateTouchUpCancel) {
         self.viewRecording.hidden = YES;
         self.viewCancle.hidden = NO;
         self.viewCount.hidden = YES;
     }
-    else if (state == VoiceRecordStateCounting) {
+    else if (state == VoiceRecordStateTouchUpCounting) {
         self.viewRecording.hidden = YES;
         self.viewCancle.hidden = YES;
         self.viewCount.hidden = NO;

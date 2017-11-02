@@ -259,4 +259,9 @@
     _imgVIcon.frame = CGRectMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5, _imgVIcon.image.size.width, _imgVIcon.image.size.height);
 }
 
+#pragma mark- Public
+- (void)showWithMessage:(NSString *)ms {
+    _lblContent.text = ms;
+}
+
 @end

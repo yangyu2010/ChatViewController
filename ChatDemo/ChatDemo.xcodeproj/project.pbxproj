@@ -30,6 +30,7 @@
 		8689588F1FA70D7A00BC0619 /* TabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8689588E1FA70D7A00BC0619 /* TabBarViewController.m */; };
 		868958921FA70DAE00BC0619 /* ConversationListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 868958911FA70DAE00BC0619 /* ConversationListController.m */; };
 		8689589C1FA72D2A00BC0619 /* ChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8689589B1FA72D2A00BC0619 /* ChatController.m */; };
+		86969CFD1FAAC4E700AD55B7 /* VoiceRecordController.m in Sources */ = {isa = PBXBuildFile; fileRef = 86969CFC1FAAC4E700AD55B7 /* VoiceRecordController.m */; };
 		F6F2DA1D7740A1162940DD0D /* libPods-ChatDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9347056125438B4963067153 /* libPods-ChatDemo.a */; };
 /* End PBXBuildFile section */
 
@@ -99,6 +100,8 @@
 		868958911FA70DAE00BC0619 /* ConversationListController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConversationListController.m; sourceTree = "<group>"; };
 		8689589A1FA72D2A00BC0619 /* ChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatController.h; sourceTree = "<group>"; };
 		8689589B1FA72D2A00BC0619 /* ChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatController.m; sourceTree = "<group>"; };
+		86969CFB1FAAC4E600AD55B7 /* VoiceRecordController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoiceRecordController.h; sourceTree = "<group>"; };
+		86969CFC1FAAC4E700AD55B7 /* VoiceRecordController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VoiceRecordController.m; sourceTree = "<group>"; };
 		9347056125438B4963067153 /* libPods-ChatDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChatDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C83B88E6E305BB4C2E5E02C2 /* Pods-ChatDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChatDemo/Pods-ChatDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -235,6 +238,8 @@
 				867B14BD1FA9BFCF00437544 /* VoiceRecordContentView.m */,
 				867B14C21FA9C43C00437544 /* VoiceRecordPowerAnimationView.h */,
 				867B14C31FA9C43C00437544 /* VoiceRecordPowerAnimationView.m */,
+				86969CFB1FAAC4E600AD55B7 /* VoiceRecordController.h */,
+				86969CFC1FAAC4E700AD55B7 /* VoiceRecordController.m */,
 			);
 			path = VoiceRecord;
 			sourceTree = "<group>";
@@ -484,6 +489,7 @@
 				868958921FA70DAE00BC0619 /* ConversationListController.m in Sources */,
 				8689589C1FA72D2A00BC0619 /* ChatController.m in Sources */,
 				862F49341FA6F9A600D0526C /* AppDelegate.m in Sources */,
+				86969CFD1FAAC4E700AD55B7 /* VoiceRecordController.m in Sources */,
 				8606ED521FA80B390023B9DE /* ChatToolBarItem.m in Sources */,
 				8606ED611FA87B380023B9DE /* UIView+Sugar.m in Sources */,
 				8666EA3B1FA97E07007A995B /* ChatToolBarMoreView.m in Sources */,

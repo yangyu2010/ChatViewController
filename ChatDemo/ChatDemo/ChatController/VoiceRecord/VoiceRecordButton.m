@@ -33,24 +33,19 @@
 #pragma mark- Public
 - (void)updateRecordBuutonStyle:(VoiceRecordState)state {
     
-    NSLog(@"state %ld", self.state);
-    
-    if (state == VoiceRecordStateNoraml) {
+    if (state == VoiceRecordStateNoraml || state == VoiceRecordStateFinished || state == VoiceRecordStateCanceled) {
         [self setTitle:@"按住 说话" forState:UIControlStateNormal];
         [self setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor]] forState:UIControlStateNormal];
         return ;
     }
     
-    else if (state == VoiceRecordStateStart) {
+    else if (state == VoiceRecordStateStart || state == VoiceRecordStateTouchUpCounting) {
         [self setTitle:@"松开 结束" forState:UIControlStateNormal];
     }
-    else if (state == VoiceRecordStateCancel) {
+    else if (state == VoiceRecordStateTouchUpCancel) {
         [self setTitle:@"松开 取消" forState:UIControlStateNormal];
     }
-    else if (state == VoiceRecordStateCounting) {
-        [self setTitle:@"松开 结束" forState:UIControlStateNormal];
-    }
-    
+
     [self setBackgroundImage:[UIImage imageWithColor:[UIColor colorFromHexRGB:@"C6C7CA"]] forState:UIControlStateNormal];
     
 }

@@ -174,41 +174,41 @@
 - (void)actionHoldDownButtonTouchDown {
     
     [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateStart];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordStart)]) {
-        [self.delegate chatToolBarVoiceRecordStart];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordState:)]) {
+        [self.delegate chatToolBarVoiceRecordState:VoiceRecordStateStart];
     }
 }
 
 /// 取消了
 - (void)actionHoldDownButtonTouchUpOutside {
 
-    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateNoraml];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordCancle)]) {
-        [self.delegate chatToolBarVoiceRecordCancle];
+    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateCanceled];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordState:)]) {
+        [self.delegate chatToolBarVoiceRecordState:VoiceRecordStateCanceled];
     }
 }
 
 /// 录制完成
 - (void)actionHoldDownButtonTouchUpInside {
-    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateNoraml];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordFinish)]) {
-        [self.delegate chatToolBarVoiceRecordFinish];
+    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateFinished];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordState:)]) {
+        [self.delegate chatToolBarVoiceRecordState:VoiceRecordStateFinished];
     }
 }
 
 /// 上滑
 - (void)actionHoldDownDragOutside {
-    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateCancel];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordOutside)]) {
-        [self.delegate chatToolBarVoiceRecordOutside];
+    [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateTouchUpCancel];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordState:)]) {
+        [self.delegate chatToolBarVoiceRecordState:VoiceRecordStateTouchUpCancel];
     }
 }
 
 /// 继续录制
 - (void)actionHoldDownDragInside {
     [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateStart];
-    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordInside)]) {
-        [self.delegate chatToolBarVoiceRecordInside];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordState:)]) {
+        [self.delegate chatToolBarVoiceRecordState:VoiceRecordStateStart];
     }
 }
 

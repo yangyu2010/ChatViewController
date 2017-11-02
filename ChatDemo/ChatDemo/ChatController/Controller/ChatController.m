@@ -10,7 +10,7 @@
 #import "ChatToolBar.h"
 #import "UIColor+Utils.h"
 #import "UIView+Sugar.h"
-#import "VoiceRecordView.h"
+#import "VoiceRecordController.h"
 
 #define kChatToolBarHeight                   49.0
 
@@ -32,13 +32,16 @@
     NSTimer *_timerVoice;
     /// 当前录制的时间
     float _recordCurrentDuration;
+    /// 当前的录音状态
+    VoiceRecordState _recordCurrentState;
+
 }
 
 /// 底部toolbar
 @property (nonatomic, strong) ChatToolBar *toolBar;
 
 /// 录制显示的View
-@property (nonatomic, strong) VoiceRecordView *viewRecord;
+@property (nonatomic, strong) VoiceRecordController *ctrVoiceRecord;
 
 @end
 
@@ -72,9 +75,8 @@
     _toolBarViewHeight = kChatToolBarHeight;
     _toolBarViewY = [[UIScreen mainScreen] bounds].size.height - _toolBarViewHeight;
     
-    self.viewRecord = [[VoiceRecordView alloc] init];
-    [self.view addSubview:self.viewRecord];
-    [self.viewRecord updateUIWithRecordState:VoiceRecordStateNoraml];
+    self.ctrVoiceRecord = [[VoiceRecordController alloc] init];
+
 }
 
 - (void)viewWillLayoutSubviews {
@@ -82,8 +84,8 @@
     
     self.toolBar.frame = CGRectMake(0, _toolBarViewY, self.view.bounds.size.width, _toolBarViewHeight);
     
-    self.viewRecord.frame = CGRectMake(0, 0, 150, 150);
-    self.viewRecord.center = CGPointMake(self.view.bounds.size.width * 0.5, self.view.bounds.size.height * 0.5);
+//    self.viewRecord.frame = CGRectMake(0, 0, 150, 150);
+//    self.viewRecord.center = CGPointMake(self.view.bounds.size.width * 0.5, self.view.bounds.size.height * 0.5);
 }
 
 #pragma mark- Data
@@ -93,6 +95,9 @@
     self.toolBar.delegate = self;
     
     _recordCurrentDuration = 0;
+    
+    _recordCurrentState = VoiceRecordStateNoraml;
+    
 }
 
 
@@ -172,8 +177,28 @@
 }
 
 #pragma mark- 录制语音 相关
+/// 循环调用的方法
+- (void)actionRecordVoiceTimeOut {
+    
+    _recordCurrentDuration += KRecordTimerDuration;
+    float remainTime = kRecordMaxRecordDurtion - _recordCurrentDuration;
+    if ((int)remainTime == 0) {
+        // 录制结束
+        [self actionRecordVoiceFinished];
+    } else if ([self actionRecordVoiceViewShouldCounting]) {
+        // 倒计时
+        _recordCurrentState = VoiceRecordStateTouchUpCounting;
+        [self actionUpdateVoiceRecordState];
+        [self.ctrVoiceRecord updateCountingRemainTime:remainTime];
+    } else {
+        // 正在录制
+        float fakePower = (float)(1 + arc4random() % 99) / 100;
+        [self.ctrVoiceRecord updateRecordingPower:fakePower];
+    }
+}
+
 /// 开始定时器 录制
-- (void)actionStartRecordVoice {
+- (void)actionStartRecordVoiceTimer {
     if (_timerVoice) {
         [_timerVoice invalidate];
         _timerVoice = nil;
@@ -184,42 +209,41 @@
 }
 
 /// 结束定时器
-- (void)actionStopRecordVoice {
+- (void)actionStopRecordVoiceTimer {
     if (_timerVoice) {
         [_timerVoice invalidate];
         _timerVoice = nil;
     }
-    
-    _recordCurrentDuration = 0;
 }
 
-/// 循环调用的方法
-- (void)actionRecordVoiceTimeOut {
+/// 更新状态
+- (void)actionUpdateVoiceRecordState {
     
-    _recordCurrentDuration += KRecordTimerDuration;
-    float remainTime = kRecordMaxRecordDurtion - _recordCurrentDuration;
-    if ((int)remainTime == 0) {
-        // 录制结束
-        [self actionStopRecordVoice];
-        [self.viewRecord updateUIWithRecordState:VoiceRecordStateNoraml];
-        
-    } else if ([self actionRecordVoiceViewShouldCounting]) {
-        // 倒计时
-        [self.viewRecord updateUIWithRecordState:VoiceRecordStateCounting];
-        [self.viewRecord updateCountingRemainTime:remainTime];
-    } else {
-        // 正在录制
-        float fakePower = (float)(1 + arc4random() % 99) / 100;
-        [self.viewRecord updateRecordingPower:fakePower];
+    if (_recordCurrentState == VoiceRecordStateStart) {
+        [self actionStartRecordVoiceTimer];
     }
+    else if (_recordCurrentState == VoiceRecordStateCanceled ||
+             _recordCurrentState == VoiceRecordStateFinished) {
+        [self actionRecordVoiceFinished];
+    }
+    [self.ctrVoiceRecord updateUIWithRecordState:_recordCurrentState];
+}
 
+/// 录制语音结束
+- (void)actionRecordVoiceFinished {
+
+    [self actionStopRecordVoiceTimer];
+    _recordCurrentDuration = 0;
+    _recordCurrentState = VoiceRecordStateNoraml;
+    [self.ctrVoiceRecord updateUIWithRecordState:_recordCurrentState];
 }
 
 /// 判断当前录制的view 是否需要显示 倒计时
 - (BOOL)actionRecordVoiceViewShouldCounting {
     
     if ((_recordCurrentDuration >= (kRecordMaxRecordDurtion - kRecordRemainCountingDuration)) &&
-        (_recordCurrentDuration < kRecordMaxRecordDurtion)) {
+        (_recordCurrentDuration < kRecordMaxRecordDurtion) &&
+        (_recordCurrentState != VoiceRecordStateTouchUpCancel)) {
         
         return YES;
     }
@@ -227,29 +251,10 @@
     return NO;
 }
 
-- (void)chatToolBarVoiceRecordStart {
-    [self.viewRecord updateUIWithRecordState:VoiceRecordStateStart];
-    [self actionStartRecordVoice];
-}
-
-- (void)chatToolBarVoiceRecordCancle {
-    [self.viewRecord updateUIWithRecordState:VoiceRecordStateNoraml];
-    [self actionStopRecordVoice];
-}
-
-- (void)chatToolBarVoiceRecordFinish {
-    [self.viewRecord updateUIWithRecordState:VoiceRecordStateNoraml];
-    [self actionStopRecordVoice];
-}
-
-- (void)chatToolBarVoiceRecordOutside {
-    [self.viewRecord updateUIWithRecordState:VoiceRecordStateCancel];
-
-}
-
-- (void)chatToolBarVoiceRecordInside {
-    [self.viewRecord updateUIWithRecordState:VoiceRecordStateStart];
-
+- (void)chatToolBarVoiceRecordState:(VoiceRecordState)state {
+    _recordCurrentState = state;
+    
+    [self actionUpdateVoiceRecordState];
 }
 
 @end

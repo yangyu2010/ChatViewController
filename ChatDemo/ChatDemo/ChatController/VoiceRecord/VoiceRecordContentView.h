@@ -35,4 +35,6 @@
 /// 显示 提示语 的View
 @interface VoiceRecordTipView : VoiceRecordContentView
 
+- (void)showWithMessage:(NSString *)msg;
+
 @end
