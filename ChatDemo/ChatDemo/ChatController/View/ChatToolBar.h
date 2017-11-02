@@ -19,14 +19,11 @@
 /// 发送文字
 - (void)chatToolBarSendText:(NSString *)text;
 
-
-//- (void)chatToolBarVoiceRecordStart;
-//- (void)chatToolBarVoiceRecordCancle;
-//- (void)chatToolBarVoiceRecordFinish;
-//- (void)chatToolBarVoiceRecordOutside;
-//- (void)chatToolBarVoiceRecordInside;
-
+/// 录音代理
 - (void)chatToolBarVoiceRecordState:(VoiceRecordState)state;
+
+/// 点击moreView
+- (void)chatToolBarMoreViewAction;
 
 @end
 

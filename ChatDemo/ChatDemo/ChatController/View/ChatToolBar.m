@@ -10,6 +10,7 @@
 #import "ChatToolBarItem.h"
 #import "UIColor+Utils.h"
 #import "VoiceRecordButton.h"
+#import "ChatToolBarMoreView.h"
 
 @interface ChatToolBar () <UITextViewDelegate, ChatToolBarItemDelegate>
 {
@@ -74,6 +75,7 @@
     [self addSubview:self.itemFace];
     
     self.itemMore = [[ChatToolBarItem alloc] initWithIconName:@"multiMedia"];
+    self.itemMore.delegate = self;
     [self addSubview:self.itemMore];
     
     self.viewInput = [[ChatToolInputView alloc] init];
@@ -216,6 +218,8 @@
 - (void)chatToolBarDidSelected:(ChatToolBarItem *)item {
     if (item == self.itemVoice) {
         [self actionItemVoice];
+    } else if (item == self.itemMore) {
+        [self actionItemMore];
     }
 }
 
@@ -238,7 +242,13 @@
         
         [self didReceiveTextDidChangeNotification];
     }
-    
+}
+
+/// 点击moreView
+- (void)actionItemMore {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarMoreViewAction)]) {
+        [self.delegate chatToolBarMoreViewAction];
+    }
 }
 
 #pragma mark- UITextViewDelegate

@@ -11,8 +11,11 @@
 #import "UIColor+Utils.h"
 #import "UIView+Sugar.h"
 #import "VoiceRecordController.h"
+#import "ChatToolBarMoreView.h"
 
 #define kChatToolBarHeight                   49.0
+
+#define KChatToolBarMoreViewHeight           200.0
 
 /// 录音定时器 间隔
 #define KRecordTimerDuration                 0.2
@@ -27,7 +30,10 @@
     CGFloat _toolBarViewHeight;
     /// 底部toolbar y值
     CGFloat _toolBarViewY;
-
+    /// 底部moreView y值
+    CGFloat _toolBarMoreViewY;
+    
+    
     /// 定时器
     NSTimer *_timerVoice;
     /// 当前录制的时间
@@ -42,6 +48,10 @@
 
 /// 录制显示的View
 @property (nonatomic, strong) VoiceRecordController *ctrVoiceRecord;
+
+/// +号更多 View
+@property (nonatomic, strong) ChatToolBarMoreView *viewMore;
+
 
 @end
 
@@ -58,6 +68,7 @@
     [self viewConfig];
     [self dataConfig];
     [self actionAddNotifications];
+
 }
 
 #pragma mark- UI
@@ -72,11 +83,10 @@
     self.toolBar = [[ChatToolBar alloc] init];
     [self.view addSubview:self.toolBar];
     
-    _toolBarViewHeight = kChatToolBarHeight;
-    _toolBarViewY = [[UIScreen mainScreen] bounds].size.height - _toolBarViewHeight;
-    
     self.ctrVoiceRecord = [[VoiceRecordController alloc] init];
 
+    self.viewMore = [[ChatToolBarMoreView alloc] init];
+    [self.view addSubview:self.viewMore];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -86,18 +96,23 @@
     
 //    self.viewRecord.frame = CGRectMake(0, 0, 150, 150);
 //    self.viewRecord.center = CGPointMake(self.view.bounds.size.width * 0.5, self.view.bounds.size.height * 0.5);
+    
+    self.viewMore.frame = CGRectMake(0, _toolBarMoreViewY, self.view.bounds.size.width, KChatToolBarMoreViewHeight);
 }
 
 #pragma mark- Data
 
 - (void)dataConfig {
     
+    _toolBarViewHeight = kChatToolBarHeight;
+    _toolBarViewY = [[UIScreen mainScreen] bounds].size.height - _toolBarViewHeight;
+    _toolBarMoreViewY = [[UIScreen mainScreen] bounds].size.height;
+    
     self.toolBar.delegate = self;
     
     _recordCurrentDuration = 0;
     
     _recordCurrentState = VoiceRecordStateNoraml;
-    
 }
 
 
@@ -174,6 +189,17 @@
     NSLog(@"发送消息: %@", text);
     
     [self actionResetToolBarFrame];
+}
+
+#pragma mark- More View 相关
+- (void)chatToolBarMoreViewAction {
+    
+    _toolBarMoreViewY = self.view.height - KChatToolBarMoreViewHeight;
+    _toolBarViewY = _toolBarMoreViewY - _toolBarViewHeight;
+    [self.view setNeedsLayout];
+    [UIView animateWithDuration:0.25f animations:^{
+        [self.view layoutIfNeeded];
+    }];
 }
 
 #pragma mark- 录制语音 相关
