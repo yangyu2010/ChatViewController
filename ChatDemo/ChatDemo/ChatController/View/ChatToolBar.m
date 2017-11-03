@@ -88,12 +88,12 @@
     [super layoutSubviews];
     
     CGFloat itemH = self.bounds.size.height;
-    CGFloat itemW = 35.0;
+    CGFloat itemW = 38.0;
     
     self.itemVoice.frame = CGRectMake(0, 0, itemW, itemH);
     self.itemMore.frame = CGRectMake(self.bounds.size.width - itemW, 0, itemW, itemH);
     self.itemFace.frame = CGRectMake(self.bounds.size.width - itemW * 2, 0, itemW, itemH);
-    self.viewInput.frame = CGRectMake(itemW + 3, 6, self.bounds.size.width - itemW * 3 - 6, itemH - 12);
+    self.viewInput.frame = CGRectMake(itemW + 3, 7, self.bounds.size.width - itemW * 3 - 6, itemH - 14);
     self.btnVoice.frame = self.viewInput.frame;
 }
 
@@ -226,13 +226,13 @@
     self.viewInput.hidden = isSelected;
     self.btnVoice.hidden = !isSelected;
     
+    [self.itemMore updateItemState:NO];
+    
     if (isSelected) {
         [self.viewInput resignFirstResponder];
-  
     } else {
         [self.viewInput becomeFirstResponder];
         _oldContentHeight = _originContentHeight;
-        
         [self didReceiveTextDidChangeNotification];
     }
     
@@ -270,7 +270,6 @@
 - (void)resetState {
     [self.viewInput resignFirstResponder];
     [self.itemVoice updateItemState:NO];
-    [self.itemFace updateItemState:NO];
     [self.itemMore updateItemState:NO];
     self.btnVoice.hidden = YES;
     self.viewInput.hidden = NO;

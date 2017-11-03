@@ -48,8 +48,6 @@
     /// 当前的录音状态
     VoiceRecordState _recordCurrentState;
 
-    
-    
 }
 
 /// 底部toolbar
@@ -217,9 +215,13 @@
     NSLog(@"发送消息: %@", text);
     
     [self actionResetToolBarFrame];
+    
+    _toolBarViewOriginHeight = 0;
 }
 
 #pragma mark- More View 相关
+
+/// 点击+事件
 - (void)chatToolBarMoreViewActionState:(BOOL)isSelected {
     
     if (_toolBarViewOriginHeight != 0) {
@@ -243,6 +245,7 @@
 
 #pragma mark- 录制语音 相关
 
+/// 点击录音按钮事件
 - (void)chatToolBarVoiceRecoredActionState:(BOOL)isSelected {
     
     if (_toolBarViewOriginHeight != 0) {
@@ -321,6 +324,10 @@
 /// 录制语音结束
 - (void)actionRecordVoiceFinished {
 
+    if (_recordCurrentDuration < 1.0) {
+        [self.ctrVoiceRecord showToast:@"录制太短了..."];
+    }
+    
     [self actionStopRecordVoiceTimer];
     _recordCurrentDuration = 0;
     _recordCurrentState = VoiceRecordStateNoraml;

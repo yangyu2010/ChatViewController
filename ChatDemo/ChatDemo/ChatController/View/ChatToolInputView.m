@@ -42,10 +42,11 @@
     self.returnKeyType = UIReturnKeySend;
     self.textAlignment = NSTextAlignmentLeft;
     self.enablesReturnKeyAutomatically = YES;
-    
-    self.layer.borderColor = [UIColor colorFromHexRGB:@"E5E5E5"].CGColor;
-    self.layer.borderWidth = 1.0f;
-    self.layer.cornerRadius = 3.0f;
+
+    self.layer.borderWidth = 0.5;
+    self.layer.borderColor = [UIColor colorFromHexRGB:@"A3A5AB"].CGColor;
+    self.layer.cornerRadius = 4;
+    self.layer.masksToBounds = YES;
 }
 
 - (void)layoutSubviews {

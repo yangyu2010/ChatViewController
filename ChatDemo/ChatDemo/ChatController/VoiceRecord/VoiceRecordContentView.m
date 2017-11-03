@@ -232,12 +232,12 @@
     self.layer.cornerRadius = 6;
     
     if (_lblContent == nil) {
-        _lblContent = [[UILabel alloc] initWithFrame:self.bounds];
+        _lblContent = [[UILabel alloc] initWithFrame:CGRectZero];
         _lblContent.backgroundColor = [UIColor clearColor];
+        _lblContent.text = @"Message Too Short";
         _lblContent.textColor = [UIColor whiteColor];
         _lblContent.textAlignment = NSTextAlignmentCenter;
-        _lblContent.font = [UIFont systemFontOfSize:14];
-        _lblContent.text = @"Message Too Short";
+        _lblContent.font = [UIFont boldSystemFontOfSize:14.0];
         [self addSubview:_lblContent];
     }
     
@@ -254,9 +254,10 @@
     [super layoutSubviews];
     
     CGFloat lblContentHeight = 26.0;
-    _lblContent.frame = CGRectMake(0, self.bounds.size.width - lblContentHeight, self.bounds.size.width, lblContentHeight);
+    _lblContent.frame = CGRectMake(0, self.bounds.size.width - lblContentHeight - 5, self.bounds.size.width, lblContentHeight);
     
-    _imgVIcon.frame = CGRectMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5, _imgVIcon.image.size.width, _imgVIcon.image.size.height);
+    _imgVIcon.frame = CGRectMake(0, 0, _imgVIcon.image.size.width, _imgVIcon.image.size.height);
+    _imgVIcon.center = CGPointMake(self.bounds.size.width * 0.5, self.bounds.size.height * 0.5);
 }
 
 #pragma mark- Public
