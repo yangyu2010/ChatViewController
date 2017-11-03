@@ -20,7 +20,11 @@
 
 @interface ChatToolBarItem : UIView
 
-- (instancetype)initWithIconName:(NSString *)iconName;
+/// 初始化
+- (instancetype)initWithIconName:(NSString *)iconName selectedIconName:(NSString *)selectedIconName;
+
+/// 更新当前item的状态
+- (void)updateItemState:(BOOL)isSelected;
 
 @property (nonatomic, weak) id <ChatToolBarItemDelegate> delegate;
 

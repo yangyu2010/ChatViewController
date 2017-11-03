@@ -73,6 +73,10 @@
 
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 #pragma mark- UI
 
 - (void)viewConfig {
@@ -93,11 +97,12 @@
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
+
+    if (_chatToolBarState == ChatToolBarStateInput) {
+        return ;
+    }
     
     self.toolBar.frame = CGRectMake(0, _toolBarViewY, self.view.bounds.size.width, _toolBarViewHeight);
-    
-//    self.viewRecord.frame = CGRectMake(0, 0, 150, 150);
-//    self.viewRecord.center = CGPointMake(self.view.bounds.size.width * 0.5, self.view.bounds.size.height * 0.5);
     
     self.viewMore.frame = CGRectMake(0, _toolBarMoreViewY, self.view.bounds.size.width, KChatToolBarMoreViewHeight);
 }
@@ -126,31 +131,19 @@
 - (void)actionAddNotifications {
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(actionKeyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
-    
-    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(actionKeyboardWillShow) name:UIKeyboardWillShowNotification object:nil];
-    //    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(actionKeyboardWillHide) name:UIKeyboardWillHideNotification object:nil];
-    
 }
 
 /// 监听键盘事件 改变table 和 输入框的位置
 - (void)actionKeyboardWillChangeFrame:(NSNotification *)notification {
+
     NSDictionary *userInfo = notification.userInfo;
     
     CGFloat duration = [userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
     CGRect endFrame = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
 
-    [UIView animateWithDuration:duration animations:^{
-        self.toolBar.y = endFrame.origin.y - _toolBarViewHeight;;
-    }];
-}
-
-/// 键盘将要出现
-- (void)actionKeyboardWillShow {
+    _toolBarViewY = endFrame.origin.y - _toolBarViewHeight;
     
-}
-
-- (void)actionKeyboardWillHide {
-    
+    [self actionUpdateLayoutDuration:duration];
 }
 
 #pragma mark- Action
@@ -161,11 +154,22 @@
     _toolBarViewHeight = kChatToolBarHeight;
     _toolBarViewY = CGRectGetMaxY(self.toolBar.frame) - _toolBarViewHeight;
     
-    [self actionUpdateLayoutDuration:0.15f];
+    [self actionUpdateLayoutDuration:0];
 }
 
+/// 点击空白处 放弃编辑
 - (void)actionViewTap {
-    [self.view endEditing:YES];
+    
+    if (_toolBarViewY >= self.view.height - _toolBarViewHeight) {
+        return ;
+    }
+    
+    _chatToolBarState = ChatToolBarStateNoraml;
+    _toolBarMoreViewY = self.view.height;
+    _toolBarViewY = self.view.height - _toolBarViewHeight;
+    [self actionUpdateLayoutDuration:0.0f];
+    [self.toolBar resetState];
+
 }
 
 /// 刷新界面 duration为0则是默认值
@@ -190,10 +194,6 @@
     [self actionUpdateLayoutDuration:0.10f];
 }
 
-- (void)chatToolBarResetInputViewHeight {
-    [self actionResetToolBarFrame];
-}
-
 - (void)chatToolBarSendText:(NSString *)text {
     
     NSLog(@"发送消息: %@", text);
@@ -204,21 +204,37 @@
 #pragma mark- More View 相关
 - (void)chatToolBarMoreViewActionState:(BOOL)isSelected {
     
+    
     if (isSelected) {
         _chatToolBarState = ChatToolBarStateMore;
         _toolBarMoreViewY = self.view.height - KChatToolBarMoreViewHeight;
         _toolBarViewY = _toolBarMoreViewY - _toolBarViewHeight;
-        
+
     } else {
         _chatToolBarState = ChatToolBarStateInput;
-        
+        _toolBarMoreViewY = self.view.height;
     }
-    
     
     [self actionUpdateLayoutDuration:0];
 }
 
 #pragma mark- 录制语音 相关
+
+- (void)chatToolBarVoiceRecoredActionState:(BOOL)isSelected {
+    if (isSelected) {
+        // 在录音
+        _chatToolBarState = ChatToolBarStateVoice;
+        _toolBarMoreViewY = self.view.height;
+        _toolBarViewHeight = kChatToolBarHeight;
+        _toolBarViewY = self.view.height - kChatToolBarHeight;
+        [self actionUpdateLayoutDuration:0];
+    } else {
+        // 取消录音, 就是正在输入
+        _chatToolBarState = ChatToolBarStateInput;
+        [self actionResetToolBarFrame];
+    }
+}
+
 /// 循环调用的方法
 - (void)actionRecordVoiceTimeOut {
     

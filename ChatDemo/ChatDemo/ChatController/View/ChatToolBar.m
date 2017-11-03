@@ -19,9 +19,7 @@
     
     /// 没有文字的时候 输入框的高度
     CGFloat _originContentHeight;
-    
-    /// 是否正在录音
-    BOOL _isRecording;
+
 }
 
 /// 语音item
@@ -67,14 +65,14 @@
 #pragma mark- UI
 
 - (void)viewConfig {
-    self.itemVoice = [[ChatToolBarItem alloc] initWithIconName:@"voice"];
+    self.itemVoice = [[ChatToolBarItem alloc] initWithIconName:@"voice" selectedIconName:@"keyboard"];
     self.itemVoice.delegate = self;
     [self addSubview:self.itemVoice];
     
-    self.itemFace = [[ChatToolBarItem alloc] initWithIconName:@"face"];
+    self.itemFace = [[ChatToolBarItem alloc] initWithIconName:@"face" selectedIconName:@"keyboard"];
     [self addSubview:self.itemFace];
     
-    self.itemMore = [[ChatToolBarItem alloc] initWithIconName:@"multiMedia"];
+    self.itemMore = [[ChatToolBarItem alloc] initWithIconName:@"multiMedia" selectedIconName:@"multiMedia"];
     self.itemMore.delegate = self;
     [self addSubview:self.itemMore];
     
@@ -104,7 +102,6 @@
 - (void)dataConfig {
     
     _oldContentHeight = 0;
-    _isRecording = NO;
     _originContentHeight = [self getTextViewContentH:self.viewInput];
     
     self.viewInput.delegate = self;
@@ -217,38 +214,60 @@
 #pragma mark- Item 事件监听
 - (void)chatToolBarDidSelected:(ChatToolBarItem *)item isSelected:(BOOL)isSelected {
     if (item == self.itemVoice) {
-        [self actionItemVoice];
+        [self actionItemVoice:isSelected];
     } else if (item == self.itemMore) {
         [self actionItemMore:isSelected];
     }
 }
 
 /// voice事件
-- (void)actionItemVoice {
-    _isRecording = !_isRecording;
-    self.viewInput.hidden = _isRecording;
-    self.btnVoice.hidden = !_isRecording;
+- (void)actionItemVoice:(BOOL)isSelected {
     
-    if (_isRecording) {
+    self.viewInput.hidden = isSelected;
+    self.btnVoice.hidden = !isSelected;
+    
+    if (isSelected) {
         [self.viewInput resignFirstResponder];
-        
-        if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarResetInputViewHeight)]) {
-            [self.delegate chatToolBarResetInputViewHeight];
-        }
-        
+  
     } else {
         [self.viewInput becomeFirstResponder];
         _oldContentHeight = _originContentHeight;
         
         [self didReceiveTextDidChangeNotification];
     }
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecoredActionState:)]) {
+            [self.delegate chatToolBarVoiceRecoredActionState:isSelected];
+    }
 }
 
 /// 点击moreView
 - (void)actionItemMore:(BOOL)isSelected {
+    
+    self.viewInput.hidden = NO;
+    self.btnVoice.hidden = YES;
+    [self.itemVoice updateItemState:NO];
+    
+    if (isSelected) {
+        [self.viewInput resignFirstResponder];
+    } else {
+        [self.viewInput becomeFirstResponder];
+    }
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarMoreViewActionState:)]) {
         [self.delegate chatToolBarMoreViewActionState:isSelected];
     }
+}
+
+#pragma mark- Public
+/// 点击空白时 需要复位当前的状态
+- (void)resetState {
+    [self.viewInput resignFirstResponder];
+    [self.itemVoice updateItemState:NO];
+    [self.itemFace updateItemState:NO];
+    [self.itemMore updateItemState:NO];
+    self.btnVoice.hidden = YES;
+    self.viewInput.hidden = NO;
 }
 
 #pragma mark- UITextViewDelegate
