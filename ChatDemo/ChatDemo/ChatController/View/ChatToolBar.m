@@ -260,6 +260,12 @@
 }
 
 #pragma mark- Public
+///开始编辑
+- (void)beginEditing {
+    
+    [self.viewInput becomeFirstResponder];
+}
+
 /// 点击空白时 需要复位当前的状态
 - (void)resetState {
     [self.viewInput resignFirstResponder];

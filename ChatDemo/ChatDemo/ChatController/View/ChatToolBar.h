@@ -41,6 +41,9 @@
 
 @interface ChatToolBar : UIView
 
+///开始编辑
+- (void)beginEditing;
+
 /// 点击空白时 需要复位当前的状态
 - (void)resetState;
 

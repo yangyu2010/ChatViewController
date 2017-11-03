@@ -29,12 +29,17 @@
 {
     /// 底部toolbar的高度
     CGFloat _toolBarViewHeight;
+    /// 记录toolbar高度, _toolBarViewHeight有时会被情况, 当前这个值会保留当前输入框里文字的高度
+    CGFloat _toolBarViewOriginHeight;
     /// 底部toolbar y值
     CGFloat _toolBarViewY;
     /// 底部moreView y值
     CGFloat _toolBarMoreViewY;
     /// 当前toolbar的状态
-    CGFloat _chatToolBarState;
+    ChatToolBarState _chatToolBarState;
+    
+    /// 是否需要根据键盘来调整页面
+    BOOL _isNeedNotifKeyboard;
     
     /// 定时器
     NSTimer *_timerVoice;
@@ -43,6 +48,8 @@
     /// 当前的录音状态
     VoiceRecordState _recordCurrentState;
 
+    
+    
 }
 
 /// 底部toolbar
@@ -70,7 +77,12 @@
     [self viewConfig];
     [self dataConfig];
     [self actionAddNotifications];
+}
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self.toolBar beginEditing];
 }
 
 - (void)dealloc {
@@ -98,10 +110,6 @@
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
 
-    if (_chatToolBarState == ChatToolBarStateInput) {
-        return ;
-    }
-    
     self.toolBar.frame = CGRectMake(0, _toolBarViewY, self.view.bounds.size.width, _toolBarViewHeight);
     
     self.viewMore.frame = CGRectMake(0, _toolBarMoreViewY, self.view.bounds.size.width, KChatToolBarMoreViewHeight);
@@ -112,6 +120,7 @@
 - (void)dataConfig {
     
     _toolBarViewHeight = kChatToolBarHeight;
+    _toolBarViewOriginHeight = 0;
     _toolBarViewY = [[UIScreen mainScreen] bounds].size.height - _toolBarViewHeight;
     _toolBarMoreViewY = [[UIScreen mainScreen] bounds].size.height;
     
@@ -122,6 +131,8 @@
     _recordCurrentDuration = 0;
     
     _recordCurrentState = VoiceRecordStateNoraml;
+    
+    _isNeedNotifKeyboard = YES;
 }
 
 
@@ -136,6 +147,11 @@
 /// 监听键盘事件 改变table 和 输入框的位置
 - (void)actionKeyboardWillChangeFrame:(NSNotification *)notification {
 
+    if (_isNeedNotifKeyboard == NO) {
+        _isNeedNotifKeyboard = YES;
+        return ;
+    }
+    
     NSDictionary *userInfo = notification.userInfo;
     
     CGFloat duration = [userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
@@ -151,6 +167,8 @@
 /// 重置当前toolBar的frame
 - (void)actionResetToolBarFrame {
     
+    _chatToolBarState = ChatToolBarStateNoraml;
+    _toolBarViewOriginHeight = _toolBarViewHeight;
     _toolBarViewHeight = kChatToolBarHeight;
     _toolBarViewY = CGRectGetMaxY(self.toolBar.frame) - _toolBarViewHeight;
     
@@ -204,6 +222,10 @@
 #pragma mark- More View 相关
 - (void)chatToolBarMoreViewActionState:(BOOL)isSelected {
     
+    if (_toolBarViewOriginHeight != 0) {
+        _toolBarViewHeight = _toolBarViewOriginHeight;
+        _toolBarViewOriginHeight = 0;
+    }
     
     if (isSelected) {
         _chatToolBarState = ChatToolBarStateMore;
@@ -213,6 +235,7 @@
     } else {
         _chatToolBarState = ChatToolBarStateInput;
         _toolBarMoreViewY = self.view.height;
+        _isNeedNotifKeyboard = NO;
     }
     
     [self actionUpdateLayoutDuration:0];
@@ -221,18 +244,26 @@
 #pragma mark- 录制语音 相关
 
 - (void)chatToolBarVoiceRecoredActionState:(BOOL)isSelected {
+    
+    if (_toolBarViewOriginHeight != 0) {
+        _toolBarViewHeight = _toolBarViewOriginHeight;
+        _toolBarViewOriginHeight = 0;
+    }
+    
     if (isSelected) {
+        [self actionResetToolBarFrame];
+        
         // 在录音
         _chatToolBarState = ChatToolBarStateVoice;
         _toolBarMoreViewY = self.view.height;
         _toolBarViewHeight = kChatToolBarHeight;
         _toolBarViewY = self.view.height - kChatToolBarHeight;
-        [self actionUpdateLayoutDuration:0];
     } else {
         // 取消录音, 就是正在输入
         _chatToolBarState = ChatToolBarStateInput;
-        [self actionResetToolBarFrame];
     }
+    
+    [self actionUpdateLayoutDuration:0];
 }
 
 /// 循环调用的方法
