@@ -91,6 +91,7 @@
     
     ChatController *vcChat = [[ChatController alloc] init];
     vcChat.hidesBottomBarWhenPushed = YES;
+    vcChat.conversationId = _arrData[indexPath.item];
     [self.navigationController pushViewController:vcChat animated:YES];
 }
 

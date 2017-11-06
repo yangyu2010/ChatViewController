@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 #import <Hyphenate/Hyphenate.h>
-#import "ChatController.h"
+#import "TabBarViewController.h"
 
 
 
@@ -27,11 +27,16 @@
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+
+
+    TabBarViewController *vc = [[TabBarViewController alloc] init];
+//    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    self.window.rootViewController = vc;
     
-    
-    ChatController *vc = [[ChatController alloc] init];
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
-    self.window.rootViewController = nav;
+    BOOL isAutoLogin = [EMClient sharedClient].options.isAutoLogin;
+    if (!isAutoLogin) {
+        [[EMClient sharedClient] loginWithUsername:@"yangyu" password:@"123456"];
+    }
     
     return YES;
 }

@@ -10,5 +10,8 @@
 
 @interface ChatController : UIViewController
 
+/// 会话
+@property (nonatomic, copy) NSString *conversationId;
+
 
 @end

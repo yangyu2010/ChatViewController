@@ -14,6 +14,8 @@
 #import "ChatToolBarMoreView.h"
 #import "ChatToolBarHeader.h"
 
+#import <Hyphenate/Hyphenate.h>
+
 #define kChatToolBarHeight                   49.0
 
 #define KChatToolBarMoreViewHeight           200.0
@@ -25,7 +27,7 @@
 /// 剩余多少s开始提示用户
 #define kRecordRemainCountingDuration        5
 
-@interface ChatController () <ChatToolBarDelegate>
+@interface ChatController () <ChatToolBarDelegate, EMChatManagerDelegate>
 {
     /// 底部toolbar的高度
     CGFloat _toolBarViewHeight;
@@ -52,12 +54,13 @@
 
 /// 底部toolbar
 @property (nonatomic, strong) ChatToolBar *toolBar;
-
 /// 录制显示的View
 @property (nonatomic, strong) VoiceRecordController *ctrVoiceRecord;
-
 /// +号更多 View
 @property (nonatomic, strong) ChatToolBarMoreView *viewMore;
+
+
+@property (nonatomic, strong) EMConversation *conversation;
 
 
 @end
@@ -75,6 +78,7 @@
     [self viewConfig];
     [self dataConfig];
     [self actionAddNotifications];
+    [self actionGetConversation];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -201,6 +205,40 @@
     }];
 }
 
+#pragma mark- 聊天相关
+/// 获取会话 和 聊天记录
+- (void)actionGetConversation {
+    
+    [[EMClient sharedClient].chatManager addDelegate:self delegateQueue:nil];
+    
+    self.conversation = [[EMClient sharedClient].chatManager getConversation:self.conversationId type:EMConversationTypeChat createIfNotExist:YES];
+
+    [self.conversation loadMessagesStartFromId:@"" count:40 searchDirection:EMMessageSearchDirectionUp completion:^(NSArray *aMessages, EMError *aError) {
+        
+        NSLog(@"aMessages %@", aMessages);
+        NSLog(@"aError %@", aError);
+    }];
+    
+}
+
+#pragma mark- 聊天代理 EMChatManagerDelegate
+- (void)messagesDidReceive:(NSArray *)aMessages {
+
+    for (EMMessage *message in aMessages) {
+        /// 判断会话id 和 当前消息id是否一致
+        if (![self.conversationId isEqualToString:message.conversationId]) {
+            break;
+        }
+        
+        if (message.body.type == EMMessageBodyTypeText) {
+            EMTextMessageBody *textBody = (EMTextMessageBody *)message.body;
+            NSLog(@"EMMessageBodyTypeText %@", textBody.text);
+            
+            [self.conversation appendMessage:message error:nil];
+        }
+    }
+}
+
 #pragma mark- 输入框处理 相关
 - (void)chatToolBarInputViewContentHeightChanged:(CGFloat)height {
 
@@ -217,6 +255,20 @@
     [self actionResetToolBarFrame];
     
     _toolBarViewOriginHeight = 0;
+    
+    EMTextMessageBody *body = [[EMTextMessageBody alloc] initWithText:text];
+
+    EMMessage *message = [[EMMessage alloc] initWithConversationID:self.conversationId from:@"yangyu" to:@"miller" body:body ext:nil];
+
+    [self.conversation appendMessage:message error:nil];
+    
+    [[EMClient sharedClient].chatManager sendMessage:message progress:^(int progress) {
+        
+    } completion:^(EMMessage *message, EMError *error) {
+        
+        NSLog(@"%@", error);
+        NSLog(@"%@", message);
+    }];
 }
 
 #pragma mark- More View 相关
