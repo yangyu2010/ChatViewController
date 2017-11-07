@@ -32,9 +32,9 @@
     }
     
     if (self.isSender) {
-        self.lblText.frame = CGRectMake(kMessageCellPadding, kMessageCellPadding, self.bounds.size.width - 3 * kMessageCellPadding, self.bounds.size.height - 2 * kMessageCellPadding);
+        self.lblText.frame = CGRectMake(kMessageCellBubbleMargin, kMessageCellBubbleMargin, self.bounds.size.width - 3 * kMessageCellBubbleMargin, self.bounds.size.height - 2 * kMessageCellBubbleMargin);
     } else {
-        self.lblText.frame = CGRectMake(kMessageCellPadding * 2, kMessageCellPadding, self.bounds.size.width - 3 * kMessageCellPadding, self.bounds.size.height - 2 * kMessageCellPadding);
+        self.lblText.frame = CGRectMake(kMessageCellBubbleMargin * 2, kMessageCellBubbleMargin, self.bounds.size.width - 3 * kMessageCellBubbleMargin, self.bounds.size.height - 2 * kMessageCellBubbleMargin);
     }
 }
 

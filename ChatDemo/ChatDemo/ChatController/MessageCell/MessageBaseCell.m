@@ -12,6 +12,7 @@
 #import "MessageCellHeader.h"
 #import "UIColor+Utils.h"
 #import "UIView+Sugar.h"
+#import <UIImageView+WebCache.h>
 
 @interface MessageBaseCell ()
 {
@@ -125,7 +126,22 @@
             self.viewBubble.lblText.text = model.text;
         }
             break;
+        case EMMessageBodyTypeImage: {
+            self.viewBubble.imgView.image = model.thumbnailImage;
+            UIImage *image = model.thumbnailImage;
+            if (!image) {
+                image = model.image;
+                if (!image) {
+                    [self.viewBubble.imgView sd_setImageWithURL:[NSURL URLWithString:_model.fileURLPath] placeholderImage:[UIImage imageNamed:_model.failImageName]];
+                } else {
+                    self.viewBubble.imgView.image = image;
+                }
+            } else {
+                self.viewBubble.imgView.image = image;
+            }
             
+        }
+            break;
         default:
             break;
     }
@@ -244,7 +260,9 @@
     }
     
     /// 计算bubbleView里 """文本""" 最大的宽度, 这里用屏幕的宽度 - 2个(头像和2倍的间距) - 左边或者右边的一个间距(气泡距离头像的距离) - 文本在气泡里面的大小(一边有1个间距, 另一边有2个间距)
-    CGFloat bubbleMaxWidth = [UIScreen mainScreen].bounds.size.width - 2 * (kMessageCellIconWh + kMessageCellPadding * 2) - kMessageCellPadding - 30;
+    //CGFloat bubbleMaxWidth = [UIScreen mainScreen].bounds.size.width - 2 * (kMessageCellIconWh + kMessageCellPadding * 2) - kMessageCellPadding - 3 * kMessageCellBubbleMargin;
+    
+    CGFloat bubbleMaxWidth = kMessageCellBubbleContentMaxWidth;
     
     /// 高度
     CGFloat height = 0;
@@ -266,7 +284,12 @@
             model.bubbleViewWidth = rect.size.width + 30;
         }
             break;
+        case EMMessageBodyTypeImage: {
             
+            height = model.thumbnailImageSize.height;
+            model.bubbleViewWidth = model.thumbnailImageSize.width + 30;
+        }
+            break;
         default:
             break;
     }

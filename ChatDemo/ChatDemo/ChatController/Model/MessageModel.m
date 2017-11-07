@@ -35,23 +35,52 @@
             case EMMessageBodyTypeImage: {
                 
                 EMImageMessageBody *imgMessageBody = (EMImageMessageBody *)_firstMessageBody;
+                
+                self.imageSize = imgMessageBody.size;
+                
                 NSData *imageData = [NSData dataWithContentsOfFile:imgMessageBody.localPath];
+                
                 if (imageData.length) {
                     self.image = [UIImage imageWithData:imageData];
                 }
                 
                 if ([imgMessageBody.thumbnailLocalPath length] > 0) {
                     self.thumbnailImage = [UIImage imageWithContentsOfFile:imgMessageBody.thumbnailLocalPath];
+                    if (self.thumbnailImage) {
+                        self.thumbnailImageSize = self.thumbnailImage.size;
+                    } else {
+                        CGSize size = imgMessageBody.size;
+                        if (size.width > 100) {
+                            CGFloat width = 100.0;
+                            CGFloat height = width / size.width * size.height;
+                            self.thumbnailImageSize = CGSizeMake(width, height);
+                        } else {
+                            self.thumbnailImageSize = size;
+                        }
+                    }
                 } else {
-                    CGSize size = self.image.size;
-                    self.thumbnailImage = size.width * size.height > 200 * 200 ? [self scaleImage:self.image toScale:sqrt((200 * 200) / (size.width * size.height))] : self.image;
+                    if (self.image) {
+                        CGSize size = self.image.size;
+                        self.thumbnailImage = size.width * size.height > 200 * 200 ? [self scaleImage:self.image toScale:sqrt((200 * 200) / (size.width * size.height))] : self.image;
+                        self.thumbnailImageSize = self.thumbnailImage.size;
+                    } else {
+                        CGSize size = imgMessageBody.size;
+                        if (size.width > 100) {
+                            CGFloat width = 100.0;
+                            CGFloat height = size.width / width * size.height;
+                            self.thumbnailImageSize = CGSizeMake(width, height);
+                        } else {
+                            self.thumbnailImageSize = size;
+                        }
+                        
+                    }
+                    
                 }
-                
-                self.thumbnailImageSize = self.thumbnailImage.size;
-                self.imageSize = imgMessageBody.size;
+
                 if (!_isSender) {
                     self.fileURLPath = imgMessageBody.remotePath;
                 }
+                
             }
                 break;
                 

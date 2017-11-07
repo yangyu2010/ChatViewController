@@ -18,6 +18,7 @@
     self.imgView.contentMode = UIViewContentModeScaleAspectFill;
     self.imgView.translatesAutoresizingMaskIntoConstraints = NO;
     self.imgView.backgroundColor = [UIColor clearColor];
+    self.imgView.clipsToBounds = YES;
     [self.imgViewBackground addSubview:self.imgView];
 }
 
@@ -30,9 +31,9 @@
     }
     
     if (self.isSender) {
-        self.imgView.frame = CGRectMake(kMessageCellPadding, kMessageCellPadding, self.bounds.size.width - 3 * kMessageCellPadding, self.bounds.size.height - 2 * kMessageCellPadding);
+        self.imgView.frame = CGRectMake(kMessageCellBubbleMargin, kMessageCellBubbleMargin, self.bounds.size.width - 3 * kMessageCellBubbleMargin, self.bounds.size.height - 2 * kMessageCellBubbleMargin);
     } else {
-        self.imgView.frame = CGRectMake(kMessageCellPadding * 2, kMessageCellPadding, self.bounds.size.width - 3 * kMessageCellPadding, self.bounds.size.height - 2 * kMessageCellPadding);
+        self.imgView.frame = CGRectMake(kMessageCellBubbleMargin * 2, kMessageCellBubbleMargin, self.bounds.size.width - 3 * kMessageCellBubbleMargin, self.bounds.size.height - 2 * kMessageCellBubbleMargin);
     }
 }
 

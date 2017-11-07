@@ -434,8 +434,8 @@
                 break;
             }
             
-            if (message.body.type == EMMessageBodyTypeText) {
-                
+            if (message.body.type == EMMessageBodyTypeText || message.body.type == EMMessageBodyTypeImage) {
+            
                 [self.conversation appendMessage:message error:nil];
                 MessageModel *model = [[MessageModel alloc] initWithMessage:message];
                 [self.arrModels addObject:model];
@@ -461,9 +461,8 @@
             break;
         }
         
-        if (message.body.type == EMMessageBodyTypeText) {
-            //            EMTextMessageBody *textBody = (EMTextMessageBody *)message.body;
-            
+        if (message.body.type == EMMessageBodyTypeText || message.body.type == EMMessageBodyTypeImage) {
+        
             [self.conversation appendMessage:message error:nil];
             MessageModel *model = [[MessageModel alloc] initWithMessage:message];
             [self.arrModels addObject:model];

@@ -4,4 +4,6 @@ target 'ChatDemo' do
 
     pod 'Hyphenate', :inhibit_warnings => true
 
+    pod 'SDWebImage'
+    
 end
