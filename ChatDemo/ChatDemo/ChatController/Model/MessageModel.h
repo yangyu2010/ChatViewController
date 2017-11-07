@@ -14,6 +14,8 @@
 
 /// 消息cell的高度
 @property (nonatomic, assign) CGFloat cellHeight;
+/// bubbleView Width
+@property (nonatomic, assign) CGFloat bubbleViewWidth;
 /// 消息对象
 @property (nonatomic, strong, readonly) EMMessage *message;
 /// 消息体

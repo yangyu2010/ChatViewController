@@ -44,7 +44,7 @@
 - (void)viewConfig {
     
     self.backgroundColor = [UIColor blackColor];
-    self.alpha = 0.5;
+    self.alpha = 0.6;
     self.layer.cornerRadius = 6;
     
     if (self.viewRecording == nil) {

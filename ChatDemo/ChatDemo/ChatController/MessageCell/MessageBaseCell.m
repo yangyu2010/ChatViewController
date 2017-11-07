@@ -11,6 +11,8 @@
 #import "MJBubbleView+Text.h"
 #import "MessageModel.h"
 #import "MessageCellHeader.h"
+#import "UIColor+Utils.h"
+#import "UIView+Sugar.h"
 
 @interface MessageBaseCell ()
 {
@@ -28,7 +30,7 @@
 @property (nonatomic, strong) MJBubbleView *viewBubble;
 
 /// 时间label
-@property (nonatomic, strong) UILabel *lblTime;
+//@property (nonatomic, strong) UILabel *lblTime;
 
 /// 状态按钮, 主要是消息失败时使用
 @property (nonatomic, strong) UIButton *btnStatus;
@@ -66,7 +68,6 @@
 - (void)viewConfig {
     [self.contentView addSubview:self.imgVIcon];
     [self.contentView addSubview:self.viewBubble];
-    [self.contentView addSubview:self.lblTime];
     [self.contentView addSubview:self.btnStatus];
     [self.contentView addSubview:self.viewActivity];
     
@@ -82,32 +83,27 @@
     }
     
     /// 假数据
-    self.lblTime.text = @"12:12:01";
     self.imgVIcon.image = [UIImage imageNamed:@"friendsCellBack"];
-
-    
+    self.contentView.backgroundColor = [UIColor randomColor];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
-    self.lblTime.frame = CGRectMake(0, 0, kMessageCellTimeLabelW, kMessageCellTimeLabelH);
-    self.lblTime.center = CGPointMake(self.bounds.size.width * 0.5, kMessageCellTimeLabelH * 0.5);
 
+    CGFloat bubbleViewWidth = self.model.bubbleViewWidth;
+    
     if (_isSender) {
         
-        self.imgVIcon.frame = CGRectMake(self.bounds.size.width - kMessageCellPadding - kMessageCellIconWh, CGRectGetMaxY(self.lblTime.frame) + kMessageCellPadding, kMessageCellIconWh, kMessageCellIconWh);
+        self.imgVIcon.frame = CGRectMake(self.bounds.size.width - kMessageCellPadding - kMessageCellIconWh, 0, kMessageCellIconWh, kMessageCellIconWh);
         
-        self.viewBubble.frame = CGRectMake(CGRectGetMinX(self.imgVIcon.frame) - kMessageCellPadding - 200, CGRectGetMinY(self.imgVIcon.frame), 200, 200);
+        self.viewBubble.frame = CGRectMake(CGRectGetMinX(self.imgVIcon.frame) - kMessageCellPadding - bubbleViewWidth, CGRectGetMinY(self.imgVIcon.frame), bubbleViewWidth, self.bounds.size.height - kMessageCellPadding);
         
         self.btnStatus.frame = CGRectMake(CGRectGetMinX(self.viewBubble.frame) - kMessageCellPadding - kMessageCellBtnStatusWH, CGRectGetMidY(self.viewBubble.frame) - kMessageCellBtnStatusWH * 0.5, kMessageCellBtnStatusWH, kMessageCellBtnStatusWH);
 
     } else {
-        self.imgVIcon.frame = CGRectMake(kMessageCellPadding, CGRectGetMaxY(self.lblTime.frame) + kMessageCellPadding, kMessageCellIconWh, kMessageCellIconWh);
+        self.imgVIcon.frame = CGRectMake(kMessageCellPadding, 0, kMessageCellIconWh, kMessageCellIconWh);
         
-        self.viewBubble.frame = CGRectMake(CGRectGetMaxX(self.imgVIcon.frame) + kMessageCellPadding, CGRectGetMinY(self.imgVIcon.frame), 200, 200);
-        
-        //    self.viewActivity.frame = CGRectMake(CGRectGetMaxX(self.viewBubble.frame) + kMessageCellPadding, CGRectGetMidY(self.viewBubble.frame), kMessageCellActivityViewWH, kMessageCellActivityViewWH);
+        self.viewBubble.frame = CGRectMake(CGRectGetMaxX(self.imgVIcon.frame) + kMessageCellPadding, CGRectGetMinY(self.imgVIcon.frame), bubbleViewWidth, self.bounds.size.height - kMessageCellPadding);
         
         self.btnStatus.frame = CGRectMake(CGRectGetMaxX(self.viewBubble.frame) + kMessageCellPadding, CGRectGetMidY(self.viewBubble.frame) - kMessageCellBtnStatusWH * 0.5, kMessageCellBtnStatusWH, kMessageCellBtnStatusWH);
     }
@@ -166,17 +162,17 @@
     return _viewBubble;
 }
 
-/// 时间label
-- (UILabel *)lblTime {
-    if (_lblTime == nil) {
-        _lblTime = [[UILabel alloc] init];
-        _lblTime.textColor = [UIColor whiteColor];
-        _lblTime.font = [UIFont systemFontOfSize:12.0f];
-        _lblTime.backgroundColor = [UIColor lightGrayColor];
-        _lblTime.textAlignment = NSTextAlignmentCenter;
-    }
-    return _lblTime;
-}
+///// 时间label
+//- (UILabel *)lblTime {
+//    if (_lblTime == nil) {
+//        _lblTime = [[UILabel alloc] init];
+//        _lblTime.textColor = [UIColor whiteColor];
+//        _lblTime.font = [UIFont systemFontOfSize:12.0f];
+//        _lblTime.backgroundColor = [UIColor lightGrayColor];
+//        _lblTime.textAlignment = NSTextAlignmentCenter;
+//    }
+//    return _lblTime;
+//}
 
 /// 状态按钮
 - (UIButton *)btnStatus {
@@ -186,7 +182,7 @@
         [_btnStatus setImage:[UIImage imageNamed:@"MessageSendFail"] forState:UIControlStateNormal];
         [_btnStatus setImage:[UIImage imageNamed:@"MessageSendFail_HL"] forState:UIControlStateHighlighted];
         [_btnStatus addTarget:self action:@selector(actionBtnStatus) forControlEvents:UIControlEventTouchUpInside];
-//        _btnStatus.hidden = YES;
+        _btnStatus.hidden = YES;
     }
     return _btnStatus;
 }
@@ -204,6 +200,13 @@
 
 
 #pragma mark- Public
+
+/// 更新bubble view 宽度
+- (void)updateBubbleViewWidth {
+    
+    
+}
+
 /// 不同的cell对应不同的id, 该方法就是获取model对应的id
 + (NSString *)cellIdentifierWithModel:(MessageModel *)model {
     NSString *cellIdentifier = @"";
@@ -249,11 +252,41 @@
 
 /// 获取cell的高度
 + (CGFloat)cellHeightWithModel:(MessageModel *)model {
+    
+    /// 缓存用 如果当前model已经有值了, 直接return
     if (model.cellHeight > 0) {
         return model.cellHeight;
     }
     
-    return 0;
+    /// 计算bubbleView里 """文本""" 最大的宽度, 这里用屏幕的宽度 - 2个(头像和2倍的间距) - 左边或者右边的一个间距(气泡距离头像的距离) - 文本在气泡里面的大小(一边有1个间距, 另一边有2个间距)
+    CGFloat bubbleMaxWidth = [UIScreen mainScreen].bounds.size.width - 2 * (kMessageCellIconWh + kMessageCellPadding * 2) - kMessageCellPadding - 30;
+    
+    CGFloat height = 0;
+    
+    switch (model.bodyType) {
+        case EMMessageBodyTypeText: {
+            
+            CGRect rect = [model.text boundingRectWithSize:CGSizeMake(bubbleMaxWidth, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:kMessageCellTextFontSize]} context:nil];
+
+            CGFloat bubbleViewHeight = rect.size.height + 2 * kMessageCellPadding;
+            
+            height += (bubbleViewHeight > kMessageCellIconWh ? bubbleViewHeight : kMessageCellIconWh);
+            
+            model.bubbleViewWidth = rect.size.width + 30;
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+    
+    /// 每个气泡距离 cell 底部 都有 10个px
+    height += kMessageCellPadding;
+    
+    model.cellHeight = height;
+
+    return height;
 }
 
 @end

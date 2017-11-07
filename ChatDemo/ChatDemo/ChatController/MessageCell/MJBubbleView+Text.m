@@ -17,6 +17,7 @@
 - (void)setupTextBubbleView {
     
     self.lblText = [[UILabel alloc] init];
+    self.lblText.font = [UIFont systemFontOfSize:kMessageCellTextFontSize];
     self.lblText.backgroundColor = [UIColor clearColor];
     self.lblText.numberOfLines = 0;
     [self.imgViewBackground addSubview:self.lblText];

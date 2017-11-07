@@ -27,6 +27,8 @@
 /// cell 状态按钮大小
 #define kMessageCellBtnStatusWH     24.0f
 
+/// cell 文本大小
+#define kMessageCellTextFontSize        16.0f
 
 #define kMessageCellIdentifierRecvText      @"kMessageCellIdentifierRecvText"
 #define kMessageCellIdentifierRecvVoice     @"kMessageCellIdentifierRecvVoice"

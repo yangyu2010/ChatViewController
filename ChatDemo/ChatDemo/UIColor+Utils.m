@@ -43,5 +43,10 @@
     result = [UIColor colorWithRed: (float)redByte / 0xff green: (float)greenByte/ 0xff blue: (float)blueByte / 0xff alpha:alpha];
     return result;
 }
++ (UIColor *)randomColor {
+    
+    return [UIColor colorWithRed:arc4random_uniform(256) green:arc4random_uniform(256) blue:arc4random_uniform(256) alpha:1.0];
+    
+}
 
 @end

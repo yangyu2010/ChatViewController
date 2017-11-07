@@ -20,4 +20,7 @@
  */
 + (UIColor *)colorFromHexRGB:(NSString *)inColorString;
 
+
++ (UIColor *)randomColor;
+
 @end

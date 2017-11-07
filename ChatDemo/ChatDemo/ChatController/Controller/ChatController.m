@@ -91,7 +91,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [self.toolBar beginEditing];
+//    [self.toolBar beginEditing];
 }
 
 - (void)dealloc {
@@ -236,7 +236,25 @@
         NSLog(@"aMessages %@", aMessages);
         NSLog(@"aError %@", aError);
         
-        //[self messagesDidRead:aMessages];
+
+        for (EMMessage *message in aMessages) {
+            /// 判断会话id 和 当前消息id是否一致
+            if (![self.conversationId isEqualToString:message.conversationId]) {
+                break;
+            }
+            
+            if (message.body.type == EMMessageBodyTypeText) {
+                
+                [self.conversation appendMessage:message error:nil];
+                MessageModel *model = [[MessageModel alloc] initWithMessage:message];
+                [self.arrModels addObject:model];
+            }
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableChat reloadData];
+        });
+
     }];
     
 }
@@ -253,8 +271,7 @@
         }
         
         if (message.body.type == EMMessageBodyTypeText) {
-            EMTextMessageBody *textBody = (EMTextMessageBody *)message.body;
-            NSLog(@"EMMessageBodyTypeText %@", textBody.text);
+//            EMTextMessageBody *textBody = (EMTextMessageBody *)message.body;
             
             [self.conversation appendMessage:message error:nil];
             MessageModel *model = [[MessageModel alloc] initWithMessage:message];
@@ -277,8 +294,6 @@
 
 - (void)chatToolBarSendText:(NSString *)text {
     
-    NSLog(@"发送消息: %@", text);
-    
     [self actionResetToolBarFrame];
     
     _toolBarViewOriginHeight = 0;
@@ -286,20 +301,15 @@
     EMTextMessageBody *body = [[EMTextMessageBody alloc] initWithText:text];
 
     EMMessage *message = [[EMMessage alloc] initWithConversationID:self.conversationId from:@"yangyu" to:@"miller" body:body ext:nil];
-
     
     [[EMClient sharedClient].chatManager sendMessage:message progress:^(int progress) {
         
     } completion:^(EMMessage *message, EMError *error) {
         
-        NSLog(@"%@", error);
-        NSLog(@"%@", message);
-        
         [self.conversation appendMessage:message error:nil];
         MessageModel *model = [[MessageModel alloc] initWithMessage:message];
         [self.arrModels addObject:model];
         [self.tableChat reloadData];
-        
     }];
 }
 
@@ -456,7 +466,9 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 300;
+    
+    MessageModel *model = self.arrModels[indexPath.item];
+    return [MessageBaseCell cellHeightWithModel:model];
 }
 
 @end
