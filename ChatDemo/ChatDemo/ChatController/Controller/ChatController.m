@@ -13,6 +13,8 @@
 #import "VoiceRecordController.h"
 #import "ChatToolBarMoreView.h"
 #import "ChatToolBarHeader.h"
+#import "MessageModel.h"
+#import "MessageBaseCell.h"
 
 #import <Hyphenate/Hyphenate.h>
 
@@ -27,7 +29,7 @@
 /// 剩余多少s开始提示用户
 #define kRecordRemainCountingDuration        5
 
-@interface ChatController () <ChatToolBarDelegate, EMChatManagerDelegate>
+@interface ChatController () <ChatToolBarDelegate, EMChatManagerDelegate, UITableViewDelegate, UITableViewDataSource>
 {
     /// 底部toolbar的高度
     CGFloat _toolBarViewHeight;
@@ -58,9 +60,14 @@
 @property (nonatomic, strong) VoiceRecordController *ctrVoiceRecord;
 /// +号更多 View
 @property (nonatomic, strong) ChatToolBarMoreView *viewMore;
+/// 聊天的tableView
+@property (nonatomic, strong) UITableView *tableChat;
 
 
+/// 当前会话
 @property (nonatomic, strong) EMConversation *conversation;
+/// model 数组
+@property (nonatomic, strong) NSMutableArray <MessageModel *> *arrModels;
 
 
 @end
@@ -107,6 +114,13 @@
 
     self.viewMore = [[ChatToolBarMoreView alloc] init];
     [self.view addSubview:self.viewMore];
+    
+    self.tableChat = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.tableChat.backgroundColor = [UIColor clearColor];
+    self.tableChat.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableChat.dataSource = self;
+    self.tableChat.delegate = self;
+    [self.view addSubview:self.tableChat];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -115,6 +129,8 @@
     self.toolBar.frame = CGRectMake(0, _toolBarViewY, self.view.bounds.size.width, _toolBarViewHeight);
     
     self.viewMore.frame = CGRectMake(0, _toolBarMoreViewY, self.view.bounds.size.width, KChatToolBarMoreViewHeight);
+    
+    self.tableChat.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - _toolBarViewHeight);
 }
 
 #pragma mark- Data
@@ -135,6 +151,8 @@
     _recordCurrentState = VoiceRecordStateNoraml;
     
     _isNeedNotifKeyboard = YES;
+    
+    self.arrModels = [NSMutableArray array];
 }
 
 
@@ -217,9 +235,13 @@
         
         NSLog(@"aMessages %@", aMessages);
         NSLog(@"aError %@", aError);
+        
+        //[self messagesDidRead:aMessages];
     }];
     
 }
+
+
 
 #pragma mark- 聊天代理 EMChatManagerDelegate
 - (void)messagesDidReceive:(NSArray *)aMessages {
@@ -235,8 +257,13 @@
             NSLog(@"EMMessageBodyTypeText %@", textBody.text);
             
             [self.conversation appendMessage:message error:nil];
+            MessageModel *model = [[MessageModel alloc] initWithMessage:message];
+            [self.arrModels addObject:model];
         }
     }
+    
+    [self.tableChat reloadData];
+    
 }
 
 #pragma mark- 输入框处理 相关
@@ -260,7 +287,6 @@
 
     EMMessage *message = [[EMMessage alloc] initWithConversationID:self.conversationId from:@"yangyu" to:@"miller" body:body ext:nil];
 
-    [self.conversation appendMessage:message error:nil];
     
     [[EMClient sharedClient].chatManager sendMessage:message progress:^(int progress) {
         
@@ -268,6 +294,12 @@
         
         NSLog(@"%@", error);
         NSLog(@"%@", message);
+        
+        [self.conversation appendMessage:message error:nil];
+        MessageModel *model = [[MessageModel alloc] initWithMessage:message];
+        [self.arrModels addObject:model];
+        [self.tableChat reloadData];
+        
     }];
 }
 
@@ -403,6 +435,28 @@
     _recordCurrentState = state;
     
     [self actionUpdateVoiceRecordState];
+}
+
+#pragma mark- UITableView
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    return self.arrModels.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    MessageModel *model = self.arrModels[indexPath.item];
+    NSString *cellIdentifier = [MessageBaseCell cellIdentifierWithModel:model];
+    MessageBaseCell *cell = (MessageBaseCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    
+    if (cell == nil) {
+        cell = [[MessageBaseCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier model:model];
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    }
+    cell.model = model;
+    return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 300;
 }
 
 @end

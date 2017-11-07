@@ -8,15 +8,17 @@
 
 #import "MessageBaseCell.h"
 #import "MJBubbleView.h"
-#import <Hyphenate/Hyphenate.h>
+#import "MJBubbleView+Text.h"
+#import "MessageModel.h"
+#import "MessageCellHeader.h"
 
 @interface MessageBaseCell ()
 {
-    /// 当前cell的消息
-    EMMessage *_message;
+    /// 消息类型
+    EMMessageBodyType _modelMessageType;
     
-    /// 当前消息是接受的, 还是发送的
-    BOOL _isMessageReceive;
+    /// 是否是发送方
+    BOOL _isSender;
 }
 
 /// 头像
@@ -43,13 +45,16 @@
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
               reuseIdentifier:(NSString *)reuseIdentifier
-                        model:(EMMessage *)message {
+                        model:(MessageModel *)message {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
+        
+        _modelMessageType = message.bodyType;
+        _isSender = message.isSender;
+        
         [self viewConfig];
         [self dataConfig];
-        _message = message;
-        _isMessageReceive = (_message.direction == EMMessageDirectionReceive);
+        
     }
     return self;
 }
@@ -61,17 +66,53 @@
 - (void)viewConfig {
     [self.contentView addSubview:self.imgVIcon];
     [self.contentView addSubview:self.viewBubble];
+    [self.contentView addSubview:self.lblTime];
     [self.contentView addSubview:self.btnStatus];
     [self.contentView addSubview:self.viewActivity];
+    
+    
+    switch (_modelMessageType) {
+        case EMMessageBodyTypeText: {
+            [self.viewBubble setupTextBubbleView];
+        }
+            break;
+            
+        default:
+            break;
+    }
+    
+    /// 假数据
+    self.lblTime.text = @"12:12:01";
+    self.imgVIcon.image = [UIImage imageNamed:@"friendsCellBack"];
+
+    
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    self.lblTime.frame = CGRectMake(self.bounds.size.width * 0.5, 0, 100, 20);
-    if (_isMessageReceive) {
-//        self.imgVIcon.frame = CGRectMake(<#CGFloat x#>, CGRectGetMaxX(self.lblTime.frame) + 10, <#CGFloat width#>, <#CGFloat height#>)
+    self.lblTime.frame = CGRectMake(0, 0, kMessageCellTimeLabelW, kMessageCellTimeLabelH);
+    self.lblTime.center = CGPointMake(self.bounds.size.width * 0.5, kMessageCellTimeLabelH * 0.5);
+
+    if (_isSender) {
+        
+        self.imgVIcon.frame = CGRectMake(self.bounds.size.width - kMessageCellPadding - kMessageCellIconWh, CGRectGetMaxY(self.lblTime.frame) + kMessageCellPadding, kMessageCellIconWh, kMessageCellIconWh);
+        
+        self.viewBubble.frame = CGRectMake(CGRectGetMinX(self.imgVIcon.frame) - kMessageCellPadding - 200, CGRectGetMinY(self.imgVIcon.frame), 200, 200);
+        
+        self.btnStatus.frame = CGRectMake(CGRectGetMinX(self.viewBubble.frame) - kMessageCellPadding - kMessageCellBtnStatusWH, CGRectGetMidY(self.viewBubble.frame) - kMessageCellBtnStatusWH * 0.5, kMessageCellBtnStatusWH, kMessageCellBtnStatusWH);
+
+    } else {
+        self.imgVIcon.frame = CGRectMake(kMessageCellPadding, CGRectGetMaxY(self.lblTime.frame) + kMessageCellPadding, kMessageCellIconWh, kMessageCellIconWh);
+        
+        self.viewBubble.frame = CGRectMake(CGRectGetMaxX(self.imgVIcon.frame) + kMessageCellPadding, CGRectGetMinY(self.imgVIcon.frame), 200, 200);
+        
+        //    self.viewActivity.frame = CGRectMake(CGRectGetMaxX(self.viewBubble.frame) + kMessageCellPadding, CGRectGetMidY(self.viewBubble.frame), kMessageCellActivityViewWH, kMessageCellActivityViewWH);
+        
+        self.btnStatus.frame = CGRectMake(CGRectGetMaxX(self.viewBubble.frame) + kMessageCellPadding, CGRectGetMidY(self.viewBubble.frame) - kMessageCellBtnStatusWH * 0.5, kMessageCellBtnStatusWH, kMessageCellBtnStatusWH);
     }
+    
+    [self.viewBubble updateTextBubbleViewFrameIsSender:_isSender];
 }
 
 #pragma mark- Data
@@ -87,6 +128,21 @@
     
 }
 
+#pragma mark- Set
+- (void)setModel:(MessageModel *)model {
+    
+    _model = model;
+    
+    switch (_modelMessageType) {
+        case EMMessageBodyTypeText: {
+            self.viewBubble.lblText.text = model.text;
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
 
 #pragma mark- Get
 
@@ -105,7 +161,7 @@
 /// 内容+背景View
 - (MJBubbleView *)viewBubble {
     if (_viewBubble == nil) {
-        _viewBubble = [[MJBubbleView alloc] init];
+        _viewBubble = [[MJBubbleView alloc] initWithIsSender:_isSender];
     }
     return _viewBubble;
 }
@@ -116,7 +172,8 @@
         _lblTime = [[UILabel alloc] init];
         _lblTime.textColor = [UIColor whiteColor];
         _lblTime.font = [UIFont systemFontOfSize:12.0f];
-        
+        _lblTime.backgroundColor = [UIColor lightGrayColor];
+        _lblTime.textAlignment = NSTextAlignmentCenter;
     }
     return _lblTime;
 }
@@ -129,7 +186,7 @@
         [_btnStatus setImage:[UIImage imageNamed:@"MessageSendFail"] forState:UIControlStateNormal];
         [_btnStatus setImage:[UIImage imageNamed:@"MessageSendFail_HL"] forState:UIControlStateHighlighted];
         [_btnStatus addTarget:self action:@selector(actionBtnStatus) forControlEvents:UIControlEventTouchUpInside];
-        _btnStatus.hidden = YES;
+//        _btnStatus.hidden = YES;
     }
     return _btnStatus;
 }
@@ -139,11 +196,64 @@
     if (_viewActivity == nil) {
         _viewActivity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         _viewActivity.translatesAutoresizingMaskIntoConstraints = NO;
-        _viewActivity.backgroundColor = [UIColor clearColor];
+        _viewActivity.backgroundColor = [UIColor redColor];
         _viewActivity.hidden = YES;
     }
     return _viewActivity;
 }
 
+
+#pragma mark- Public
+/// 不同的cell对应不同的id, 该方法就是获取model对应的id
++ (NSString *)cellIdentifierWithModel:(MessageModel *)model {
+    NSString *cellIdentifier = @"";
+    if (model.isSender) {
+        switch (model.bodyType) {
+            case EMMessageBodyTypeText:
+                cellIdentifier = kMessageCellIdentifierSendText;
+                break;
+            case EMMessageBodyTypeImage:
+                cellIdentifier = kMessageCellIdentifierSendImage;
+                break;
+            case EMMessageBodyTypeVideo:
+                cellIdentifier = kMessageCellIdentifierSendVideo;
+                break;
+            case EMMessageBodyTypeVoice:
+                cellIdentifier = kMessageCellIdentifierSendVoice;
+                break;
+            default:
+                break;
+        }
+    }
+    else {
+        switch (model.bodyType) {
+            case EMMessageBodyTypeText:
+                cellIdentifier = kMessageCellIdentifierRecvText;
+                break;
+            case EMMessageBodyTypeImage:
+                cellIdentifier = kMessageCellIdentifierRecvImage;
+                break;
+            case EMMessageBodyTypeVideo:
+                cellIdentifier = kMessageCellIdentifierRecvVideo;
+                break;
+            case EMMessageBodyTypeVoice:
+                cellIdentifier = kMessageCellIdentifierRecvVoice;
+                break;
+            default:
+                break;
+        }
+    }
+
+    return cellIdentifier;
+}
+
+/// 获取cell的高度
++ (CGFloat)cellHeightWithModel:(MessageModel *)model {
+    if (model.cellHeight > 0) {
+        return model.cellHeight;
+    }
+    
+    return 0;
+}
 
 @end

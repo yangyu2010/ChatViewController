@@ -7,14 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
+@class MessageModel;
 
-@class EMMessage;
 
 @interface MessageBaseCell : UITableViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
               reuseIdentifier:(NSString *)reuseIdentifier
-                        model:(EMMessage *)message;
+                        model:(MessageModel *)message;
 
+/// model 监听set方法 
+@property (nonatomic, strong) MessageModel *model;
+
+
+/// 不同的cell对应不同的id, 该方法就是获取model对应的id
++ (NSString *)cellIdentifierWithModel:(MessageModel *)model;
+
+/// 获取cell的高度
++ (CGFloat)cellHeightWithModel:(MessageModel *)model;
 
 @end
