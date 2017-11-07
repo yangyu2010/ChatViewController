@@ -14,6 +14,7 @@
 
 #pragma mark- Public
 
+/// 设置ui界面
 - (void)setupTextBubbleView {
     
     self.lblText = [[UILabel alloc] init];
@@ -21,17 +22,20 @@
     self.lblText.backgroundColor = [UIColor clearColor];
     self.lblText.numberOfLines = 0;
     [self.imgViewBackground addSubview:self.lblText];
-    
+
 }
 
-- (void)updateTextBubbleViewFrameIsSender:(BOOL)isSender {
+/// 更新frame
+- (void)updateTextBubbleViewFrame {
+    if (self.lblText == nil) {
+        return ;
+    }
     
-    if (isSender) {
+    if (self.isSender) {
         self.lblText.frame = CGRectMake(kMessageCellPadding, kMessageCellPadding, self.bounds.size.width - 3 * kMessageCellPadding, self.bounds.size.height - 2 * kMessageCellPadding);
     } else {
         self.lblText.frame = CGRectMake(kMessageCellPadding * 2, kMessageCellPadding, self.bounds.size.width - 3 * kMessageCellPadding, self.bounds.size.height - 2 * kMessageCellPadding);
     }
-    
 }
 
 

@@ -7,19 +7,23 @@
 //  气泡View
 
 #import <UIKit/UIKit.h>
+#import <Hyphenate/EMMessageBody.h>
 
 
 @interface MJBubbleView : UIView
 
+/// Init
 - (instancetype)initWithIsSender:(BOOL)isSender;
+
 
 /// 是否是发送方
 @property (nonatomic, assign) BOOL isSender;
 
+/// 当前消息类型
+@property (nonatomic, assign) EMMessageBodyType type;
+
 /// 背景Img
 @property (nonatomic, strong) UIImageView *imgViewBackground;
-
-
 
 /// text views 文本
 @property (nonatomic, strong) UILabel *lblText;
@@ -34,5 +38,13 @@
 @property (strong, nonatomic) UILabel *lblVoiceDuration;
 /// 语言是否已经播放了
 @property (strong, nonatomic) UIImageView *imgViewIsRead;
+
+
+/// 根据type来设置view
+- (void)setupBubbleViewWith:(EMMessageBodyType)type;
+
+/// 更新frame
+- (void)updateSubViewFrames;
+
 
 @end

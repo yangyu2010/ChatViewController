@@ -22,6 +22,7 @@
 		8666FD9C1FAAD3FF00CD12C7 /* ChatToolBarMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666FD9B1FAAD3FF00CD12C7 /* ChatToolBarMoreCell.m */; };
 		8666FD9F1FAAD7B600CD12C7 /* ChatToolBarMoreModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666FD9E1FAAD7B600CD12C7 /* ChatToolBarMoreModel.m */; };
 		867904311FB16B8B004545D5 /* MJBubbleView+Text.m in Sources */ = {isa = PBXBuildFile; fileRef = 867904301FB16B8B004545D5 /* MJBubbleView+Text.m */; };
+		867904351FB1B0D8004545D5 /* MJBubbleView+Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 867904341FB1B0D8004545D5 /* MJBubbleView+Image.m */; };
 		867B14B81FA9AC8500437544 /* UIImage+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 867B14B61FA9AC8500437544 /* UIImage+Category.m */; };
 		867B14BB1FA9BF7000437544 /* VoiceRecordButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 867B14BA1FA9BF7000437544 /* VoiceRecordButton.m */; };
 		867B14BE1FA9BFCF00437544 /* VoiceRecordContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 867B14BD1FA9BFCF00437544 /* VoiceRecordContentView.m */; };
@@ -90,6 +91,8 @@
 		8679042F1FB16B8B004545D5 /* MJBubbleView+Text.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MJBubbleView+Text.h"; sourceTree = "<group>"; };
 		867904301FB16B8B004545D5 /* MJBubbleView+Text.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MJBubbleView+Text.m"; sourceTree = "<group>"; };
 		867904321FB19900004545D5 /* MessageCellHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageCellHeader.h; sourceTree = "<group>"; };
+		867904331FB1B0D7004545D5 /* MJBubbleView+Image.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MJBubbleView+Image.h"; sourceTree = "<group>"; };
+		867904341FB1B0D8004545D5 /* MJBubbleView+Image.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MJBubbleView+Image.m"; sourceTree = "<group>"; };
 		867B14B21FA9A8C600437544 /* VoiceRecordHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VoiceRecordHeader.h; sourceTree = "<group>"; };
 		867B14B61FA9AC8500437544 /* UIImage+Category.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Category.m"; sourceTree = "<group>"; };
 		867B14B71FA9AC8500437544 /* UIImage+Category.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Category.h"; sourceTree = "<group>"; };
@@ -340,6 +343,8 @@
 				86A06AF31FB04BF30000A53F /* MJBubbleView.m */,
 				8679042F1FB16B8B004545D5 /* MJBubbleView+Text.h */,
 				867904301FB16B8B004545D5 /* MJBubbleView+Text.m */,
+				867904331FB1B0D7004545D5 /* MJBubbleView+Image.h */,
+				867904341FB1B0D8004545D5 /* MJBubbleView+Image.m */,
 			);
 			path = MessageCell;
 			sourceTree = "<group>";
@@ -541,6 +546,7 @@
 				867B14C11FA9BFDB00437544 /* VoiceRecordView.m in Sources */,
 				862F49421FA6F9A600D0526C /* main.m in Sources */,
 				867B14C41FA9C43C00437544 /* VoiceRecordPowerAnimationView.m in Sources */,
+				867904351FB1B0D8004545D5 /* MJBubbleView+Image.m in Sources */,
 				867B14B81FA9AC8500437544 /* UIImage+Category.m in Sources */,
 				8666FD991FAAD3CC00CD12C7 /* ChatToolBarMoreView.m in Sources */,
 				8606ED551FA81B360023B9DE /* UIColor+Utils.m in Sources */,

@@ -7,6 +7,8 @@
 //
 
 #import "MJBubbleView.h"
+#import "MJBubbleView+Text.h"
+#import "MJBubbleView+Image.h"
 
 @implementation MJBubbleView
 
@@ -16,6 +18,7 @@
         _isSender = isSender;
         
         [self viewConfig];
+        
     }
     return self;
 }
@@ -46,6 +49,33 @@
         _imgViewBackground.backgroundColor = [UIColor clearColor];
     }
     return _imgViewBackground;
+}
+
+#pragma mark- Public
+
+/// 根据type来设置view
+- (void)setupBubbleViewWith:(EMMessageBodyType)type {
+    
+    self.type = type;
+    
+    switch (type) {
+        case EMMessageBodyTypeText: {
+            [self setupTextBubbleView];
+        }
+            break;
+        case EMMessageBodyTypeImage: {
+            [self setupImageBubbleView];
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+/// 更新frame
+- (void)updateSubViewFrames {
+    [self updateTextBubbleViewFrame];
+    [self updateImageBubbleViewFrame];
 }
 
 @end

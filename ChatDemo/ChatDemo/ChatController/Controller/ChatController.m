@@ -102,6 +102,8 @@
 
 - (void)viewConfig {
     self.view.backgroundColor = [UIColor colorFromHexRGB:@"E8E8E8"];
+    self.automaticallyAdjustsScrollViewInsets = NO;
+//    self.navigationController.navigationBar.translucent = NO;
     self.title = @"聊天";
 
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actionViewTap)];
@@ -221,66 +223,6 @@
     [UIView animateWithDuration:duration animations:^{
         [self.view layoutIfNeeded];
     }];
-}
-
-#pragma mark- 聊天相关
-/// 获取会话 和 聊天记录
-- (void)actionGetConversation {
-    
-    [[EMClient sharedClient].chatManager addDelegate:self delegateQueue:nil];
-    
-    self.conversation = [[EMClient sharedClient].chatManager getConversation:self.conversationId type:EMConversationTypeChat createIfNotExist:YES];
-
-    [self.conversation loadMessagesStartFromId:@"" count:40 searchDirection:EMMessageSearchDirectionUp completion:^(NSArray *aMessages, EMError *aError) {
-        
-        NSLog(@"aMessages %@", aMessages);
-        NSLog(@"aError %@", aError);
-        
-
-        for (EMMessage *message in aMessages) {
-            /// 判断会话id 和 当前消息id是否一致
-            if (![self.conversationId isEqualToString:message.conversationId]) {
-                break;
-            }
-            
-            if (message.body.type == EMMessageBodyTypeText) {
-                
-                [self.conversation appendMessage:message error:nil];
-                MessageModel *model = [[MessageModel alloc] initWithMessage:message];
-                [self.arrModels addObject:model];
-            }
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableChat reloadData];
-        });
-
-    }];
-    
-}
-
-
-
-#pragma mark- 聊天代理 EMChatManagerDelegate
-- (void)messagesDidReceive:(NSArray *)aMessages {
-
-    for (EMMessage *message in aMessages) {
-        /// 判断会话id 和 当前消息id是否一致
-        if (![self.conversationId isEqualToString:message.conversationId]) {
-            break;
-        }
-        
-        if (message.body.type == EMMessageBodyTypeText) {
-//            EMTextMessageBody *textBody = (EMTextMessageBody *)message.body;
-            
-            [self.conversation appendMessage:message error:nil];
-            MessageModel *model = [[MessageModel alloc] initWithMessage:message];
-            [self.arrModels addObject:model];
-        }
-    }
-    
-    [self.tableChat reloadData];
-    
 }
 
 #pragma mark- 输入框处理 相关
@@ -470,5 +412,69 @@
     MessageModel *model = self.arrModels[indexPath.item];
     return [MessageBaseCell cellHeightWithModel:model];
 }
+
+
+#pragma mark- 聊天相关
+/// 获取会话 和 聊天记录
+- (void)actionGetConversation {
+    
+    [[EMClient sharedClient].chatManager addDelegate:self delegateQueue:nil];
+    
+    self.conversation = [[EMClient sharedClient].chatManager getConversation:self.conversationId type:EMConversationTypeChat createIfNotExist:YES];
+    
+    [self.conversation loadMessagesStartFromId:@"" count:40 searchDirection:EMMessageSearchDirectionUp completion:^(NSArray *aMessages, EMError *aError) {
+        
+        NSLog(@"aMessages %@", aMessages);
+        NSLog(@"aError %@", aError);
+        
+        
+        for (EMMessage *message in aMessages) {
+            /// 判断会话id 和 当前消息id是否一致
+            if (![self.conversationId isEqualToString:message.conversationId]) {
+                break;
+            }
+            
+            if (message.body.type == EMMessageBodyTypeText) {
+                
+                [self.conversation appendMessage:message error:nil];
+                MessageModel *model = [[MessageModel alloc] initWithMessage:message];
+                [self.arrModels addObject:model];
+            }
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableChat reloadData];
+        });
+        
+    }];
+    
+}
+
+
+
+#pragma mark- 聊天代理 EMChatManagerDelegate
+- (void)messagesDidReceive:(NSArray *)aMessages {
+    
+    for (EMMessage *message in aMessages) {
+        /// 判断会话id 和 当前消息id是否一致
+        if (![self.conversationId isEqualToString:message.conversationId]) {
+            break;
+        }
+        
+        if (message.body.type == EMMessageBodyTypeText) {
+            //            EMTextMessageBody *textBody = (EMTextMessageBody *)message.body;
+            
+            [self.conversation appendMessage:message error:nil];
+            MessageModel *model = [[MessageModel alloc] initWithMessage:message];
+            [self.arrModels addObject:model];
+        }
+    }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableChat reloadData];
+    });
+    
+}
+
 
 @end

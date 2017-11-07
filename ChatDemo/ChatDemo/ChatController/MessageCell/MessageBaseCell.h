@@ -12,15 +12,13 @@
 
 @interface MessageBaseCell : UITableViewCell
 
+/// 初始化方法, 需要传个model来, 根据消息类型和发送接收方还处理
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
               reuseIdentifier:(NSString *)reuseIdentifier
                         model:(MessageModel *)message;
 
 /// model 监听set方法 
 @property (nonatomic, strong) MessageModel *model;
-
-/// 更新bubble view 宽度
-- (void)updateBubbleViewWidth;
 
 /// 不同的cell对应不同的id, 该方法就是获取model对应的id
 + (NSString *)cellIdentifierWithModel:(MessageModel *)model;
