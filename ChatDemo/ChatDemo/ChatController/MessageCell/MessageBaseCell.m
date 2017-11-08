@@ -13,9 +13,7 @@
 #import "UIColor+Utils.h"
 #import "UIView+Sugar.h"
 #import <UIImageView+WebCache.h>
-#import "MJBubbleView+Text.h"
-#import "MJBubbleView+Image.h"
-#import "MJBubbleView+Voice.h"
+
 
 @interface MessageBaseCell ()
 {
@@ -110,21 +108,7 @@
         self.btnStatus.frame = CGRectMake(CGRectGetMaxX(self.viewBubble.frame) + kMessageCellPadding, CGRectGetMidY(self.viewBubble.frame) - kMessageCellBtnStatusWH * 0.5, kMessageCellBtnStatusWH, kMessageCellBtnStatusWH);
     }
     
-    //[self.viewBubble updateSubViewFrames];
-    
-    switch (_modelMessageType) {
-        case EMMessageBodyTypeText:
-            [self.viewBubble updateTextBubbleViewFrame];
-            break;
-        case EMMessageBodyTypeImage:
-            [self.viewBubble updateImageBubbleViewFrame];
-            break;
-        case EMMessageBodyTypeVoice:
-            [self.viewBubble updateVoiceBubbleViewFrame];
-            break;
-        default:
-            break;
-    }
+    [self.viewBubble updateSubViewFrames];
     
 }
 

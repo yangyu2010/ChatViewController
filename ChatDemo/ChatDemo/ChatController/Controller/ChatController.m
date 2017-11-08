@@ -41,6 +41,8 @@
     CGFloat _toolBarMoreViewY;
     /// 当前toolbar的状态
     ChatToolBarState _chatToolBarState;
+    /// table y值
+    CGFloat _tableViewY;
     
     /// 是否需要根据键盘来调整页面
     BOOL _isNeedNotifKeyboard;
@@ -134,7 +136,11 @@
     
     self.viewMore.frame = CGRectMake(0, _toolBarMoreViewY, self.view.bounds.size.width, KChatToolBarMoreViewHeight);
     
-    self.tableChat.frame = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - _toolBarViewHeight);
+    _tableViewY = -(self.view.height - _toolBarViewY - _toolBarViewHeight);
+
+    self.tableChat.frame = CGRectMake(0, _tableViewY, self.view.bounds.size.width, self.view.bounds.size.height - _toolBarViewHeight);
+    
+    [self _scrollViewToBottom];
 }
 
 #pragma mark- Data
@@ -145,7 +151,7 @@
     _toolBarViewOriginHeight = 0;
     _toolBarViewY = [[UIScreen mainScreen] bounds].size.height - _toolBarViewHeight;
     _toolBarMoreViewY = [[UIScreen mainScreen] bounds].size.height;
-    
+    _tableViewY = 0;
     _chatToolBarState = ChatToolBarStateNoraml;
     
     self.toolBar.delegate = self;
@@ -168,23 +174,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(actionKeyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
 }
 
-/// 监听键盘事件 改变table 和 输入框的位置
-- (void)actionKeyboardWillChangeFrame:(NSNotification *)notification {
 
-    if (_isNeedNotifKeyboard == NO) {
-        _isNeedNotifKeyboard = YES;
-        return ;
-    }
-    
-    NSDictionary *userInfo = notification.userInfo;
-    
-    CGFloat duration = [userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
-    CGRect endFrame = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
-
-    _toolBarViewY = endFrame.origin.y - _toolBarViewHeight;
-    
-    [self actionUpdateLayoutDuration:duration];
-}
 
 #pragma mark- Action
 
@@ -228,6 +218,26 @@
 }
 
 #pragma mark- 输入框处理 相关
+
+/// 监听键盘事件 改变table 和 输入框的位置
+- (void)actionKeyboardWillChangeFrame:(NSNotification *)notification {
+    
+    if (_isNeedNotifKeyboard == NO) {
+        _isNeedNotifKeyboard = YES;
+        return ;
+    }
+    
+    NSDictionary *userInfo = notification.userInfo;
+    
+    CGFloat duration = [userInfo[UIKeyboardAnimationDurationUserInfoKey] floatValue];
+    CGRect endFrame = [userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    
+    _toolBarViewY = endFrame.origin.y - _toolBarViewHeight;
+    
+    [self actionUpdateLayoutDuration:duration];
+}
+
+/// 输入框会根据内容的多少来改变自生高度
 - (void)chatToolBarInputViewContentHeightChanged:(CGFloat)height {
 
     _toolBarViewHeight += height;
@@ -236,6 +246,7 @@
     [self actionUpdateLayoutDuration:0.10f];
 }
 
+/// 发送文本
 - (void)chatToolBarSendText:(NSString *)text {
     
     [self actionResetToolBarFrame];
@@ -299,6 +310,7 @@
         _toolBarMoreViewY = self.view.height;
         _toolBarViewHeight = kChatToolBarHeight;
         _toolBarViewY = self.view.height - kChatToolBarHeight;
+        
     } else {
         // 取消录音, 就是正在输入
         _chatToolBarState = ChatToolBarStateInput;
@@ -448,10 +460,24 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableChat reloadData];
+            [self _scrollViewToBottom];
         });
         
     }];
     
+}
+
+/// 滑动最底部
+- (void)_scrollViewToBottom {
+    
+    NSInteger rows = [self.tableChat numberOfRowsInSection:0];
+    
+    if (rows > 0) {
+        [self.tableChat scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:rows - 1 inSection:0]
+                              atScrollPosition:UITableViewScrollPositionBottom
+                                      animated:NO];
+    }
+
 }
 
 
@@ -477,6 +503,7 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.tableChat reloadData];
+        [self _scrollViewToBottom];
     });
     
 }

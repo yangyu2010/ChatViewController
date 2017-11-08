@@ -58,28 +58,26 @@
         
         return ;
     }
-    
-    
-    
+
     if (self.isSender) {
         
         self.imgViewIsRead.hidden = YES;
         
         self.imgViewVoice.frame = CGRectMake(0, 0, self.imgViewVoice.image.size.width, self.imgViewVoice.image.size.height);
-        self.imgViewVoice.center = CGPointMake(CGRectGetMaxX(self.imgViewBackground.frame) - 2 * kMessageCellBubbleMargin - self.imgViewVoice.image.size.width, CGRectGetMidY(self.imgViewBackground.frame));
+        self.imgViewVoice.center = CGPointMake(CGRectGetMaxX(self.imgViewBackground.frame) - 2 * kMessageCellBubbleMargin - self.imgViewVoice.image.size.width, CGRectGetMidY(self.frame));
 
-        self.lblVoiceDuration.frame = CGRectMake(CGRectGetMinX(self.imgViewBackground.frame) - kMessageCellBubbleMargin - 30, CGRectGetMidY(self.imgViewBackground.frame), 30, 12);
+        self.lblVoiceDuration.frame = CGRectMake(self.bounds.size.width - kMessageCellBubbleMargin - 30, CGRectGetMidY(self.frame), 30, 12);
         
     } else {
         
         self.imgViewIsRead.hidden = NO;
         
         self.imgViewVoice.frame = CGRectMake(0, 0, self.imgViewVoice.image.size.width, self.imgViewVoice.image.size.height);
-        self.imgViewVoice.center = CGPointMake(2 * kMessageCellBubbleMargin + self.imgViewVoice.image.size.width * 0.5, CGRectGetMidY(self.imgViewBackground.frame));
+        self.imgViewVoice.center = CGPointMake(2 * kMessageCellBubbleMargin + self.imgViewVoice.image.size.width * 0.5, CGRectGetMidY(self.frame));
 
-        self.imgViewIsRead.frame = CGRectMake(self.bounds.size.width + kMessageCellBubbleMargin, 0, self.imgViewIsRead.image.size.width, self.imgViewIsRead.image.size.height);
+        self.imgViewIsRead.frame = CGRectMake(self.bounds.size.width + kMessageCellBubbleMargin, 3, self.imgViewIsRead.image.size.width, self.imgViewIsRead.image.size.height);
 
-        self.lblVoiceDuration.frame = CGRectMake(CGRectGetMinX(self.imgViewIsRead.frame), CGRectGetMidY(self.imgViewBackground.frame), 30, 12);
+        self.lblVoiceDuration.frame = CGRectMake(CGRectGetMinX(self.imgViewIsRead.frame), CGRectGetMidY(self.frame), 30, 12);
         
     }
 

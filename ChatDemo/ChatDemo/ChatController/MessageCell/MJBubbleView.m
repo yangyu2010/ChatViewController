@@ -82,9 +82,24 @@
 
 /// 更新frame
 - (void)updateSubViewFrames {
-    [self updateTextBubbleViewFrame];
-    [self updateImageBubbleViewFrame];
-    [self updateVoiceBubbleViewFrame];
+
+    switch (self.type) {
+        case EMMessageBodyTypeText:
+            [self updateTextBubbleViewFrame];
+            break;
+        case EMMessageBodyTypeImage:
+            [self updateImageBubbleViewFrame];
+            break;
+        case EMMessageBodyTypeVoice:
+            [self updateVoiceBubbleViewFrame];
+            break;
+        default:
+            break;
+    }
+    
+//    [self updateTextBubbleViewFrame];
+//    [self updateImageBubbleViewFrame];
+//    [self updateVoiceBubbleViewFrame];
 }
 
 @end
