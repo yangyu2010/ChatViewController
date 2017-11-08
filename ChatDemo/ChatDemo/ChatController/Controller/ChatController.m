@@ -109,6 +109,13 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actionViewTap)];
     [self.view addGestureRecognizer:tap];
     
+    self.tableChat = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+    self.tableChat.backgroundColor = [UIColor colorFromHexRGB:@"E8E8E8"];
+    self.tableChat.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableChat.dataSource = self;
+    self.tableChat.delegate = self;
+    [self.view addSubview:self.tableChat];
+    
     self.toolBar = [[ChatToolBar alloc] init];
     [self.view addSubview:self.toolBar];
     
@@ -117,12 +124,7 @@
     self.viewMore = [[ChatToolBarMoreView alloc] init];
     [self.view addSubview:self.viewMore];
     
-    self.tableChat = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    self.tableChat.backgroundColor = [UIColor clearColor];
-    self.tableChat.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableChat.dataSource = self;
-    self.tableChat.delegate = self;
-    [self.view addSubview:self.tableChat];
+ 
 }
 
 - (void)viewWillLayoutSubviews {
@@ -434,7 +436,9 @@
                 break;
             }
             
-            if (message.body.type == EMMessageBodyTypeText || message.body.type == EMMessageBodyTypeImage) {
+            if (message.body.type == EMMessageBodyTypeText ||
+                message.body.type == EMMessageBodyTypeImage ||
+                message.body.type == EMMessageBodyTypeVoice) {
             
                 [self.conversation appendMessage:message error:nil];
                 MessageModel *model = [[MessageModel alloc] initWithMessage:message];
@@ -461,7 +465,9 @@
             break;
         }
         
-        if (message.body.type == EMMessageBodyTypeText || message.body.type == EMMessageBodyTypeImage) {
+        if (message.body.type == EMMessageBodyTypeText ||
+            message.body.type == EMMessageBodyTypeImage ||
+            message.body.type == EMMessageBodyTypeVoice) {
         
             [self.conversation appendMessage:message error:nil];
             MessageModel *model = [[MessageModel alloc] initWithMessage:message];

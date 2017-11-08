@@ -9,6 +9,7 @@
 #import "MJBubbleView.h"
 #import "MJBubbleView+Text.h"
 #import "MJBubbleView+Image.h"
+#import "MJBubbleView+Voice.h"
 
 @implementation MJBubbleView
 
@@ -27,10 +28,13 @@
 - (void)viewConfig {
     [self addSubview:self.imgViewBackground];
     
+    // weChatBubble_Receiving_Solid 接收
+    // weChatBubble_Sending_Solid 发送
+    
     if (_isSender) {
-        self.imgViewBackground.image = [UIImage imageNamed:@"message_right"];
+        self.imgViewBackground.image = [UIImage imageNamed:@"weChatBubble_Sending_Solid"];
     } else {
-        self.imgViewBackground.image = [UIImage imageNamed:@"message_left"];
+        self.imgViewBackground.image = [UIImage imageNamed:@"weChatBubble_Receiving_Solid"];
     }
 }
 
@@ -67,6 +71,10 @@
             [self setupImageBubbleView];
         }
             break;
+        case EMMessageBodyTypeVoice: {
+            [self setupVoiceBubbleView];
+        }
+            break;
         default:
             break;
     }
@@ -76,6 +84,7 @@
 - (void)updateSubViewFrames {
     [self updateTextBubbleViewFrame];
     [self updateImageBubbleViewFrame];
+    [self updateVoiceBubbleViewFrame];
 }
 
 @end

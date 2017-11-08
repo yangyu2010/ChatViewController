@@ -5,6 +5,20 @@
       "scale" : "1x"
     },
     {
+      "resizing" : {
+        "mode" : "9-part",
+        "center" : {
+          "mode" : "tile",
+          "width" : 1,
+          "height" : 1
+        },
+        "cap-insets" : {
+          "bottom" : 32,
+          "top" : 57,
+          "right" : 14,
+          "left" : 26
+        }
+      },
       "idiom" : "universal",
       "filename" : "weChatBubble_Receiving_Solid@2x.png",
       "scale" : "2x"

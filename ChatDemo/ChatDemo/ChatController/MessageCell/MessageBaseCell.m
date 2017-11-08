@@ -13,6 +13,9 @@
 #import "UIColor+Utils.h"
 #import "UIView+Sugar.h"
 #import <UIImageView+WebCache.h>
+#import "MJBubbleView+Text.h"
+#import "MJBubbleView+Image.h"
+#import "MJBubbleView+Voice.h"
 
 @interface MessageBaseCell ()
 {
@@ -66,6 +69,13 @@
 #pragma mark- UI
 
 - (void)viewConfig {
+    
+    self.layer.drawsAsynchronously = YES;
+    self.layer.shouldRasterize = YES;
+    self.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    
+    self.contentView.backgroundColor = [UIColor colorFromHexRGB:@"E8E8E8"];
+    
     [self.contentView addSubview:self.imgVIcon];
     [self.contentView addSubview:self.viewBubble];
     [self.contentView addSubview:self.btnStatus];
@@ -100,7 +110,22 @@
         self.btnStatus.frame = CGRectMake(CGRectGetMaxX(self.viewBubble.frame) + kMessageCellPadding, CGRectGetMidY(self.viewBubble.frame) - kMessageCellBtnStatusWH * 0.5, kMessageCellBtnStatusWH, kMessageCellBtnStatusWH);
     }
     
-    [self.viewBubble updateSubViewFrames];
+    //[self.viewBubble updateSubViewFrames];
+    
+    switch (_modelMessageType) {
+        case EMMessageBodyTypeText:
+            [self.viewBubble updateTextBubbleViewFrame];
+            break;
+        case EMMessageBodyTypeImage:
+            [self.viewBubble updateImageBubbleViewFrame];
+            break;
+        case EMMessageBodyTypeVoice:
+            [self.viewBubble updateVoiceBubbleViewFrame];
+            break;
+        default:
+            break;
+    }
+    
 }
 
 #pragma mark- Data
@@ -139,7 +164,10 @@
             } else {
                 self.viewBubble.imgView.image = image;
             }
-            
+        }
+            break;
+        case EMMessageBodyTypeVoice: {
+            self.viewBubble.lblVoiceDuration.text = [NSString stringWithFormat:@"%d''",(int)model.mediaDuration];
         }
             break;
         default:
@@ -153,6 +181,7 @@
 - (UIImageView *)imgVIcon {
     if (_imgVIcon == nil) {
         _imgVIcon = [[UIImageView alloc] init];
+        _imgVIcon.contentMode = UIViewContentModeScaleToFill;
         _imgVIcon.translatesAutoresizingMaskIntoConstraints = NO;
         _imgVIcon.backgroundColor = [UIColor clearColor];
         _imgVIcon.clipsToBounds = YES;
@@ -262,17 +291,20 @@
     /// 计算bubbleView里 """文本""" 最大的宽度, 这里用屏幕的宽度 - 2个(头像和2倍的间距) - 左边或者右边的一个间距(气泡距离头像的距离) - 文本在气泡里面的大小(一边有1个间距, 另一边有2个间距)
     //CGFloat bubbleMaxWidth = [UIScreen mainScreen].bounds.size.width - 2 * (kMessageCellIconWh + kMessageCellPadding * 2) - kMessageCellPadding - 3 * kMessageCellBubbleMargin;
     
-    CGFloat bubbleMaxWidth = kMessageCellBubbleContentMaxWidth;
+    CGFloat bubbleContentMaxWidth = kMessageCellBubbleContentMaxWidth;
     
     /// 高度
     CGFloat height = 0;
     
     /// 根据类型来判断当前bubble view的 宽高度
     switch (model.bodyType) {
+            
+            /***************文本***************/
+            
         case EMMessageBodyTypeText: {
             
             /// 计算出当前文字所需要的宽高度
-            CGRect rect = [model.text boundingRectWithSize:CGSizeMake(bubbleMaxWidth, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:kMessageCellTextFontSize]} context:nil];
+            CGRect rect = [model.text boundingRectWithSize:CGSizeMake(bubbleContentMaxWidth, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:kMessageCellTextFontSize]} context:nil];
 
             /// 文本在bubbleView里上下各有 1 个 间距
             CGFloat bubbleViewHeight = rect.size.height + 2 * kMessageCellPadding;
@@ -284,10 +316,21 @@
             model.bubbleViewWidth = rect.size.width + 30;
         }
             break;
+            
+            /***************图片***************/
+            
         case EMMessageBodyTypeImage: {
             
             height = model.thumbnailImageSize.height;
             model.bubbleViewWidth = model.thumbnailImageSize.width + 30;
+        }
+            break;
+            
+            /***************语音***************/
+            
+        case EMMessageBodyTypeVoice: {
+            height += kMessageCellIconWh;
+            model.bubbleViewWidth = kMessageCellVoiceMinWidth + model.mediaDuration / 60 * kMessageCellVoicePadding;
         }
             break;
         default:

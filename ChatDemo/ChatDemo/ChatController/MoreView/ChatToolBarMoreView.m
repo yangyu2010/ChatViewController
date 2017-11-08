@@ -15,8 +15,10 @@
 
 @interface ChatToolBarMoreView () <UICollectionViewDelegate, UICollectionViewDataSource>
 
+/// CollectionView
 @property (nonatomic, strong) UICollectionView *collectionMore;
 
+/// 数据源
 @property (nonatomic, strong) NSArray <ChatToolBarMoreModel *> *arrData;
 
 
@@ -96,6 +98,7 @@
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    
     
 }
 

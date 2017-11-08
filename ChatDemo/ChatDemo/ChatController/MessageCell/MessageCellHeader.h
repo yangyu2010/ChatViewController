@@ -33,8 +33,20 @@
 /// cell 文本大小
 #define kMessageCellTextFontSize    16.0f
 
-/// 计算bubbleView里 "内容(文本或图片或别的)" 最大的宽度, 这里用屏幕的宽度 - 2个(头像和2个的间距) - 左边或者右边的一个间距(气泡距离头像的距离) - 文本在气泡里面的大小(一边有1个间距, 另一边有2个间距)
-#define kMessageCellBubbleContentMaxWidth ([UIScreen mainScreen].bounds.size.width - 2 * (kMessageCellIconWh + kMessageCellPadding * 2) - kMessageCellPadding - 3 * kMessageCellBubbleMargin)
+/// cell 里 气泡view最大的宽度, (屏幕的宽度 - 2个(头像和2个的间距))
+#define KMessageCellBubbleViewMaxWidth ([UIScreen mainScreen].bounds.size.width - 2 * (kMessageCellIconWh + kMessageCellPadding * 2))
+
+/// 计算bubbleView里 "内容(文本或图片或别的)" 最大的宽度, 气泡view最大的宽度 - 左边或者右边的一个间距(气泡距离气泡的距离) - 文本在气泡里面的大小(一边有1个间距, 另一边有2个间距)
+#define kMessageCellBubbleContentMaxWidth (KMessageCellBubbleViewMaxWidth - kMessageCellPadding - 3 * kMessageCellBubbleMargin)
+
+/// 语言长度 最大
+#define kMessageCellVoiceMaxWidth (KMessageCellBubbleViewMaxWidth * 0.75)
+
+/// 语言长度 最小
+#define kMessageCellVoiceMinWidth (KMessageCellBubbleViewMaxWidth * 0.25)
+
+/// 语言长度的差距, 用时长乘这个差距
+#define kMessageCellVoicePadding (kMessageCellVoiceMaxWidth - kMessageCellVoiceMinWidth)
 
 #define kMessageCellIdentifierRecvText      @"kMessageCellIdentifierRecvText"
 #define kMessageCellIdentifierRecvVoice     @"kMessageCellIdentifierRecvVoice"

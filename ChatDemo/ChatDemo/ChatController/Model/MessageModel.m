@@ -72,9 +72,7 @@
                         } else {
                             self.thumbnailImageSize = size;
                         }
-                        
                     }
-                    
                 }
 
                 if (!_isSender) {
