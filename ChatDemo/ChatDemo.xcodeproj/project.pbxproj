@@ -19,6 +19,7 @@
 		862F494C1FA6F9A600D0526C /* ChatDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 862F494B1FA6F9A600D0526C /* ChatDemoTests.m */; };
 		862F49571FA6F9A600D0526C /* ChatDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 862F49561FA6F9A600D0526C /* ChatDemoUITests.m */; };
 		8642AA741FB29DE400E81849 /* MJBubbleView+Voice.m in Sources */ = {isa = PBXBuildFile; fileRef = 8642AA731FB29DE400E81849 /* MJBubbleView+Voice.m */; };
+		8642AA771FB312D800E81849 /* ChatHelp.m in Sources */ = {isa = PBXBuildFile; fileRef = 8642AA761FB312D800E81849 /* ChatHelp.m */; };
 		8666FD991FAAD3CC00CD12C7 /* ChatToolBarMoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666FD981FAAD3CC00CD12C7 /* ChatToolBarMoreView.m */; };
 		8666FD9C1FAAD3FF00CD12C7 /* ChatToolBarMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666FD9B1FAAD3FF00CD12C7 /* ChatToolBarMoreCell.m */; };
 		8666FD9F1FAAD7B600CD12C7 /* ChatToolBarMoreModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666FD9E1FAAD7B600CD12C7 /* ChatToolBarMoreModel.m */; };
@@ -85,6 +86,8 @@
 		862F49581FA6F9A600D0526C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8642AA721FB29DE400E81849 /* MJBubbleView+Voice.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MJBubbleView+Voice.h"; sourceTree = "<group>"; };
 		8642AA731FB29DE400E81849 /* MJBubbleView+Voice.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MJBubbleView+Voice.m"; sourceTree = "<group>"; };
+		8642AA751FB312D800E81849 /* ChatHelp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatHelp.h; sourceTree = "<group>"; };
+		8642AA761FB312D800E81849 /* ChatHelp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatHelp.m; sourceTree = "<group>"; };
 		8666FD971FAAD3CC00CD12C7 /* ChatToolBarMoreView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatToolBarMoreView.h; sourceTree = "<group>"; };
 		8666FD981FAAD3CC00CD12C7 /* ChatToolBarMoreView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatToolBarMoreView.m; sourceTree = "<group>"; };
 		8666FD9A1FAAD3FF00CD12C7 /* ChatToolBarMoreCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatToolBarMoreCell.h; sourceTree = "<group>"; };
@@ -300,6 +303,8 @@
 		868958971FA72D2A00BC0619 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				8642AA751FB312D800E81849 /* ChatHelp.h */,
+				8642AA761FB312D800E81849 /* ChatHelp.m */,
 				86A06AF51FB065430000A53F /* MessageModel.h */,
 				86A06AF61FB065430000A53F /* MessageModel.m */,
 			);
@@ -554,6 +559,7 @@
 				867904351FB1B0D8004545D5 /* MJBubbleView+Image.m in Sources */,
 				867B14B81FA9AC8500437544 /* UIImage+Category.m in Sources */,
 				8666FD991FAAD3CC00CD12C7 /* ChatToolBarMoreView.m in Sources */,
+				8642AA771FB312D800E81849 /* ChatHelp.m in Sources */,
 				8606ED551FA81B360023B9DE /* UIColor+Utils.m in Sources */,
 				868958921FA70DAE00BC0619 /* ConversationListController.m in Sources */,
 				8642AA741FB29DE400E81849 /* MJBubbleView+Voice.m in Sources */,

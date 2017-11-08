@@ -59,6 +59,12 @@
     self.lblTitle.frame = CGRectMake(0, CGRectGetMaxY(self.btnIcon.frame), self.bounds.size.width, 20);
 }
 
+- (void)setHighlighted:(BOOL)highlighted {
+    [super setHighlighted:highlighted];
+    
+    self.btnIcon.highlighted = highlighted;
+}
+
 #pragma mark- Data
 
 - (void)dataConfig {

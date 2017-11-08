@@ -15,6 +15,7 @@
 #import "ChatToolBarHeader.h"
 #import "MessageModel.h"
 #import "MessageBaseCell.h"
+#import "ChatHelp.h"
 
 #import <Hyphenate/Hyphenate.h>
 
@@ -29,7 +30,16 @@
 /// 剩余多少s开始提示用户
 #define kRecordRemainCountingDuration        5
 
-@interface ChatController () <ChatToolBarDelegate, EMChatManagerDelegate, UITableViewDelegate, UITableViewDataSource>
+@interface ChatController ()
+                                <EMChatManagerDelegate,
+                                UITableViewDelegate,
+                                UITableViewDataSource,
+                                ChatToolBarDelegate,
+                                ChatToolBarMoreViewDelegate,
+                                UINavigationControllerDelegate,
+                                UIImagePickerControllerDelegate>
+
+
 {
     /// 底部toolbar的高度
     CGFloat _toolBarViewHeight;
@@ -58,12 +68,15 @@
 
 /// 底部toolbar
 @property (nonatomic, strong) ChatToolBar *toolBar;
-/// 录制显示的View
+/// 录制语言时状态显示的View
 @property (nonatomic, strong) VoiceRecordController *ctrVoiceRecord;
 /// +号更多 View
 @property (nonatomic, strong) ChatToolBarMoreView *viewMore;
 /// 聊天的tableView
 @property (nonatomic, strong) UITableView *tableChat;
+
+/// 相机 图册
+@property (nonatomic, strong) UIImagePickerController *pickerImage;
 
 
 /// 当前会话
@@ -78,6 +91,52 @@
 
 #pragma mark- Init
 
+#pragma mark- Get
+
+- (UITableView *)tableChat {
+    if (_tableChat == nil) {
+        _tableChat = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
+        _tableChat.backgroundColor = [UIColor colorFromHexRGB:@"E8E8E8"];
+        _tableChat.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableChat.dataSource = self;
+        _tableChat.delegate = self;
+    }
+    return _tableChat;
+}
+
+/// 底部toolbar
+- (ChatToolBar *)toolBar {
+    if (_toolBar == nil) {
+        _toolBar = [[ChatToolBar alloc] init];
+    }
+    return _toolBar;
+}
+
+/// +号更多 View
+- (ChatToolBarMoreView *)viewMore {
+    if (_viewMore == nil) {
+        _viewMore = [[ChatToolBarMoreView alloc] init];
+        _viewMore.delegate = self;
+    }
+    return _viewMore;
+}
+
+/// 录制语言时状态显示的View
+- (VoiceRecordController *)ctrVoiceRecord {
+    if (_ctrVoiceRecord == nil) {
+        _ctrVoiceRecord = [[VoiceRecordController alloc] init];
+    }
+    return _ctrVoiceRecord;
+}
+
+/// 相机 图册
+- (UIImagePickerController *)pickerImage {
+    if (_pickerImage == nil) {
+        _pickerImage = [[UIImagePickerController alloc] init];
+        _pickerImage.delegate = self;
+    }
+    return _pickerImage;
+}
 
 #pragma mark- Life cricle
 
@@ -90,44 +149,36 @@
     [self actionGetConversation];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-//    [self.toolBar beginEditing];
-}
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    if (_pickerImage){
+        [_pickerImage dismissViewControllerAnimated:NO completion:nil];
+        _pickerImage = nil;
+    }
 }
 
 #pragma mark- UI
 
 - (void)viewConfig {
+    
     self.view.backgroundColor = [UIColor colorFromHexRGB:@"E8E8E8"];
-    self.automaticallyAdjustsScrollViewInsets = NO;
+//    self.automaticallyAdjustsScrollViewInsets = NO;
 //    self.navigationController.navigationBar.translucent = NO;
     self.title = @"聊天";
 
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actionViewTap)];
-    [self.view addGestureRecognizer:tap];
-    
-    self.tableChat = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
-    self.tableChat.backgroundColor = [UIColor colorFromHexRGB:@"E8E8E8"];
-    self.tableChat.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableChat.dataSource = self;
-    self.tableChat.delegate = self;
     [self.view addSubview:self.tableChat];
-    
-    self.toolBar = [[ChatToolBar alloc] init];
     [self.view addSubview:self.toolBar];
-    
-    self.ctrVoiceRecord = [[VoiceRecordController alloc] init];
-
-    self.viewMore = [[ChatToolBarMoreView alloc] init];
     [self.view addSubview:self.viewMore];
     
- 
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actionViewTap)];
+    [self.tableChat addGestureRecognizer:tap];
+    
+    
+//    dispatch_async(<#dispatch_queue_t  _Nonnull queue#>, <#^(void)block#>)
 }
+
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
@@ -142,6 +193,7 @@
     
     [self _scrollViewToBottom];
 }
+
 
 #pragma mark- Data
 
@@ -253,19 +305,7 @@
     
     _toolBarViewOriginHeight = 0;
     
-    EMTextMessageBody *body = [[EMTextMessageBody alloc] initWithText:text];
-
-    EMMessage *message = [[EMMessage alloc] initWithConversationID:self.conversationId from:@"yangyu" to:@"miller" body:body ext:nil];
-    
-    [[EMClient sharedClient].chatManager sendMessage:message progress:^(int progress) {
-        
-    } completion:^(EMMessage *message, EMError *error) {
-        
-        [self.conversation appendMessage:message error:nil];
-        MessageModel *model = [[MessageModel alloc] initWithMessage:message];
-        [self.arrModels addObject:model];
-        [self.tableChat reloadData];
-    }];
+    [self actionSendTextMessage:text];
 }
 
 #pragma mark- More View 相关
@@ -290,6 +330,35 @@
     }
     
     [self actionUpdateLayoutDuration:0];
+}
+
+#pragma mark- MoreView Delegate
+- (void)chatToolBarMoreViewPictureAction:(ChatToolBarMoreView *)view {
+    
+    [self showImagePicker:UIImagePickerControllerSourceTypePhotoLibrary];
+}
+
+- (void)chatToolBarMoreViewShootAction:(ChatToolBarMoreView *)view {
+    
+    [self showImagePicker:UIImagePickerControllerSourceTypeCamera];
+}
+
+#pragma mark- 处理照片相关
+
+/// 弹出照片库
+- (void)showImagePicker:(UIImagePickerControllerSourceType)sourceType {
+    
+    self.pickerImage.sourceType = sourceType;
+    [self presentViewController:self.pickerImage animated:YES completion:nil];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
+    
+    UIImage *image = info[UIImagePickerControllerOriginalImage];
+    
+    [self actionSendImageMessage:image];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark- 录制语音 相关
@@ -508,5 +577,50 @@
     
 }
 
+#pragma mark- 发送消息
+/// 发送一个消息到服务器
+- (void)actionSendMessage:(EMMessage *)message {
+    
+    
+}
+
+/// 发送文字消息方法
+- (void)actionSendTextMessage:(NSString *)text {
+    if (text.length == 0) {
+        return ;
+    }
+    
+    EMMessage *message = [ChatHelp getTextMessage:text to:self.conversationId];
+    
+    [[EMClient sharedClient].chatManager sendMessage:message progress:^(int progress) {
+        
+    } completion:^(EMMessage *message, EMError *error) {
+        
+        [self.conversation appendMessage:message error:nil];
+        MessageModel *model = [[MessageModel alloc] initWithMessage:message];
+        [self.arrModels addObject:model];
+        [self.tableChat reloadData];
+    }];
+}
+
+/// 发送图片消息对象
+- (void)actionSendImageMessage:(UIImage *)image {
+    if (image == nil) {
+        return ;
+    }
+
+    EMMessage *message = [ChatHelp getImageMessage:image to:self.conversationId];
+
+    
+    [[EMClient sharedClient].chatManager sendMessage:message progress:^(int progress) {
+        
+    } completion:^(EMMessage *message, EMError *error) {
+        
+        [self.conversation appendMessage:message error:nil];
+        MessageModel *model = [[MessageModel alloc] initWithMessage:message];
+        [self.arrModels addObject:model];
+        [self.tableChat reloadData];
+    }];
+}
 
 @end

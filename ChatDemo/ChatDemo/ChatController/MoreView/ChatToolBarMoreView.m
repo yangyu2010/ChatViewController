@@ -99,6 +99,16 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     
+    if (indexPath.item == 0) {
+        // 照片
+        if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarMoreViewPictureAction:)]) {
+            [self.delegate chatToolBarMoreViewPictureAction:self];
+        }
+    } else if (indexPath.item == 1) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarMoreViewShootAction:)]) {
+            [self.delegate chatToolBarMoreViewShootAction:self];
+        }
+    }
     
 }
 

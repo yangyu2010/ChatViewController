@@ -8,6 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
+@class ChatToolBarMoreView;
+
+@protocol ChatToolBarMoreViewDelegate <NSObject>
+
+/// 照片库
+- (void)chatToolBarMoreViewPictureAction:(ChatToolBarMoreView *)view;
+
+/// 拍照
+- (void)chatToolBarMoreViewShootAction:(ChatToolBarMoreView *)view;
+
+@end
+
 @interface ChatToolBarMoreView : UIView
+
+@property (nonatomic, weak) id <ChatToolBarMoreViewDelegate> delegate;
 
 @end
