@@ -39,7 +39,8 @@
                                 ChatToolBarDelegate,
                                 ChatToolBarMoreViewDelegate,
                                 UINavigationControllerDelegate,
-                                UIImagePickerControllerDelegate>
+                                UIImagePickerControllerDelegate,
+                                MessageCellDelegate>
 
 
 {
@@ -82,11 +83,12 @@
 /// 相机 图册
 @property (nonatomic, strong) UIImagePickerController *pickerImage;
 
-
 /// 当前会话
 @property (nonatomic, strong) EMConversation *conversation;
 /// model 数组 里面存有MessageModel 和 时间字符串
 @property (nonatomic, strong) NSMutableArray *arrModels;
+/// 消息源, 只保存
+@property (nonatomic, strong) NSMutableArray <EMMessage *> *arrMessages;
 /// 时间间隔标记 默认是0, 如果记录了一次时间, 就把这个时间赋值给当前
 @property (nonatomic, assign) NSTimeInterval timeIntervalMessageTag;
 
@@ -137,13 +139,13 @@
 }
 
 /// 相机 图册
-- (UIImagePickerController *)pickerImage {
-    if (_pickerImage == nil) {
-        _pickerImage = [[UIImagePickerController alloc] init];
-        _pickerImage.delegate = self;
-    }
-    return _pickerImage;
-}
+//- (UIImagePickerController *)pickerImage {
+//    if (_pickerImage == nil) {
+//        _pickerImage = [[UIImagePickerController alloc] init];
+//        _pickerImage.delegate = self;
+//    }
+//    return _pickerImage;
+//}
 
 #pragma mark- Life cricle
 
@@ -222,10 +224,19 @@
     _isNeedNotifKeyboard = YES;
     
     self.arrModels = [NSMutableArray array];
+    self.arrMessages = [NSMutableArray array];
     
     _queueMessage = dispatch_queue_create("com.musjoy.chat", NULL);
     
     self.timeIntervalMessageTag = -1;
+
+    
+    dispatch_async(_queueMessage, ^{
+        self.pickerImage = [[UIImagePickerController alloc] init];
+        self.pickerImage.delegate = self;
+    });
+    
+
 }
 
 
@@ -514,6 +525,7 @@
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     cell.model = model;
+    cell.delegate = self;
     return cell;
 }
 
@@ -528,6 +540,30 @@
     return [MessageCell cellHeightWithModel:model];
 }
 
+#pragma mark- cell 代理
+- (void)messageCellDidSelectedStatusButton:(MessageCell *)cell model:(MessageModel *)model {
+    
+    if ((model.messageStatus != EMMessageStatusFailed) &&
+        (model.messageStatus != EMMessageStatusPending)) {
+        return;
+    }
+    
+    __weak typeof(self) weakself = self;
+    model.messageStatus = EMMessageStatusDelivering;
+    
+    NSUInteger index = NSNotFound;
+    index = [self.arrModels indexOfObject:model];
+    if (index == NSNotFound) {
+        [self.tableChat reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForItem:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    } else {
+        [self.tableChat reloadData];
+    }
+    
+    [[EMClient sharedClient].chatManager resendMessage:model.message progress:nil completion:^(EMMessage *message, EMError *error) {
+        [weakself actionRefreshSendMessageStatus:message];
+    }];
+}
+
 
 #pragma mark- 聊天相关
 /// 获取会话 和 聊天记录
@@ -538,10 +574,6 @@
     self.conversation = [[EMClient sharedClient].chatManager getConversation:self.conversationId type:EMConversationTypeChat createIfNotExist:YES];
     
     [self.conversation loadMessagesStartFromId:@"" count:40 searchDirection:EMMessageSearchDirectionUp completion:^(NSArray *aMessages, EMError *aError) {
-        
-        NSLog(@"aMessages %@", aMessages);
-        NSLog(@"aError %@", aError);
-        
         
         for (EMMessage *message in aMessages) {
             /// 判断会话id 和 当前消息id是否一致
@@ -566,6 +598,7 @@
                 MessageModel *model = [[MessageModel alloc] initWithMessage:message];
                 
                 [self.arrModels addObject:model];
+                [self.arrMessages addObject:message];
             }
         }
         
@@ -609,6 +642,7 @@
             [self.conversation appendMessage:message error:nil];
             MessageModel *model = [[MessageModel alloc] initWithMessage:message];
             [self.arrModels addObject:model];
+            [self.arrMessages addObject:message];
         }
     }
     
@@ -623,10 +657,24 @@
 /// 发送一个消息到服务器
 - (void)actionSendMessage:(EMMessage *)message {
     
+    
+    NSLog(@"actionSendMessage %@", message.messageId);
+    
     [self actionAddMessageToSource:message];
     
+    __weak typeof(self) weakself = self;
+    [[EMClient sharedClient].chatManager sendMessage:message progress:^(int progress) {
+        
+    } completion:^(EMMessage *message, EMError *error) {
+
+        NSLog(@"actionSendMessage completion %@", message.messageId);
+        
+        [weakself actionRefreshSendMessageStatus:message];
+
+    }];
 }
 
+/// 发送消息, 先把消息加到数据源里, 也就是先显示出来
 - (void)actionAddMessageToSource:(EMMessage *)message {
     
     __weak ChatController *weakSelf = self;
@@ -634,20 +682,18 @@
     dispatch_async(_queueMessage, ^{
         NSArray *messages = [weakSelf actionFormatTimeMessage:@[message]];
         
-        
         dispatch_async(dispatch_get_main_queue(), ^{
             
             [weakSelf.arrModels addObjectsFromArray:messages];
+            [weakSelf.arrMessages addObject:message];
             [weakSelf.tableChat reloadData];
-            
-//            [weakSelf.dataArray addObjectsFromArray:messages];
-//            [weakSelf.tableView reloadData];
-//            [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[weakSelf.dataArray count] - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+            [weakSelf _scrollViewToBottom];
+
         });
     });
 }
 
-/// 拼接消息, 因为要处理时间
+/// 处理消息, 因为要处理时间, 转换成自己的model
 - (NSArray *)actionFormatTimeMessage:(NSArray *)messages {
     
     NSMutableArray *arrFormatted = [[NSMutableArray alloc] init];
@@ -655,16 +701,61 @@
         return arrFormatted;
     }
     for (EMMessage *message in messages) {
+        
+        /// 1.判断时间, 如果需要显示时间, 就创建一个加入数组中
         CGFloat interval = (self.timeIntervalMessageTag - message.timestamp) / 1000;
         if (self.timeIntervalMessageTag < 0 || interval > kTimeIntervalMessageTag || interval < -kTimeIntervalMessageTag) {
-            
-            [arrFormatted addObject:[NSString stringWithFormat:@"%lld", message.timestamp]];
+            NSDate *messageDate = [NSDate dateWithTimeIntervalInMilliSecondSince1970:(NSTimeInterval)message.timestamp];
+            [self.arrModels addObject:[messageDate formattedTime]];
             self.timeIntervalMessageTag = message.timestamp;
         }
+        
+        /// 2.添加自己的model
+        MessageModel *model = [[MessageModel alloc] initWithMessage:message];
+        [arrFormatted addObject:model];
+        
+        NSLog(@"messageId2 %@", message.messageId);
+        
+    }
+
+    return arrFormatted;
+}
+
+/// 更新发送了的消息状态, 是否成功, 失败
+- (void)actionRefreshSendMessageStatus:(EMMessage *)message {
+    
+    if (self.arrModels.count == 0) {
+        return ;
     }
     
+    __block NSUInteger index = NSNotFound;
+    index = NSNotFound;
     
-    return arrFormatted;
+    NSLog(@"actionRefreshSendMessageStatus %@", message.messageId);
+    
+    [self.arrModels enumerateObjectsUsingBlock:^(MessageModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        
+        if ([obj isKindOfClass:[MessageModel class]]) {
+            NSLog(@"enumerateObjectsUsingBlock %@", obj.messageId);
+            
+            NSLog(@"11 %@", obj.text) ;
+        }
+        
+        
+        if ([obj isKindOfClass:[MessageModel class]] &&
+            [obj.messageId isEqualToString:message.messageId]) {
+            index = idx;
+            *stop = YES;
+        }
+    }];
+    
+    if (index == NSNotFound) {
+        return ;
+    }
+    
+    MessageModel *model = self.arrModels[index];
+    model.messageStatus = message.status;
+    [self.tableChat reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForItem:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
 }
 
 /// 发送文字消息方法
@@ -674,16 +765,7 @@
     }
     
     EMMessage *message = [ChatHelp getTextMessage:text to:self.conversationId];
-    
-    [[EMClient sharedClient].chatManager sendMessage:message progress:^(int progress) {
-        
-    } completion:^(EMMessage *message, EMError *error) {
-        
-        [self.conversation appendMessage:message error:nil];
-        MessageModel *model = [[MessageModel alloc] initWithMessage:message];
-        [self.arrModels addObject:model];
-        [self.tableChat reloadData];
-    }];
+    [self actionSendMessage:message];
 }
 
 /// 发送图片消息对象
@@ -693,17 +775,7 @@
     }
 
     EMMessage *message = [ChatHelp getImageMessage:image to:self.conversationId];
-
-    
-    [[EMClient sharedClient].chatManager sendMessage:message progress:^(int progress) {
-        
-    } completion:^(EMMessage *message, EMError *error) {
-        
-        [self.conversation appendMessage:message error:nil];
-        MessageModel *model = [[MessageModel alloc] initWithMessage:message];
-        [self.arrModels addObject:model];
-        [self.tableChat reloadData];
-    }];
+    [self actionSendMessage:message];
 }
 
 @end

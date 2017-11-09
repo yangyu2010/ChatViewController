@@ -25,7 +25,7 @@
 /// 消息体类型
 @property (nonatomic, assign, readonly) EMMessageBodyType bodyType;
 /// 消息发送状态
-@property (nonatomic, assign, readonly) EMMessageStatus messageStatus;
+@property (nonatomic, assign) EMMessageStatus messageStatus;
 /// 聊天类型
 @property (nonatomic, assign, readonly) EMChatType messageType;
 /// 当前登录用户是否为消息的发送方

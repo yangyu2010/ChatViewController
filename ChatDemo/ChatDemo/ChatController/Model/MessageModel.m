@@ -7,6 +7,7 @@
 //
 
 #import "MessageModel.h"
+#import "MessageCellHeader.h"
 
 @implementation MessageModel
 
@@ -19,7 +20,7 @@
         _message = message;
         _firstMessageBody = message.body;
         _messageId = message.messageId;
-        _messageStatus = EMMessageStatusPending;
+        _messageStatus = message.status;
         _messageType = message.chatType;
         _bodyType = message.body.type;
         _isSender = (message.direction == EMMessageDirectionSend);
@@ -50,8 +51,8 @@
                         self.thumbnailImageSize = self.thumbnailImage.size;
                     } else {
                         CGSize size = imgMessageBody.size;
-                        if (size.width > 100) {
-                            CGFloat width = 100.0;
+                        if (size.width > kMessageCellBubbleContentMaxWidth) {
+                            CGFloat width = kMessageCellBubbleContentMaxWidth;
                             CGFloat height = width / size.width * size.height;
                             self.thumbnailImageSize = CGSizeMake(width, height);
                         } else {

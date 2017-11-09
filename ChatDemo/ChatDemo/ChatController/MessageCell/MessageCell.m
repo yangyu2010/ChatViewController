@@ -34,6 +34,7 @@
         case EMMessageStatusSucceed: {
             self.btnStatus.hidden = YES;
             [self.viewActivity stopAnimating];
+            self.viewActivity.hidden = YES;
         }
             break;
         case EMMessageStatusFailed: {
@@ -48,6 +49,13 @@
     
 }
 
+/// 点击状态按钮
+- (void)actionBtnStatus {
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(messageCellDidSelectedStatusButton:model:)]) {
+        [self.delegate messageCellDidSelectedStatusButton:self model:self.model];
+    }
+}
 
 
 #pragma mark- Public
@@ -111,6 +119,9 @@
     /// 高度
     CGFloat height = 0;
     
+    /// 最后的高度需要加上这个值
+    CGFloat _cellPadding = (kMessageCellPadding + 2 * kMessageCellBubbleMargin);
+    
     /// 根据类型来判断当前bubble view的 宽高度
     switch (model.bodyType) {
             
@@ -122,10 +133,14 @@
             CGRect rect = [model.text boundingRectWithSize:CGSizeMake(bubbleContentMaxWidth, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:kMessageCellTextFontSize]} context:nil];
             
             /// 文本在bubbleView里上下各有 1 个 间距
-            CGFloat bubbleViewHeight = rect.size.height + 2 * kMessageCellPadding;
+            CGFloat bubbleViewHeight = rect.size.height;
             
             /// 判断最低高度 == 头像的高度
-            height += (bubbleViewHeight > kMessageCellIconWh ? bubbleViewHeight : kMessageCellIconWh);
+            if (height > kMessageCellIconWh) {
+                height = bubbleViewHeight + _cellPadding;
+            } else {
+                height = kMessageCellIconWh + kMessageCellPadding;
+            }
             
             /// 气泡的宽度需要加 左右 的间距(一边有10px, 另一边有20px)
             model.bubbleViewWidth = rect.size.width + 30;
@@ -136,24 +151,21 @@
             
         case EMMessageBodyTypeImage: {
             
-            height = model.thumbnailImageSize.height;
-            model.bubbleViewWidth = model.thumbnailImageSize.width + 30;
+            height = model.thumbnailImageSize.height + _cellPadding;
+            model.bubbleViewWidth = model.thumbnailImageSize.width + _cellPadding;
         }
             break;
             
             /***************语音***************/
             
         case EMMessageBodyTypeVoice: {
-            height += kMessageCellIconWh;
+            height += kMessageCellIconWh + kMessageCellPadding;
             model.bubbleViewWidth = kMessageCellVoiceMinWidth + model.mediaDuration / 60 * kMessageCellVoicePadding;
         }
             break;
         default:
             break;
     }
-    
-    /// 每个气泡距离 cell 底部 都有 10个px
-    height += kMessageCellPadding;
     
     /// 赋值给model, 复用
     model.cellHeight = height;

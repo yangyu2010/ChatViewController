@@ -45,5 +45,10 @@
 	<string>Photo</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>

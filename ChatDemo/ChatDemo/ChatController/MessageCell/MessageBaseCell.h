@@ -29,6 +29,4 @@
 @property (nonatomic, strong) MessageModel *model;
 
 
-
-
 @end

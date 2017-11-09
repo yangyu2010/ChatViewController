@@ -19,7 +19,7 @@
     NSString *from = [[EMClient sharedClient] currentUsername];
     EMMessage *message = [[EMMessage alloc] initWithConversationID:toUser from:from to:toUser body:body ext:nil];
     message.chatType = EMChatTypeChat;
-    
+    message.status = EMMessageStatusDelivering;
     return message;
 }
 
@@ -36,7 +36,7 @@
     
     EMMessage *message = [[EMMessage alloc] initWithConversationID:toUser from:from to:toUser body:body ext:nil];
     message.chatType = EMChatTypeChat;
-    
+    message.status = EMMessageStatusDelivering;
     return message;
 }
 

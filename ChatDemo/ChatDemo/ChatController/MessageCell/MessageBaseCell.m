@@ -30,11 +30,6 @@
 /// 内容+背景View
 @property (nonatomic, strong) MJBubbleView *viewBubble;
 
-/// 时间label
-//@property (nonatomic, strong) UILabel *lblTime;
-
-
-
 @end
 
 @implementation MessageBaseCell
@@ -181,18 +176,6 @@
     }
     return _viewBubble;
 }
-
-///// 时间label
-//- (UILabel *)lblTime {
-//    if (_lblTime == nil) {
-//        _lblTime = [[UILabel alloc] init];
-//        _lblTime.textColor = [UIColor whiteColor];
-//        _lblTime.font = [UIFont systemFontOfSize:12.0f];
-//        _lblTime.backgroundColor = [UIColor lightGrayColor];
-//        _lblTime.textAlignment = NSTextAlignmentCenter;
-//    }
-//    return _lblTime;
-//}
 
 /// 状态按钮
 - (UIButton *)btnStatus {

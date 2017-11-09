@@ -287,11 +287,12 @@
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
 
     if ([text isEqualToString:@"\n"]) {
-        if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarSendText:)]) {
-            [self.delegate chatToolBarSendText:textView.text];
-        }
+        NSString *str = textView.text;
         textView.text = @"";
         _oldContentHeight = [self getTextViewContentH:textView];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarSendText:)]) {
+            [self.delegate chatToolBarSendText:str];
+        }
         return NO;
     }
     return YES;
