@@ -14,9 +14,11 @@
 #import "ChatToolBarMoreView.h"
 #import "ChatToolBarHeader.h"
 #import "MessageModel.h"
-#import "MessageBaseCell.h"
+#import "MessageCell.h"
 #import "ChatHelp.h"
-
+#import "MessageTimeCell.h"
+#import "MessageCellHeader.h"
+#import "NSDate+Category.h"
 #import <Hyphenate/Hyphenate.h>
 
 #define kChatToolBarHeight                   49.0
@@ -64,6 +66,8 @@
     /// 当前的录音状态
     VoiceRecordState _recordCurrentState;
 
+    /// 消息队列
+    dispatch_queue_t _queueMessage;
 }
 
 /// 底部toolbar
@@ -81,8 +85,10 @@
 
 /// 当前会话
 @property (nonatomic, strong) EMConversation *conversation;
-/// model 数组
-@property (nonatomic, strong) NSMutableArray <MessageModel *> *arrModels;
+/// model 数组 里面存有MessageModel 和 时间字符串
+@property (nonatomic, strong) NSMutableArray *arrModels;
+/// 时间间隔标记 默认是0, 如果记录了一次时间, 就把这个时间赋值给当前
+@property (nonatomic, assign) NSTimeInterval timeIntervalMessageTag;
 
 
 @end
@@ -93,6 +99,7 @@
 
 #pragma mark- Get
 
+/// tableView
 - (UITableView *)tableChat {
     if (_tableChat == nil) {
         _tableChat = [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStylePlain];
@@ -215,6 +222,10 @@
     _isNeedNotifKeyboard = YES;
     
     self.arrModels = [NSMutableArray array];
+    
+    _queueMessage = dispatch_queue_create("com.musjoy.chat", NULL);
+    
+    self.timeIntervalMessageTag = -1;
 }
 
 
@@ -478,12 +489,28 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    MessageModel *model = self.arrModels[indexPath.item];
-    NSString *cellIdentifier = [MessageBaseCell cellIdentifierWithModel:model];
-    MessageBaseCell *cell = (MessageBaseCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
+    
+    /// arrmodels里如果存储的是字符串, 代表这个位置应该显示个时间
+    id object = [self.arrModels objectAtIndex:indexPath.item];
+    if ([object isKindOfClass:[NSString class]]) {
+        NSString *cellIdentifierTime = [MessageTimeCell cellIdentifier];
+        MessageTimeCell *timeCell = (MessageTimeCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifierTime];
+        
+        if (timeCell == nil) {
+            timeCell = [[MessageTimeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifierTime];
+        }
+        
+        timeCell.strTime = object;
+        return timeCell;
+    }
+    
+    /// 正常的消息cell
+    MessageModel *model = object;
+    NSString *cellIdentifier = [MessageCell cellIdentifierWithModel:model];
+    MessageCell *cell = (MessageCell *)[tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     
     if (cell == nil) {
-        cell = [[MessageBaseCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier model:model];
+        cell = [[MessageCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier model:model];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     cell.model = model;
@@ -492,8 +519,13 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    id object = [self.arrModels objectAtIndex:indexPath.item];
+    if ([object isKindOfClass:[NSString class]]) {
+        return [MessageTimeCell cellHeight];
+    }
+    
     MessageModel *model = self.arrModels[indexPath.item];
-    return [MessageBaseCell cellHeightWithModel:model];
+    return [MessageCell cellHeightWithModel:model];
 }
 
 
@@ -516,13 +548,23 @@
             if (![self.conversationId isEqualToString:message.conversationId]) {
                 break;
             }
-            
+
             if (message.body.type == EMMessageBodyTypeText ||
                 message.body.type == EMMessageBodyTypeImage ||
                 message.body.type == EMMessageBodyTypeVoice) {
             
+                
+                CGFloat interval = (self.timeIntervalMessageTag - message.timestamp) / 1000;
+                if (self.timeIntervalMessageTag < 0 || interval > kTimeIntervalMessageTag || interval < -kTimeIntervalMessageTag) {
+                    NSDate *messageDate = [NSDate dateWithTimeIntervalInMilliSecondSince1970:(NSTimeInterval)message.timestamp];
+                    [self.arrModels addObject:[messageDate formattedTime]];
+                    self.timeIntervalMessageTag = message.timestamp;
+                }
+                
+                
                 [self.conversation appendMessage:message error:nil];
                 MessageModel *model = [[MessageModel alloc] initWithMessage:message];
+                
                 [self.arrModels addObject:model];
             }
         }
@@ -581,7 +623,48 @@
 /// 发送一个消息到服务器
 - (void)actionSendMessage:(EMMessage *)message {
     
+    [self actionAddMessageToSource:message];
     
+}
+
+- (void)actionAddMessageToSource:(EMMessage *)message {
+    
+    __weak ChatController *weakSelf = self;
+
+    dispatch_async(_queueMessage, ^{
+        NSArray *messages = [weakSelf actionFormatTimeMessage:@[message]];
+        
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [weakSelf.arrModels addObjectsFromArray:messages];
+            [weakSelf.tableChat reloadData];
+            
+//            [weakSelf.dataArray addObjectsFromArray:messages];
+//            [weakSelf.tableView reloadData];
+//            [weakSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:[weakSelf.dataArray count] - 1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+        });
+    });
+}
+
+/// 拼接消息, 因为要处理时间
+- (NSArray *)actionFormatTimeMessage:(NSArray *)messages {
+    
+    NSMutableArray *arrFormatted = [[NSMutableArray alloc] init];
+    if ([messages count] == 0) {
+        return arrFormatted;
+    }
+    for (EMMessage *message in messages) {
+        CGFloat interval = (self.timeIntervalMessageTag - message.timestamp) / 1000;
+        if (self.timeIntervalMessageTag < 0 || interval > kTimeIntervalMessageTag || interval < -kTimeIntervalMessageTag) {
+            
+            [arrFormatted addObject:[NSString stringWithFormat:@"%lld", message.timestamp]];
+            self.timeIntervalMessageTag = message.timestamp;
+        }
+    }
+    
+    
+    return arrFormatted;
 }
 
 /// 发送文字消息方法

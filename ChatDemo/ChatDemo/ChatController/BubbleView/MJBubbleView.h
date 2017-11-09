@@ -16,6 +16,7 @@
 - (instancetype)initWithIsSender:(BOOL)isSender;
 
 
+
 /// 是否是发送方
 @property (nonatomic, assign) BOOL isSender;
 
