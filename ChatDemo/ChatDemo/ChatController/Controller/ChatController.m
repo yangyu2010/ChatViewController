@@ -160,12 +160,16 @@
 
 
 - (void)dealloc {
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[EMClient sharedClient].chatManager removeDelegate:self];
     
     if (_pickerImage){
         [_pickerImage dismissViewControllerAnimated:NO completion:nil];
         _pickerImage = nil;
     }
+    
+    NSLog(@"ChatViewController dealloc");
 }
 
 #pragma mark- UI
@@ -184,8 +188,6 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actionViewTap)];
     [self.tableChat addGestureRecognizer:tap];
     
-    
-//    dispatch_async(<#dispatch_queue_t  _Nonnull queue#>, <#^(void)block#>)
 }
 
 
@@ -200,7 +202,7 @@
 
     self.tableChat.frame = CGRectMake(0, _tableViewY, self.view.bounds.size.width, self.view.bounds.size.height - _toolBarViewHeight);
     
-    [self _scrollViewToBottom];
+    [self _scrollViewToBottomAnimated:NO];
 }
 
 
@@ -379,6 +381,8 @@
     UIImage *image = info[UIImagePickerControllerOriginalImage];
     
     [self actionSendImageMessage:image];
+    
+    NSLog(@"image.size %@", NSStringFromCGSize(image.size));
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -560,9 +564,14 @@
     }
     
     [[EMClient sharedClient].chatManager resendMessage:model.message progress:nil completion:^(EMMessage *message, EMError *error) {
-        [weakself actionRefreshSendMessageStatus:message];
+        [weakself actionRefreshSendMessageStatus:message originMessageId:model.messageId];
     }];
 }
+
+- (void)messageCellDidSelectedAvatar:(MessageCell *)cell {
+    
+}
+
 
 
 #pragma mark- 聊天相关
@@ -580,11 +589,11 @@
             if (![self.conversationId isEqualToString:message.conversationId]) {
                 break;
             }
-
+            
             if (message.body.type == EMMessageBodyTypeText ||
                 message.body.type == EMMessageBodyTypeImage ||
                 message.body.type == EMMessageBodyTypeVoice) {
-            
+                
                 
                 CGFloat interval = (self.timeIntervalMessageTag - message.timestamp) / 1000;
                 if (self.timeIntervalMessageTag < 0 || interval > kTimeIntervalMessageTag || interval < -kTimeIntervalMessageTag) {
@@ -604,7 +613,7 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableChat reloadData];
-            [self _scrollViewToBottom];
+            [self _scrollViewToBottomAnimated:NO];
         });
         
     }];
@@ -612,65 +621,49 @@
 }
 
 /// 滑动最底部
-- (void)_scrollViewToBottom {
+- (void)_scrollViewToBottomAnimated:(BOOL)animated {
     
     NSInteger rows = [self.tableChat numberOfRowsInSection:0];
     
     if (rows > 0) {
         [self.tableChat scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:rows - 1 inSection:0]
                               atScrollPosition:UITableViewScrollPositionBottom
-                                      animated:NO];
+                                      animated:animated];
     }
-
+    
 }
 
 
 
 #pragma mark- 聊天代理 EMChatManagerDelegate
 - (void)messagesDidReceive:(NSArray *)aMessages {
-    
-    for (EMMessage *message in aMessages) {
-        /// 判断会话id 和 当前消息id是否一致
-        if (![self.conversationId isEqualToString:message.conversationId]) {
-            break;
-        }
+
+    __weak typeof(self) weakself = self;
+    dispatch_async(_queueMessage, ^{
+        NSArray *arrMessages = [weakself actionFormatTimeMessage:aMessages];
+        [weakself.arrModels addObjectsFromArray:arrMessages];
         
-        if (message.body.type == EMMessageBodyTypeText ||
-            message.body.type == EMMessageBodyTypeImage ||
-            message.body.type == EMMessageBodyTypeVoice) {
-        
-            [self.conversation appendMessage:message error:nil];
-            MessageModel *model = [[MessageModel alloc] initWithMessage:message];
-            [self.arrModels addObject:model];
-            [self.arrMessages addObject:message];
-        }
-    }
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.tableChat reloadData];
-        [self _scrollViewToBottom];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakself.tableChat reloadData];
+            [weakself _scrollViewToBottomAnimated:NO];
+        });
     });
-    
 }
 
 #pragma mark- 发送消息
 /// 发送一个消息到服务器
 - (void)actionSendMessage:(EMMessage *)message {
-    
-    
-    NSLog(@"actionSendMessage %@", message.messageId);
+
+    NSString *originMessageId = message.messageId;
     
     [self actionAddMessageToSource:message];
     
     __weak typeof(self) weakself = self;
     [[EMClient sharedClient].chatManager sendMessage:message progress:^(int progress) {
         
-    } completion:^(EMMessage *message, EMError *error) {
-
-        NSLog(@"actionSendMessage completion %@", message.messageId);
+    } completion:^(EMMessage *aMessage, EMError *error) {
         
-        [weakself actionRefreshSendMessageStatus:message];
-
+        [weakself actionRefreshSendMessageStatus:aMessage originMessageId:originMessageId];
     }];
 }
 
@@ -678,7 +671,7 @@
 - (void)actionAddMessageToSource:(EMMessage *)message {
     
     __weak ChatController *weakSelf = self;
-
+    
     dispatch_async(_queueMessage, ^{
         NSArray *messages = [weakSelf actionFormatTimeMessage:@[message]];
         
@@ -687,8 +680,8 @@
             [weakSelf.arrModels addObjectsFromArray:messages];
             [weakSelf.arrMessages addObject:message];
             [weakSelf.tableChat reloadData];
-            [weakSelf _scrollViewToBottom];
-
+            [weakSelf _scrollViewToBottomAnimated:YES];
+            
         });
     });
 }
@@ -714,15 +707,14 @@
         MessageModel *model = [[MessageModel alloc] initWithMessage:message];
         [arrFormatted addObject:model];
         
-        NSLog(@"messageId2 %@", message.messageId);
-        
     }
-
+    
     return arrFormatted;
 }
 
 /// 更新发送了的消息状态, 是否成功, 失败
-- (void)actionRefreshSendMessageStatus:(EMMessage *)message {
+- (void)actionRefreshSendMessageStatus:(EMMessage *)message
+                       originMessageId:(NSString *)originMessageId {
     
     if (self.arrModels.count == 0) {
         return ;
@@ -731,19 +723,10 @@
     __block NSUInteger index = NSNotFound;
     index = NSNotFound;
     
-    NSLog(@"actionRefreshSendMessageStatus %@", message.messageId);
-    
     [self.arrModels enumerateObjectsUsingBlock:^(MessageModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        if ([obj isKindOfClass:[MessageModel class]]) {
-            NSLog(@"enumerateObjectsUsingBlock %@", obj.messageId);
-            
-            NSLog(@"11 %@", obj.text) ;
-        }
-        
-        
         if ([obj isKindOfClass:[MessageModel class]] &&
-            [obj.messageId isEqualToString:message.messageId]) {
+            [obj.messageId isEqualToString:originMessageId]) {
             index = idx;
             *stop = YES;
         }
@@ -753,8 +736,8 @@
         return ;
     }
     
-    MessageModel *model = self.arrModels[index];
-    model.messageStatus = message.status;
+    MessageModel *newModel = [[MessageModel alloc] initWithMessage:message];
+    [self.arrModels replaceObjectAtIndex:index withObject:newModel];
     [self.tableChat reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForItem:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
 }
 
@@ -773,9 +756,11 @@
     if (image == nil) {
         return ;
     }
-
+    
     EMMessage *message = [ChatHelp getImageMessage:image to:self.conversationId];
     [self actionSendMessage:message];
 }
+
+
 
 @end

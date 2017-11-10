@@ -96,10 +96,6 @@
         default:
             break;
     }
-    
-//    [self updateTextBubbleViewFrame];
-//    [self updateImageBubbleViewFrame];
-//    [self updateVoiceBubbleViewFrame];
 }
 
 @end

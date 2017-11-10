@@ -9,11 +9,34 @@
 #import "MessageCell.h"
 #import "MessageModel.h"
 #import "MessageCellHeader.h"
+#import "MJBubbleView.h"
 
 
 @implementation MessageCell
 
+#pragma mark- Private
+- (void)actionBubbleViewTapAction:(UITapGestureRecognizer *)tapRecognizer {
+    
+}
+
+- (void)actionAvatarViewTapAction:(UITapGestureRecognizer *)tapRecognizer {
+    
+}
+
+
 #pragma mark- Rewrite
+
+- (void)dataConfig {
+    [super dataConfig];
+    
+    UITapGestureRecognizer *tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actionBubbleViewTapAction:)];
+    [self.viewBubble addGestureRecognizer:tapRecognizer];
+    
+    UITapGestureRecognizer *tapRecognizer2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actionAvatarViewTapAction:)];
+    [self.imgVIcon addGestureRecognizer:tapRecognizer2];
+    
+}
+
 - (void)setModel:(MessageModel *)model {
     [super setModel:model];
     
@@ -47,6 +70,9 @@
             break;
     }
     
+   
+    NSLog(@"ext %@", model.message.ext);
+    NSLog(@"%@", model.mediaLocalPath);
 }
 
 /// 点击状态按钮
@@ -133,11 +159,11 @@
             CGRect rect = [model.text boundingRectWithSize:CGSizeMake(bubbleContentMaxWidth, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [UIFont systemFontOfSize:kMessageCellTextFontSize]} context:nil];
             
             /// 文本在bubbleView里上下各有 1 个 间距
-            CGFloat bubbleViewHeight = rect.size.height;
+            CGFloat bubbleViewHeight = rect.size.height + _cellPadding;
             
             /// 判断最低高度 == 头像的高度
-            if (height > kMessageCellIconWh) {
-                height = bubbleViewHeight + _cellPadding;
+            if (bubbleViewHeight > kMessageCellIconWh) {
+                height = bubbleViewHeight + kMessageCellPadding;
             } else {
                 height = kMessageCellIconWh + kMessageCellPadding;
             }

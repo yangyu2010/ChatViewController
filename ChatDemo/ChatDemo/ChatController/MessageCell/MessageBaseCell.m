@@ -24,12 +24,6 @@
     BOOL _isSender;
 }
 
-/// 头像
-@property (nonatomic, strong) UIImageView *imgVIcon;
-
-/// 内容+背景View
-@property (nonatomic, strong) MJBubbleView *viewBubble;
-
 @end
 
 @implementation MessageBaseCell
@@ -85,7 +79,7 @@
     if (_isSender) {
         
         self.imgVIcon.frame = CGRectMake(self.bounds.size.width - kMessageCellPadding - kMessageCellIconWh, 0, kMessageCellIconWh, kMessageCellIconWh);
-        
+      
         self.viewBubble.frame = CGRectMake(CGRectGetMinX(self.imgVIcon.frame) - kMessageCellPadding - bubbleViewWidth, CGRectGetMinY(self.imgVIcon.frame), bubbleViewWidth, self.bounds.size.height - kMessageCellPadding);
         
         self.btnStatus.frame = CGRectMake(CGRectGetMinX(self.viewBubble.frame) - kMessageCellPadding - kMessageCellBtnStatusWH, CGRectGetMidY(self.viewBubble.frame) - kMessageCellBtnStatusWH * 0.5, kMessageCellBtnStatusWH, kMessageCellBtnStatusWH);
@@ -96,15 +90,13 @@
         self.imgVIcon.frame = CGRectMake(kMessageCellPadding, 0, kMessageCellIconWh, kMessageCellIconWh);
         
         self.viewBubble.frame = CGRectMake(CGRectGetMaxX(self.imgVIcon.frame) + kMessageCellPadding, CGRectGetMinY(self.imgVIcon.frame), bubbleViewWidth, self.bounds.size.height - kMessageCellPadding);
-        
+
         self.btnStatus.frame = CGRectMake(CGRectGetMaxX(self.viewBubble.frame) + kMessageCellPadding, CGRectGetMidY(self.viewBubble.frame) - kMessageCellBtnStatusWH * 0.5, kMessageCellBtnStatusWH, kMessageCellBtnStatusWH);
         
         self.viewActivity.frame = self.btnStatus.frame;
-
     }
     
     [self.viewBubble updateSubViewFrames];
-    
 }
 
 #pragma mark- Data
@@ -128,6 +120,7 @@
     switch (_modelMessageType) {
         case EMMessageBodyTypeText: {
             self.viewBubble.lblText.text = model.text;
+
         }
             break;
         case EMMessageBodyTypeImage: {

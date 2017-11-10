@@ -21,6 +21,7 @@
     self.lblText.font = [UIFont systemFontOfSize:kMessageCellTextFontSize];
     self.lblText.backgroundColor = [UIColor clearColor];
     self.lblText.numberOfLines = 0;
+    self.lblText.textAlignment = NSTextAlignmentLeft;
     [self.imgViewBackground addSubview:self.lblText];
 
 }
