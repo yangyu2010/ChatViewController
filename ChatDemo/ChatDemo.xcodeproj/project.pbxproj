@@ -45,6 +45,7 @@
 		86C1CB281FB4280200D5F2D9 /* NSDate+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 86C1CB271FB4280200D5F2D9 /* NSDate+Category.m */; };
 		86C1CB2B1FB4281600D5F2D9 /* NSDateFormatter+Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 86C1CB2A1FB4281600D5F2D9 /* NSDateFormatter+Category.m */; };
 		86C1CB361FB42ADA00D5F2D9 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 86C1CB381FB42ADA00D5F2D9 /* Localizable.strings */; };
+		86CAB3AE1FB59098009DC044 /* MessageReadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 86CAB3AD1FB59098009DC044 /* MessageReadManager.m */; };
 		F6F2DA1D7740A1162940DD0D /* libPods-ChatDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9347056125438B4963067153 /* libPods-ChatDemo.a */; };
 /* End PBXBuildFile section */
 
@@ -148,6 +149,8 @@
 		86C1CB2D1FB429CE00D5F2D9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		86C1CB371FB42ADA00D5F2D9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		86C1CB391FB42ADB00D5F2D9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		86CAB3AC1FB59098009DC044 /* MessageReadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageReadManager.h; sourceTree = "<group>"; };
+		86CAB3AD1FB59098009DC044 /* MessageReadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MessageReadManager.m; sourceTree = "<group>"; };
 		9347056125438B4963067153 /* libPods-ChatDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ChatDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C83B88E6E305BB4C2E5E02C2 /* Pods-ChatDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChatDemo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ChatDemo/Pods-ChatDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -397,6 +400,8 @@
 				86C1CB271FB4280200D5F2D9 /* NSDate+Category.m */,
 				86C1CB291FB4281600D5F2D9 /* NSDateFormatter+Category.h */,
 				86C1CB2A1FB4281600D5F2D9 /* NSDateFormatter+Category.m */,
+				86CAB3AC1FB59098009DC044 /* MessageReadManager.h */,
+				86CAB3AD1FB59098009DC044 /* MessageReadManager.m */,
 			);
 			path = ChatLibs;
 			sourceTree = "<group>";
@@ -612,6 +617,7 @@
 				862F49341FA6F9A600D0526C /* AppDelegate.m in Sources */,
 				86C1CB2B1FB4281600D5F2D9 /* NSDateFormatter+Category.m in Sources */,
 				86C1CB1A1FB3F0B200D5F2D9 /* MJBubbleView+Text.m in Sources */,
+				86CAB3AE1FB59098009DC044 /* MessageReadManager.m in Sources */,
 				86969CFD1FAAC4E700AD55B7 /* VoiceRecordController.m in Sources */,
 				8606ED611FA87B380023B9DE /* UIView+Sugar.m in Sources */,
 				867B14BE1FA9BFCF00437544 /* VoiceRecordContentView.m in Sources */,

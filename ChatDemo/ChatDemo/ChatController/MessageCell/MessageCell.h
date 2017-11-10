@@ -27,8 +27,11 @@
 
 @protocol MessageCellDelegate <NSObject>
 
+/// 点击气泡View
+- (void)messageCellDidSelected:(MessageCell *)cell model:(MessageModel *)model;
+
 /// 点击头像
-- (void)messageCellDidSelectedAvatar:(MessageCell *)cell;
+- (void)messageCellDidSelectedAvatar:(MessageCell *)cell model:(MessageModel *)model;
 
 /// 点击状态按钮
 - (void)messageCellDidSelectedStatusButton:(MessageCell *)cell model:(MessageModel *)model;

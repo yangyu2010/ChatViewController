@@ -15,13 +15,32 @@
 @implementation MessageCell
 
 #pragma mark- Private
+
+/// 点击 气泡 view
 - (void)actionBubbleViewTapAction:(UITapGestureRecognizer *)tapRecognizer {
     
+    if (self.delegate && [self.delegate respondsToSelector:@selector(messageCellDidSelected:model:)]) {
+        [self.delegate messageCellDidSelected:self model:self.model];
+    }
 }
 
+/// 点击头像
 - (void)actionAvatarViewTapAction:(UITapGestureRecognizer *)tapRecognizer {
     
+    if (self.delegate && [self.delegate respondsToSelector:@selector(messageCellDidSelectedAvatar:model:)]) {
+        [self.delegate messageCellDidSelectedAvatar:self model:self.model];
+    }
 }
+
+/// 点击状态按钮
+- (void)actionBtnStatus {
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(messageCellDidSelectedStatusButton:model:)]) {
+        [self.delegate messageCellDidSelectedStatusButton:self model:self.model];
+    }
+}
+
+
 
 
 #pragma mark- Rewrite
@@ -74,15 +93,6 @@
     NSLog(@"ext %@", model.message.ext);
     NSLog(@"%@", model.mediaLocalPath);
 }
-
-/// 点击状态按钮
-- (void)actionBtnStatus {
-    
-    if (self.delegate && [self.delegate respondsToSelector:@selector(messageCellDidSelectedStatusButton:model:)]) {
-        [self.delegate messageCellDidSelectedStatusButton:self model:self.model];
-    }
-}
-
 
 #pragma mark- Public
 

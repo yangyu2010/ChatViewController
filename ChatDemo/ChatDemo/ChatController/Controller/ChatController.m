@@ -20,6 +20,7 @@
 #import "MessageCellHeader.h"
 #import "NSDate+Category.h"
 #import <Hyphenate/Hyphenate.h>
+#import "MessageReadManager.h"
 
 #define kChatToolBarHeight                   49.0
 
@@ -545,6 +546,8 @@
 }
 
 #pragma mark- cell 代理
+
+/// 点击cell的状态按钮
 - (void)messageCellDidSelectedStatusButton:(MessageCell *)cell model:(MessageModel *)model {
     
     if ((model.messageStatus != EMMessageStatusFailed) &&
@@ -568,11 +571,62 @@
     }];
 }
 
-- (void)messageCellDidSelectedAvatar:(MessageCell *)cell {
+/// 点击cell
+- (void)messageCellDidSelected:(MessageCell *)cell model:(MessageModel *)model {
+    
+    switch (model.bodyType) {
+        case EMMessageBodyTypeImage:
+        {
+            [self actionAudioCellDidSelected:model];
+        }
+            break;
+            
+        default:
+            break;
+    }
+}
+
+/// 点击cell的 头像
+- (void)messageCellDidSelectedAvatar:(MessageCell *)cell model:(MessageModel *)model {
     
 }
 
 
+#pragma mark- 点击cell的相应处理
+
+/// 点击 音频
+- (void)actionAudioCellDidSelected:(MessageModel *)model {
+    
+    if (model.bodyType != EMMessageBodyTypeVoice) {
+        return ;
+    }
+    
+    EMVoiceMessageBody *body = (EMVoiceMessageBody*)model.message.body;
+    EMDownloadStatus downloadStatus = [body downloadStatus];
+    if (downloadStatus == EMDownloadStatusDownloading) {
+        NSLog(@"音频正在下载中");
+        return ;
+    }
+    else if (downloadStatus == EMDownloadStatusFailed) {
+        NSLog(@"音频下载失败, 重新下载中");;
+        [[EMClient sharedClient].chatManager downloadMessageAttachment:model.message progress:nil completion:nil];
+        return;
+    }
+    
+    __weak ChatController *weakSelf = self;
+    BOOL isPrepare = [[MessageReadManager defaultManager] prepareMessageAudioModel:model updateViewCompletion:^(MessageModel *prevAudioModel, MessageModel *currentAudioModel) {
+        if (prevAudioModel || currentAudioModel) {
+            [weakSelf.tableChat reloadData];
+        }
+    }];
+    
+    if (isPrepare) {
+        // 可以开始播放了
+        
+    } else {
+        
+    }
+}
 
 #pragma mark- 聊天相关
 /// 获取会话 和 聊天记录
@@ -637,7 +691,7 @@
 
 #pragma mark- 聊天代理 EMChatManagerDelegate
 - (void)messagesDidReceive:(NSArray *)aMessages {
-
+    
     __weak typeof(self) weakself = self;
     dispatch_async(_queueMessage, ^{
         NSArray *arrMessages = [weakself actionFormatTimeMessage:aMessages];
@@ -653,7 +707,7 @@
 #pragma mark- 发送消息
 /// 发送一个消息到服务器
 - (void)actionSendMessage:(EMMessage *)message {
-
+    
     NSString *originMessageId = message.messageId;
     
     [self actionAddMessageToSource:message];
