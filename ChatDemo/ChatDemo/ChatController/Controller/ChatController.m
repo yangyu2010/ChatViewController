@@ -21,6 +21,7 @@
 #import "NSDate+Category.h"
 #import <Hyphenate/Hyphenate.h>
 #import "MessageReadManager.h"
+#import <AVFoundation/AVFoundation.h>
 
 #define kChatToolBarHeight                   49.0
 
@@ -70,6 +71,9 @@
 
     /// 消息队列
     dispatch_queue_t _queueMessage;
+    
+    
+    AVAudioPlayer *_audioPlayer;
 }
 
 /// 底部toolbar
@@ -575,7 +579,7 @@
 - (void)messageCellDidSelected:(MessageCell *)cell model:(MessageModel *)model {
     
     switch (model.bodyType) {
-        case EMMessageBodyTypeImage:
+        case EMMessageBodyTypeVoice:
         {
             [self actionAudioCellDidSelected:model];
         }
@@ -588,6 +592,7 @@
 
 /// 点击cell的 头像
 - (void)messageCellDidSelectedAvatar:(MessageCell *)cell model:(MessageModel *)model {
+    
     
 }
 
@@ -622,9 +627,20 @@
     
     if (isPrepare) {
         // 可以开始播放了
+        NSString *path = model.mediaLocalPath;
+        NSURL *url = [NSURL fileURLWithPath:path];
+        NSError *_error = nil;
+        _audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&_error];
+        if (!_error) {
+            [_audioPlayer prepareToPlay];
+            [_audioPlayer play];
+        } else {
+            NSLog(@"AudioCell error %@", _error.localizedDescription);
+        }
         
     } else {
         
+        NSLog(@"AudioCell no finish");
     }
 }
 
