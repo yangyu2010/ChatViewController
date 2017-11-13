@@ -40,4 +40,18 @@
     return message;
 }
 
+/// 生产一个音频Message
++ (EMMessage *)getVoiceMessageWithLocalPath:(NSString *)localPath
+                                    duration:(NSInteger)duration
+                                          to:(NSString *)toUser {
+    
+    EMVoiceMessageBody *body = [[EMVoiceMessageBody alloc] initWithLocalPath:localPath displayName:@"audio"];
+    body.duration = (int)duration;
+    NSString *from = [[EMClient sharedClient] currentUsername];
+    EMMessage *message = [[EMMessage alloc] initWithConversationID:toUser from:from to:toUser body:body ext:nil];
+    message.chatType = EMChatTypeChat;
+    
+    return message;
+}
+
 @end

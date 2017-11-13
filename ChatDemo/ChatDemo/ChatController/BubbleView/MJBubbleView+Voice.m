@@ -78,9 +78,9 @@
     if (self.isSender) {
 
         self.imgViewVoice.frame = CGRectMake(0, 0, self.imgViewVoice.image.size.width, self.imgViewVoice.image.size.height);
-        self.imgViewVoice.center = CGPointMake(CGRectGetMaxX(self.imgViewBackground.frame) - 2 * kMessageCellBubbleMargin - self.imgViewVoice.image.size.width, CGRectGetMidY(self.frame));
+        self.imgViewVoice.center = CGPointMake(self.bounds.size.width - 2 * kMessageCellBubbleMargin - self.imgViewVoice.image.size.width * 0.5, CGRectGetMidY(self.frame));
 
-        self.lblVoiceDuration.frame = CGRectMake(self.bounds.size.width - kMessageCellBubbleMargin - 30, CGRectGetMidY(self.frame), 30, 12);
+        self.lblVoiceDuration.frame = CGRectMake(-30 + kMessageCellBubbleMargin, CGRectGetMidY(self.frame), 30, 12);
         
     } else {
         

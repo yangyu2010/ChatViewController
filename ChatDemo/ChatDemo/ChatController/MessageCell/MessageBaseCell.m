@@ -165,7 +165,7 @@
 - (UIImageView *)imgVIcon {
     if (_imgVIcon == nil) {
         _imgVIcon = [[UIImageView alloc] init];
-        _imgVIcon.contentMode = UIViewContentModeScaleToFill;
+        _imgVIcon.contentMode = UIViewContentModeScaleAspectFill;
         _imgVIcon.translatesAutoresizingMaskIntoConstraints = NO;
         _imgVIcon.backgroundColor = [UIColor clearColor];
         _imgVIcon.clipsToBounds = YES;

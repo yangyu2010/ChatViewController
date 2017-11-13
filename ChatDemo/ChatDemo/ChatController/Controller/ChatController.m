@@ -31,9 +31,9 @@
 /// 录音定时器 间隔
 #define KRecordTimerDuration                 0.2
 /// 最多录制时间
-#define kRecordMaxRecordDurtion              10
+#define kRecordMaxRecordDurtion              30
 /// 剩余多少s开始提示用户
-#define kRecordRemainCountingDuration        5
+#define kRecordRemainCountingDuration        10
 
 @interface ChatController ()
                                 <EMChatManagerDelegate,
@@ -403,7 +403,6 @@
     
     if (isSelected) {
         [self actionResetToolBarFrame];
-        
         // 在录音
         _chatToolBarState = ChatToolBarStateVoice;
         _toolBarMoreViewY = self.view.height;
@@ -447,6 +446,17 @@
     
     _timerVoice = [NSTimer scheduledTimerWithTimeInterval:KRecordTimerDuration target:self selector:@selector(actionRecordVoiceTimeOut) userInfo:nil repeats:YES];
     [_timerVoice fire];
+
+    int x = arc4random() % 100000;
+    NSTimeInterval time = [[NSDate date] timeIntervalSince1970];
+    NSString *fileName = [NSString stringWithFormat:@"%d%d",(int)time,x];
+    
+    [[EMCDDeviceManager sharedInstance] asyncStartRecordingWithFileName:fileName completion:^(NSError *error) {
+        
+        NSLog(@"1error %@", error);
+         
+     }];
+    
 }
 
 /// 结束定时器
@@ -463,11 +473,25 @@
     if (_recordCurrentState == VoiceRecordStateStart) {
         [self actionStartRecordVoiceTimer];
     }
-    else if (_recordCurrentState == VoiceRecordStateCanceled ||
-             _recordCurrentState == VoiceRecordStateFinished) {
+    else if (_recordCurrentState == VoiceRecordStateCanceled) {
+        [self actionRecordVoiceCancle];
+    }
+    else if (_recordCurrentState == VoiceRecordStateFinished) {
         [self actionRecordVoiceFinished];
     }
+    
     [self.ctrVoiceRecord updateUIWithRecordState:_recordCurrentState];
+}
+
+/// 取消录音
+- (void)actionRecordVoiceCancle {
+    
+    [self actionStopRecordVoiceTimer];
+    _recordCurrentDuration = 0;
+    _recordCurrentState = VoiceRecordStateNoraml;
+//    [self.ctrVoiceRecord updateUIWithRecordState:_recordCurrentState];
+    
+    [[EMCDDeviceManager sharedInstance] cancelCurrentRecording];
 }
 
 /// 录制语音结束
@@ -480,7 +504,19 @@
     [self actionStopRecordVoiceTimer];
     _recordCurrentDuration = 0;
     _recordCurrentState = VoiceRecordStateNoraml;
-    [self.ctrVoiceRecord updateUIWithRecordState:_recordCurrentState];
+//    [self.ctrVoiceRecord updateUIWithRecordState:_recordCurrentState];
+    
+    
+    __weak typeof(self) weakSelf = self;
+    [[EMCDDeviceManager sharedInstance] asyncStopRecordingWithCompletion:^(NSString *recordPath, NSInteger aDuration, NSError *error) {
+        
+        if (error) {
+            NSLog(@"%@", error);
+        } else {
+            [weakSelf actionSendVoiceMessageWithLocalPath:recordPath duration:aDuration];
+        }
+        
+    }];
 }
 
 /// 判断当前录制的view 是否需要显示 倒计时
@@ -829,6 +865,16 @@
     [self actionSendMessage:message];
 }
 
-
+/// 发送语音消息
+- (void)actionSendVoiceMessageWithLocalPath:(NSString *)localPath
+                               duration:(NSInteger)duration {
+    
+    if (localPath.length == 0 || duration == 0) {
+        return ;
+    }
+    
+    EMMessage *message = [ChatHelp getVoiceMessageWithLocalPath:localPath duration:duration to:self.conversationId];
+    [self actionSendMessage:message];
+}
 
 @end

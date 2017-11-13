@@ -33,4 +33,19 @@
 + (EMMessage *)getImageMessage:(UIImage *)image
                             to:(NSString *)toUser;
 
+
+
+/**
+ 生产一个音频Message
+
+ @param localPath 音频本地路径
+ @param duration 时长
+ @param toUser 接收方
+ @return EMMessage
+ */
++ (EMMessage *)getVoiceMessageWithLocalPath:(NSString *)localPath
+                                    duration:(NSInteger)duration
+                                          to:(NSString *)toUser;
+
+
 @end

@@ -91,10 +91,7 @@
                 if (message.ext) {
                     self.isMediaPlayed = [[message.ext objectForKey:@"isPlayed"] boolValue];
                 }
-                
-                NSLog(@"%d", voiceBody.duration);
-                NSLog(@"ext %@", message.ext);
-                
+
                 self.fileURLPath = voiceBody.remotePath;
                 self.mediaLocalPath = voiceBody.localPath;
             }

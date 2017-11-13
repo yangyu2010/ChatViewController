@@ -508,22 +508,22 @@
 		86E1FBD71FB978C100229FF1 /* internal */ = {
 			isa = PBXGroup;
 			children = (
+				86E1FBDD1FB978C100229FF1 /* DemoErrorCode.h */,
 				86E1FBD81FB978C100229FF1 /* EMCDDeviceManager+Microphone.h */,
+				86E1FBE31FB978C100229FF1 /* EMCDDeviceManager+Microphone.m */,
+				86E1FBE21FB978C100229FF1 /* EMCDDeviceManager+Remind.h */,
 				86E1FBD91FB978C100229FF1 /* EMCDDeviceManager+Remind.m */,
+				86E1FBE11FB978C100229FF1 /* EMCDDeviceManager+ProximitySensor.h */,
 				86E1FBDA1FB978C100229FF1 /* EMCDDeviceManager+ProximitySensor.m */,
 				86E1FBDB1FB978C100229FF1 /* EMCDDeviceManager.h */,
 				86E1FBDC1FB978C100229FF1 /* EMCDDeviceManagerBase.h */,
-				86E1FBDD1FB978C100229FF1 /* DemoErrorCode.h */,
-				86E1FBDE1FB978C100229FF1 /* EMAudioPlayerUtil.h */,
-				86E1FBDF1FB978C100229FF1 /* EMAudioRecorderUtil.h */,
-				86E1FBE01FB978C100229FF1 /* EMCDDeviceManager+Media.m */,
-				86E1FBE11FB978C100229FF1 /* EMCDDeviceManager+ProximitySensor.h */,
-				86E1FBE21FB978C100229FF1 /* EMCDDeviceManager+Remind.h */,
-				86E1FBE31FB978C100229FF1 /* EMCDDeviceManager+Microphone.m */,
-				86E1FBE41FB978C100229FF1 /* EMAudioRecorderUtil.m */,
-				86E1FBE51FB978C100229FF1 /* EMAudioPlayerUtil.m */,
 				86E1FBE61FB978C100229FF1 /* EMCDDeviceManagerBase.m */,
+				86E1FBDE1FB978C100229FF1 /* EMAudioPlayerUtil.h */,
+				86E1FBE51FB978C100229FF1 /* EMAudioPlayerUtil.m */,
+				86E1FBDF1FB978C100229FF1 /* EMAudioRecorderUtil.h */,
+				86E1FBE41FB978C100229FF1 /* EMAudioRecorderUtil.m */,
 				86E1FBE71FB978C100229FF1 /* EMCDDeviceManager+Media.h */,
+				86E1FBE01FB978C100229FF1 /* EMCDDeviceManager+Media.m */,
 			);
 			path = internal;
 			sourceTree = "<group>";

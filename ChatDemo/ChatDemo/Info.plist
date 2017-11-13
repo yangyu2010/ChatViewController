@@ -45,6 +45,8 @@
 	<string>Photo</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

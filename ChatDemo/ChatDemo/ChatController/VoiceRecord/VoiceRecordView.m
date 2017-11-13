@@ -13,6 +13,10 @@
 {
     VoiceRecordState _state;
 }
+
+/// 背景透明View
+@property (nonatomic, strong) UIView *viewBg;
+
 /// 正在录制的View
 @property (nonatomic, strong) VoiceRecordingView *viewRecording;
 
@@ -43,9 +47,18 @@
 
 - (void)viewConfig {
     
-    self.backgroundColor = [UIColor blackColor];
-    self.alpha = 0.6;
     self.layer.cornerRadius = 6;
+    self.layer.masksToBounds = YES;
+    self.clipsToBounds = YES;
+    self.backgroundColor = [UIColor clearColor];
+    
+    if (self.viewBg == nil) {
+        self.viewBg = [[UIView alloc] init];
+        self.viewBg.backgroundColor = [UIColor blackColor];
+        self.viewBg.alpha = 0.6;
+        [self addSubview:self.viewBg];
+    }
+    
     
     if (self.viewRecording == nil) {
         self.viewRecording = [[VoiceRecordingView alloc] init];
@@ -72,6 +85,7 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
+    self.viewBg.frame = self.bounds;
     self.viewRecording.frame = self.bounds;
     self.viewCancle.frame = self.bounds;
     self.viewCount.frame = self.bounds;
