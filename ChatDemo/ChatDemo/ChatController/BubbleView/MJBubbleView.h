@@ -32,6 +32,7 @@
 /// image views 图片
 @property (strong, nonatomic) UIImageView *imgView;
 
+
 /// voice views 语言
 /// 语言图片
 @property (strong, nonatomic) UIImageView *imgViewVoice;

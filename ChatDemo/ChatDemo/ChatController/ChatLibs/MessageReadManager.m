@@ -30,6 +30,8 @@ static MessageReadManager *_detailInstance = nil;
 }
 
 #pragma mark- Public
+
+/// 判断语音消息是否可以播放
 - (BOOL)prepareMessageAudioModel:(MessageModel *)messageModel
             updateViewCompletion:(void (^)(MessageModel *prevAudioModel, MessageModel *currentAudioModel))updateCompletion {
     
@@ -85,6 +87,20 @@ static MessageReadManager *_detailInstance = nil;
     }
     
     return isPrepare;
+}
+
+/// 重置正在播放状态为NO
+- (void)stopMessageAudioModel {
+    
+    MessageModel *model = nil;
+    if (self.modelAudioMessage.bodyType == EMMessageBodyTypeVoice) {
+        if (self.modelAudioMessage.isMediaPlaying) {
+            model = self.modelAudioMessage;
+        }
+        self.modelAudioMessage.isMediaPlaying = NO;
+        self.modelAudioMessage = nil;
+    }
+    
 }
 
 @end

@@ -139,7 +139,19 @@
         }
             break;
         case EMMessageBodyTypeVoice: {
+            
             self.viewBubble.lblVoiceDuration.text = [NSString stringWithFormat:@"%d''",(int)model.mediaDuration];
+
+            if (!model.isSender) {
+                self.viewBubble.imgViewIsRead.hidden = (model.isMediaPlayed == YES);
+            }
+            
+            if (model.isMediaPlaying) {
+                [self.viewBubble.imgViewVoice startAnimating];
+            } else {
+                [self.viewBubble.imgViewVoice stopAnimating];
+            }
+            
         }
             break;
         default:

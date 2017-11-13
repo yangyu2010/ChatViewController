@@ -88,10 +88,6 @@
         default:
             break;
     }
-    
-   
-    NSLog(@"ext %@", model.message.ext);
-    NSLog(@"%@", model.mediaLocalPath);
 }
 
 #pragma mark- Public

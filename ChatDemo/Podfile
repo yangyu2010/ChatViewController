@@ -6,4 +6,6 @@ target 'ChatDemo' do
 
     pod 'SDWebImage'
     
+    #pod 'EaseUI', :git => 'https://github.com/easemob/easeui-ios-hyphenate-cocoapods.git'
+    
 end

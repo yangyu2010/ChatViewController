@@ -53,7 +53,7 @@
 #define kMessageCellVoicePadding (kMessageCellVoiceMaxWidth - kMessageCellVoiceMinWidth)
 
 /// 时间标识的间隔
-#define kTimeIntervalMessageTag   60
+#define kTimeIntervalMessageTag   60 * 5
 
 #pragma mark- 聊天cell的标识
 

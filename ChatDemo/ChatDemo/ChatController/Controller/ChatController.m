@@ -21,7 +21,8 @@
 #import "NSDate+Category.h"
 #import <Hyphenate/Hyphenate.h>
 #import "MessageReadManager.h"
-#import <AVFoundation/AVFoundation.h>
+#import "EMCDDeviceManager.h"
+
 
 #define kChatToolBarHeight                   49.0
 
@@ -71,9 +72,7 @@
 
     /// 消息队列
     dispatch_queue_t _queueMessage;
-    
-    
-    AVAudioPlayer *_audioPlayer;
+
 }
 
 /// 底部toolbar
@@ -627,16 +626,15 @@
     
     if (isPrepare) {
         // 可以开始播放了
-        NSString *path = model.mediaLocalPath;
-        NSURL *url = [NSURL fileURLWithPath:path];
-        NSError *_error = nil;
-        _audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&_error];
-        if (!_error) {
-            [_audioPlayer prepareToPlay];
-            [_audioPlayer play];
-        } else {
-            NSLog(@"AudioCell error %@", _error.localizedDescription);
-        }
+        [[EMCDDeviceManager sharedInstance] enableProximitySensor];
+        [[EMCDDeviceManager sharedInstance] asyncPlayingWithPath:model.mediaLocalPath completion:^(NSError *error) {
+            [[MessageReadManager defaultManager] stopMessageAudioModel];
+           
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.tableChat reloadData];
+            });
+            
+        }];
         
     } else {
         

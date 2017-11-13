@@ -21,7 +21,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
-    EMOptions *emOptions = [EMOptions optionsWithAppkey:@"easemob-demo#chatdemoui"];
+    EMOptions *emOptions = [EMOptions optionsWithAppkey:@"243963596#wowojiaju"];
     [[EMClient sharedClient] initializeSDKWithOptions:emOptions];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];

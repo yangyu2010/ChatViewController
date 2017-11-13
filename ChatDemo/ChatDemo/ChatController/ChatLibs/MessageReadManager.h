@@ -26,4 +26,12 @@
 - (BOOL)prepareMessageAudioModel:(MessageModel *)messageModel
             updateViewCompletion:(void (^)(MessageModel *prevAudioModel, MessageModel *currentAudioModel))updateCompletion;
 
+
+/**
+ 重置正在播放状态为NO
+ */
+- (void)stopMessageAudioModel;
+
 @end
+
+

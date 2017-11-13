@@ -47,6 +47,22 @@
     self.imgViewIsRead.clipsToBounds = YES;
     [self addSubview:self.imgViewIsRead];
     
+    if (self.isSender) {
+        self.imgViewIsRead.hidden = YES;
+        
+        self.imgViewVoice.animationImages = @[
+                                              [UIImage imageNamed:@"SenderVoiceNodePlaying001"],
+                                              [UIImage imageNamed:@"SenderVoiceNodePlaying002"],
+                                              [UIImage imageNamed:@"SenderVoiceNodePlaying003"]
+                                              ];
+    } else {
+        self.imgViewIsRead.hidden = NO;
+        
+        self.imgViewVoice.animationImages = @[[UIImage imageNamed:@"ReceiverVoiceNodePlaying001"],
+                                              [UIImage imageNamed:@"ReceiverVoiceNodePlaying002"],
+                                              [UIImage imageNamed:@"ReceiverVoiceNodePlaying003"]
+                                              ];
+    }
 }
 
 /// 更新frame
@@ -60,17 +76,13 @@
     }
 
     if (self.isSender) {
-        
-        self.imgViewIsRead.hidden = YES;
-        
+
         self.imgViewVoice.frame = CGRectMake(0, 0, self.imgViewVoice.image.size.width, self.imgViewVoice.image.size.height);
         self.imgViewVoice.center = CGPointMake(CGRectGetMaxX(self.imgViewBackground.frame) - 2 * kMessageCellBubbleMargin - self.imgViewVoice.image.size.width, CGRectGetMidY(self.frame));
 
         self.lblVoiceDuration.frame = CGRectMake(self.bounds.size.width - kMessageCellBubbleMargin - 30, CGRectGetMidY(self.frame), 30, 12);
         
     } else {
-        
-        self.imgViewIsRead.hidden = NO;
         
         self.imgViewVoice.frame = CGRectMake(0, 0, self.imgViewVoice.image.size.width, self.imgViewVoice.image.size.height);
         self.imgViewVoice.center = CGPointMake(2 * kMessageCellBubbleMargin + self.imgViewVoice.image.size.width * 0.5, CGRectGetMidY(self.frame));
