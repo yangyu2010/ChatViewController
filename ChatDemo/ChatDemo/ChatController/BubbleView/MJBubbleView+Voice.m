@@ -63,6 +63,7 @@
                                               [UIImage imageNamed:@"ReceiverVoiceNodePlaying003"]
                                               ];
     }
+
 }
 
 /// 更新frame
@@ -94,5 +95,6 @@
     }
 
 }
+
 
 @end

@@ -172,6 +172,8 @@
 /// 开始录制
 - (void)actionHoldDownButtonTouchDown {
     
+//    NSLog(@"开始录制");
+    
     [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateStart];
     if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordState:)]) {
         [self.delegate chatToolBarVoiceRecordState:VoiceRecordStateStart];
@@ -180,6 +182,8 @@
 
 /// 取消了
 - (void)actionHoldDownButtonTouchUpOutside {
+    
+//    NSLog(@"取消了");
 
     [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateCanceled];
     if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordState:)]) {
@@ -189,6 +193,10 @@
 
 /// 录制完成
 - (void)actionHoldDownButtonTouchUpInside {
+    
+//    NSLog(@"录制完成");
+
+    
     [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateFinished];
     if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordState:)]) {
         [self.delegate chatToolBarVoiceRecordState:VoiceRecordStateFinished];
@@ -197,6 +205,9 @@
 
 /// 上滑
 - (void)actionHoldDownDragOutside {
+    
+//    NSLog(@"上滑");
+
     [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateTouchUpCancel];
     if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordState:)]) {
         [self.delegate chatToolBarVoiceRecordState:VoiceRecordStateTouchUpCancel];
@@ -205,6 +216,9 @@
 
 /// 继续录制
 - (void)actionHoldDownDragInside {
+    
+//    NSLog(@"继续录制");
+
     [self.btnVoice updateRecordBuutonStyle:VoiceRecordStateStart];
     if (self.delegate && [self.delegate respondsToSelector:@selector(chatToolBarVoiceRecordState:)]) {
         [self.delegate chatToolBarVoiceRecordState:VoiceRecordStateStart];

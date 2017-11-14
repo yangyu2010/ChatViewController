@@ -73,6 +73,8 @@
     /// 消息队列
     dispatch_queue_t _queueMessage;
 
+    /// 正式录音ing
+    BOOL _isRecordingVoice;
 }
 
 /// 底部toolbar
@@ -236,6 +238,7 @@
     
     self.timeIntervalMessageTag = -1;
 
+    _isRecordingVoice = NO;
     
     dispatch_async(_queueMessage, ^{
         self.pickerImage = [[UIImagePickerController alloc] init];
@@ -439,6 +442,12 @@
 
 /// 开始定时器 录制
 - (void)actionStartRecordVoiceTimer {
+    
+    if (_isRecordingVoice) {
+        return ;
+    }
+    _isRecordingVoice = YES;
+    
     if (_timerVoice) {
         [_timerVoice invalidate];
         _timerVoice = nil;
@@ -492,6 +501,7 @@
 //    [self.ctrVoiceRecord updateUIWithRecordState:_recordCurrentState];
     
     [[EMCDDeviceManager sharedInstance] cancelCurrentRecording];
+    _isRecordingVoice = NO;
 }
 
 /// 录制语音结束
@@ -517,6 +527,8 @@
         }
         
     }];
+    
+    _isRecordingVoice = NO;
 }
 
 /// 判断当前录制的view 是否需要显示 倒计时

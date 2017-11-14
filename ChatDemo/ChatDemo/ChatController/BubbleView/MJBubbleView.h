@@ -7,7 +7,7 @@
 //  气泡View
 
 #import <UIKit/UIKit.h>
-#import <Hyphenate/EMMessageBody.h>
+#import <Hyphenate/EMMessage.h>
 
 
 @interface MJBubbleView : UIView
@@ -16,12 +16,14 @@
 - (instancetype)initWithIsSender:(BOOL)isSender;
 
 
-
 /// 是否是发送方
 @property (nonatomic, assign) BOOL isSender;
-
 /// 当前消息类型
 @property (nonatomic, assign) EMMessageBodyType type;
+/// 消息发送状态
+@property (nonatomic, assign) EMMessageStatus messageStatus;
+
+
 
 /// 背景Img
 @property (nonatomic, strong) UIImageView *imgViewBackground;

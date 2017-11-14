@@ -63,6 +63,8 @@
         return ;
     }
     
+    self.viewBubble.messageStatus = model.messageStatus;
+    
     switch (model.messageStatus) {
         case EMMessageStatusPending:
             break;

@@ -98,4 +98,15 @@
     }
 }
 
+/// 设置发送方的
+- (void)setMessageStatus:(EMMessageStatus)messageStatus {
+    _messageStatus = messageStatus;
+    
+    if (_messageStatus == EMMessageStatusSucceed) {
+        self.lblVoiceDuration.hidden = NO;
+    } else {
+        self.lblVoiceDuration.hidden = YES;
+    }
+}
+
 @end
