@@ -77,7 +77,7 @@
     
     if (pasteboard.image != nil) {
         [[NSNotificationCenter defaultCenter] postNotificationName:kChatTextViewPasteboardImageNotification object:pasteboard.image userInfo:nil];
-        [self resignFirstResponder];
+//        [self resignFirstResponder];
     }
 }
 
