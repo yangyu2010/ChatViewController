@@ -19,6 +19,10 @@
 /// 点击 气泡 view
 - (void)actionBubbleViewTapAction:(UITapGestureRecognizer *)tapRecognizer {
     
+    if (tapRecognizer.state != UIGestureRecognizerStateEnded) {
+        return;
+    }
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(messageCellDidSelected:model:)]) {
         [self.delegate messageCellDidSelected:self model:self.model];
     }
@@ -26,6 +30,10 @@
 
 /// 点击头像
 - (void)actionAvatarViewTapAction:(UITapGestureRecognizer *)tapRecognizer {
+    
+    if (tapRecognizer.state != UIGestureRecognizerStateEnded) {
+        return;
+    }
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(messageCellDidSelectedAvatar:model:)]) {
         [self.delegate messageCellDidSelectedAvatar:self model:self.model];
@@ -40,6 +48,20 @@
     }
 }
 
+/// 背景图长按
+- (void)actionHeaderLongPress:(UILongPressGestureRecognizer *)gesture {
+    
+    NSLog(@"LongPress %ld", gesture.state);
+    
+    NSLog(@"长按手势");
+    
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        [self.viewBubble becomeFirstResponder];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(messageCellLongPressAction:model:)]) {
+            [self.delegate messageCellLongPressAction:self model:self.model];
+        }
+    }
+}
 
 
 
@@ -54,6 +76,8 @@
     UITapGestureRecognizer *tapRecognizer2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(actionAvatarViewTapAction:)];
     [self.imgVIcon addGestureRecognizer:tapRecognizer2];
     
+    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(actionHeaderLongPress:)];
+    [self.viewBubble.imgViewBackground addGestureRecognizer:longPressGesture];
 }
 
 - (void)setModel:(MessageModel *)model {

@@ -8,6 +8,7 @@
 
 #import "ChatToolInputView.h"
 #import "UIColor+Utils.h"
+#import "ChatControllerHeader.h"
 
 @implementation ChatToolInputView
 
@@ -52,7 +53,33 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     
+}
+
+#pragma mark- Rewrite
+- (BOOL) canBecomeFirstResponder {
+    return YES;
+}
+
+- (BOOL) canPerformAction:(SEL)action withSender:(id)sender {
+//    if ( [UIMenuController sharedMenuController] ) {
+//        [UIMenuController sharedMenuController].menuVisible = NO;
+//    }
+    return YES;
+}
+
+/// 监听复制事件
+- (void)paste:(id)sender {
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    if (pasteboard.string.length > 0) {
+        [super paste:sender];
+        return ;
+    }
     
+    if (pasteboard.image != nil) {
+//        [NSNotificationCenter defaultCenter] postNotificationName:kChatTextViewPasteboardImageNotification object:<#(nullable id)#>
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kChatTextViewPasteboardImageNotification object:pasteboard.image userInfo:nil];
+    }
 }
 
 #pragma mark- Data

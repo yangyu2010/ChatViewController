@@ -163,6 +163,7 @@
 		86C1CB391FB42ADB00D5F2D9 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		86CAB3AC1FB59098009DC044 /* MessageReadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MessageReadManager.h; sourceTree = "<group>"; };
 		86CAB3AD1FB59098009DC044 /* MessageReadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MessageReadManager.m; sourceTree = "<group>"; };
+		86E0F6981FBC3C2400ECD7CD /* ChatControllerHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatControllerHeader.h; sourceTree = "<group>"; };
 		86E1FBC91FB978C100229FF1 /* libopencore-amrwb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libopencore-amrwb.a"; sourceTree = "<group>"; };
 		86E1FBCA1FB978C100229FF1 /* if_rom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = if_rom.h; sourceTree = "<group>"; };
 		86E1FBCB1FB978C100229FF1 /* dec_if.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dec_if.h; sourceTree = "<group>"; };
@@ -358,7 +359,6 @@
 				86C1CB221FB410F700D5F2D9 /* ChatLibs */,
 				86C1CB0F1FB3F0B200D5F2D9 /* BubbleView */,
 				86A06AEE1FB04A1A0000A53F /* MessageCell */,
-				86A06AEA1FB009A50000A53F /* ChatView */,
 				86A06ADF1FB0098B0000A53F /* ToolBarView */,
 				8666FD961FAAD3CC00CD12C7 /* MoreView */,
 				867B14AE1FA9A80F00437544 /* VoiceRecord */,
@@ -371,6 +371,7 @@
 		868958971FA72D2A00BC0619 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				86E0F6981FBC3C2400ECD7CD /* ChatControllerHeader.h */,
 				8642AA751FB312D800E81849 /* ChatHelp.h */,
 				8642AA761FB312D800E81849 /* ChatHelp.m */,
 				86A06AF51FB065430000A53F /* MessageModel.h */,
@@ -400,13 +401,6 @@
 				86A06AE31FB0098B0000A53F /* ChatToolBar.m */,
 			);
 			path = ToolBarView;
-			sourceTree = "<group>";
-		};
-		86A06AEA1FB009A50000A53F /* ChatView */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ChatView;
 			sourceTree = "<group>";
 		};
 		86A06AEE1FB04A1A0000A53F /* MessageCell */ = {

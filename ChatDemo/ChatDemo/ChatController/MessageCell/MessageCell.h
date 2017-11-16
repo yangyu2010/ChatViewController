@@ -36,4 +36,7 @@
 /// 点击状态按钮
 - (void)messageCellDidSelectedStatusButton:(MessageCell *)cell model:(MessageModel *)model;
 
+/// 长按
+- (void)messageCellLongPressAction:(MessageCell *)cell model:(MessageModel *)model;
+
 @end

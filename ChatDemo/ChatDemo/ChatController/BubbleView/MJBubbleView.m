@@ -18,10 +18,22 @@
     if (self) {
         _isSender = isSender;
         
+        [self dataConfig];
         [self viewConfig];
         
     }
     return self;
+}
+
+#pragma mark- Data
+- (void)dataConfig {
+    
+    self.imgViewBackground.userInteractionEnabled = YES;
+    
+}
+
+- (BOOL)canBecomeFirstResponder {
+    return YES;
 }
 
 #pragma mark- UI
@@ -44,6 +56,7 @@
     self.imgViewBackground.frame = self.bounds;
     
 }
+
 
 #pragma mark- Get
 - (UIImageView *)imgViewBackground {

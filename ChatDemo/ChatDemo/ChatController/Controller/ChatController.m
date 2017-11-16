@@ -22,7 +22,8 @@
 #import <Hyphenate/Hyphenate.h>
 #import "MessageReadManager.h"
 #import "EMCDDeviceManager.h"
-
+#import "MJBubbleView.h"
+#import "ChatControllerHeader.h"
 
 #define kChatToolBarHeight                   49.0
 
@@ -57,8 +58,8 @@
     CGFloat _toolBarMoreViewY;
     /// 当前toolbar的状态
     ChatToolBarState _chatToolBarState;
-    /// table y值
-    CGFloat _tableViewY;
+    /// table height
+//    CGFloat _tableViewHeight;
     
     /// 是否需要根据键盘来调整页面
     BOOL _isNeedNotifKeyboard;
@@ -75,6 +76,8 @@
 
     /// 正式录音ing
     BOOL _isRecordingVoice;
+    
+    UIMenuController *_menuController;
 }
 
 /// 底部toolbar
@@ -97,6 +100,15 @@
 @property (nonatomic, strong) NSMutableArray <EMMessage *> *arrMessages;
 /// 时间间隔标记 默认是0, 如果记录了一次时间, 就把这个时间赋值给当前
 @property (nonatomic, assign) NSTimeInterval timeIntervalMessageTag;
+
+/// 长按手势出发的菜单
+@property (nonatomic, strong) UIMenuController *ctrMenu;
+/// 复制item
+@property (nonatomic, strong) UIMenuItem *itemCopy;
+/// 删除item
+@property (nonatomic, strong) UIMenuItem *itemDelete;
+//// 记录长按手势的下标
+@property (nonatomic, strong) NSIndexPath *indexPathMeun;
 
 
 @end
@@ -204,9 +216,7 @@
     
     self.viewMore.frame = CGRectMake(0, _toolBarMoreViewY, self.view.bounds.size.width, KChatToolBarMoreViewHeight);
     
-    _tableViewY = -(self.view.height - _toolBarViewY - _toolBarViewHeight);
-
-    self.tableChat.frame = CGRectMake(0, _tableViewY, self.view.bounds.size.width, self.view.bounds.size.height - _toolBarViewHeight);
+    self.tableChat.frame = CGRectMake(0, 0, self.view.bounds.size.width, _toolBarViewY);
     
     [self _scrollViewToBottomAnimated:NO];
 }
@@ -220,7 +230,6 @@
     _toolBarViewOriginHeight = 0;
     _toolBarViewY = [[UIScreen mainScreen] bounds].size.height - _toolBarViewHeight;
     _toolBarMoreViewY = [[UIScreen mainScreen] bounds].size.height;
-    _tableViewY = 0;
     _chatToolBarState = ChatToolBarStateNoraml;
     
     self.toolBar.delegate = self;
@@ -255,6 +264,8 @@
 - (void)actionAddNotifications {
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(actionKeyboardWillChangeFrame:) name:UIKeyboardWillChangeFrameNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(actionToolBarTextViewPasteImage:) name:kChatTextViewPasteboardImageNotification object:nil];
 }
 
 
@@ -299,6 +310,7 @@
         [self.view layoutIfNeeded];
     }];
 }
+
 
 #pragma mark- 输入框处理 相关
 
@@ -628,10 +640,15 @@
     switch (model.bodyType) {
         case EMMessageBodyTypeVoice:
         {
+            NSLog(@"点击了语音");
             [self actionAudioCellDidSelected:model];
         }
             break;
             
+        case EMMessageBodyTypeImage: {
+            NSLog(@"点击了图片");
+        }
+            break;
         default:
             break;
     }
@@ -640,11 +657,38 @@
 /// 点击cell的 头像
 - (void)messageCellDidSelectedAvatar:(MessageCell *)cell model:(MessageModel *)model {
     
+    NSLog(@"点击了头像");
+}
+
+/// cell长按
+- (void)messageCellLongPressAction:(MessageCell *)cell model:(MessageModel *)model {
     
+    self.indexPathMeun = [self.tableChat indexPathForCell:cell];
+    
+    if (self.ctrMenu == nil) {
+        self.ctrMenu = [UIMenuController sharedMenuController];
+    }
+    if (self.itemCopy == nil) {
+        self.itemCopy = [[UIMenuItem alloc] initWithTitle:@"Copy" action:@selector(actionLongPressMenuCopy)];
+    }
+    if (self.itemDelete == nil) {
+        self.itemDelete = [[UIMenuItem alloc] initWithTitle:@"Delete" action:@selector(actionLongPressMenuDelete)];
+    }
+    
+    if (model.bodyType == EMMessageBodyTypeVoice) {
+        [self.ctrMenu setMenuItems:@[self.itemDelete]];
+    } else {
+        [self.ctrMenu setMenuItems:@[self.itemCopy, self.itemDelete]];
+    }
+    
+    [self.ctrMenu setTargetRect:cell.viewBubble.frame inView:cell];
+    [self.ctrMenu setMenuVisible:YES animated:YES];
 }
 
 
-#pragma mark- 点击cell的相应处理
+
+
+#pragma mark- 点击/长按cell的相应处理
 
 /// 点击 音频
 - (void)actionAudioCellDidSelected:(MessageModel *)model {
@@ -688,6 +732,91 @@
         
         NSLog(@"AudioCell no finish");
     }
+}
+
+/// 长按 复制操作
+- (void)actionLongPressMenuCopy {
+    
+    if (self.indexPathMeun == nil) {
+        return ;
+    }
+    
+    MessageModel *model = self.arrModels[self.indexPathMeun.item];
+    if (model == nil) {
+        return ;
+    }
+    
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    self.indexPathMeun = nil;
+    
+    if (model.bodyType == EMMessageBodyTypeText) {
+        pasteboard.string = model.text;
+    }
+    else if (model.bodyType == EMMessageBodyTypeImage) {
+        if (model.thumbnailImage) {
+            pasteboard.image = model.thumbnailImage;
+        }
+        else if (model.image) {
+            pasteboard.image = model.image;
+        } else {
+            NSLog(@"复制照片失败");
+        }
+    }
+    
+}
+
+/// 长按 删除操作
+- (void)actionLongPressMenuDelete {
+    if (self.indexPathMeun == nil || self.indexPathMeun.item <= 0) {
+        return ;
+    }
+    
+    MessageModel *model = self.arrModels[self.indexPathMeun.item];
+    if (model == nil) {
+        return ;
+    }
+    
+    NSMutableIndexSet *indexs = [NSMutableIndexSet indexSetWithIndex:self.indexPathMeun.item];
+    NSMutableArray *indexPaths = [NSMutableArray arrayWithObjects:self.indexPathMeun, nil];
+    
+    [self.conversation deleteMessageWithId:model.message.messageId error:nil];
+    [self.arrMessages removeObject:model.message];
+    
+    if (self.indexPathMeun.item - 1 >= 0) {
+        id nextMessage = nil;
+        id prevMessage = [self.arrModels objectAtIndex:(self.indexPathMeun.item - 1)];
+        if (self.indexPathMeun.item + 1 < [self.arrModels count]) {
+            nextMessage = [self.arrModels objectAtIndex:(self.indexPathMeun.item + 1)];
+        }
+        if ([prevMessage isKindOfClass:[NSString class]] &&
+            (!nextMessage || [nextMessage isKindOfClass:[NSString class]])) {
+            [indexs addIndex:self.indexPathMeun.item - 1];
+            [indexPaths addObject:[NSIndexPath indexPathForRow:(self.indexPathMeun.item - 1) inSection:0]];
+        }
+    }
+    
+    [self.arrModels removeObjectsAtIndexes:indexs];
+    [self.tableChat beginUpdates];
+    [self.tableChat deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableChat endUpdates];
+    
+    if (self.arrModels.count == 0) {
+        self.timeIntervalMessageTag = -1;
+    }
+    
+    self.indexPathMeun = nil;
+}
+
+/// 监听 复制图片 事件
+- (void)actionToolBarTextViewPasteImage:(NSNotification *)notification {
+    
+    UIImage *image = notification.object;
+    if (image == nil) {
+        return ;
+    }
+    
+    
+    
 }
 
 #pragma mark- 聊天相关

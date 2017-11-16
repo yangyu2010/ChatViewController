@@ -17,10 +17,8 @@
 
 /// 头像
 @property (nonatomic, strong) UIImageView *imgVIcon;
-
 /// 内容+背景View
 @property (nonatomic, strong) MJBubbleView *viewBubble;
-
 /// 状态按钮, 主要是消息失败时使用
 @property (nonatomic, strong) UIButton *btnStatus;
 /// 发送中ing 菊花
@@ -34,16 +32,15 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style
               reuseIdentifier:(NSString *)reuseIdentifier
                         model:(MessageModel *)message;
-
 /// model 监听set方法
 @property (nonatomic, strong) MessageModel *model;
+
 
 
 /********************Public********************/
 
 /// 配置UI
 - (void)viewConfig;
-
 /// 配置数据等
 - (void)dataConfig;
 
