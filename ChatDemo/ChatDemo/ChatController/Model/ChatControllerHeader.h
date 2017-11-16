@@ -11,5 +11,9 @@
 
 #define kChatTextViewPasteboardImageNotification    @"kChatTextViewPasteboardImageNotification"
 
+#define kChatToolBarHeight                   49.0
+
+#define KChatToolBarMoreViewHeight           200.0
+
 
 #endif /* ChatControllerHeader_h */

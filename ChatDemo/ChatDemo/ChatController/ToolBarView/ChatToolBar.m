@@ -11,6 +11,7 @@
 #import "UIColor+Utils.h"
 #import "VoiceRecordButton.h"
 #import "ChatToolBarMoreView.h"
+#import "ChatControllerHeader.h"
 
 @interface ChatToolBar () <UITextViewDelegate, ChatToolBarItemDelegate>
 {
@@ -101,7 +102,7 @@
 
 - (void)dataConfig {
     
-    _oldContentHeight = 0;
+    _oldContentHeight = [self getTextViewContentH:self.viewInput];
     _originContentHeight = [self getTextViewContentH:self.viewInput];
     
     self.viewInput.delegate = self;

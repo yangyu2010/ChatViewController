@@ -24,10 +24,9 @@
 #import "EMCDDeviceManager.h"
 #import "MJBubbleView.h"
 #import "ChatControllerHeader.h"
+#import "ChatAlertImageController.h"
 
-#define kChatToolBarHeight                   49.0
 
-#define KChatToolBarMoreViewHeight           200.0
 
 /// 录音定时器 间隔
 #define KRecordTimerDuration                 0.2
@@ -815,7 +814,9 @@
         return ;
     }
     
+    ChatAlertImageController *alert = [[ChatAlertImageController alloc] initWithImage:image];
     
+    [self presentViewController:alert animated:YES completion:nil];
     
 }
 

@@ -18,6 +18,10 @@
 		862F49421FA6F9A600D0526C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 862F49411FA6F9A600D0526C /* main.m */; };
 		862F494C1FA6F9A600D0526C /* ChatDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 862F494B1FA6F9A600D0526C /* ChatDemoTests.m */; };
 		862F49571FA6F9A600D0526C /* ChatDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 862F49561FA6F9A600D0526C /* ChatDemoUITests.m */; };
+		863494CC1FBD2AA0001D293C /* ChatAlertImageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 863494CA1FBD2AA0001D293C /* ChatAlertImageController.m */; };
+		863494D31FBD3DD9001D293C /* ChatAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 863494D21FBD3DD9001D293C /* ChatAlertView.m */; };
+		863494D71FBD4184001D293C /* ChatAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 863494D61FBD4184001D293C /* ChatAlertView.xib */; };
+		863494DA1FBD46CF001D293C /* ChatAlertAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 863494D91FBD46CF001D293C /* ChatAlertAnimator.m */; };
 		8642AA771FB312D800E81849 /* ChatHelp.m in Sources */ = {isa = PBXBuildFile; fileRef = 8642AA761FB312D800E81849 /* ChatHelp.m */; };
 		8666FD991FAAD3CC00CD12C7 /* ChatToolBarMoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666FD981FAAD3CC00CD12C7 /* ChatToolBarMoreView.m */; };
 		8666FD9C1FAAD3FF00CD12C7 /* ChatToolBarMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666FD9B1FAAD3FF00CD12C7 /* ChatToolBarMoreCell.m */; };
@@ -102,6 +106,13 @@
 		862F49521FA6F9A600D0526C /* ChatDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChatDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		862F49561FA6F9A600D0526C /* ChatDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDemoUITests.m; sourceTree = "<group>"; };
 		862F49581FA6F9A600D0526C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		863494C91FBD2AA0001D293C /* ChatAlertImageController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatAlertImageController.h; sourceTree = "<group>"; };
+		863494CA1FBD2AA0001D293C /* ChatAlertImageController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatAlertImageController.m; sourceTree = "<group>"; };
+		863494D11FBD3DD9001D293C /* ChatAlertView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatAlertView.h; sourceTree = "<group>"; };
+		863494D21FBD3DD9001D293C /* ChatAlertView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatAlertView.m; sourceTree = "<group>"; };
+		863494D61FBD4184001D293C /* ChatAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatAlertView.xib; sourceTree = "<group>"; };
+		863494D81FBD46CF001D293C /* ChatAlertAnimator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatAlertAnimator.h; sourceTree = "<group>"; };
+		863494D91FBD46CF001D293C /* ChatAlertAnimator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatAlertAnimator.m; sourceTree = "<group>"; };
 		8642AA751FB312D800E81849 /* ChatHelp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatHelp.h; sourceTree = "<group>"; };
 		8642AA761FB312D800E81849 /* ChatHelp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatHelp.m; sourceTree = "<group>"; };
 		8666FD971FAAD3CC00CD12C7 /* ChatToolBarMoreView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatToolBarMoreView.h; sourceTree = "<group>"; };
@@ -320,6 +331,20 @@
 			path = ChatDemoUITests;
 			sourceTree = "<group>";
 		};
+		863494C51FBD26D3001D293C /* AlertImageView */ = {
+			isa = PBXGroup;
+			children = (
+				863494C91FBD2AA0001D293C /* ChatAlertImageController.h */,
+				863494CA1FBD2AA0001D293C /* ChatAlertImageController.m */,
+				863494D11FBD3DD9001D293C /* ChatAlertView.h */,
+				863494D21FBD3DD9001D293C /* ChatAlertView.m */,
+				863494D61FBD4184001D293C /* ChatAlertView.xib */,
+				863494D81FBD46CF001D293C /* ChatAlertAnimator.h */,
+				863494D91FBD46CF001D293C /* ChatAlertAnimator.m */,
+			);
+			path = AlertImageView;
+			sourceTree = "<group>";
+		};
 		8666FD961FAAD3CC00CD12C7 /* MoreView */ = {
 			isa = PBXGroup;
 			children = (
@@ -356,6 +381,7 @@
 		868958931FA7164300BC0619 /* ChatController */ = {
 			isa = PBXGroup;
 			children = (
+				863494C51FBD26D3001D293C /* AlertImageView */,
 				86C1CB221FB410F700D5F2D9 /* ChatLibs */,
 				86C1CB0F1FB3F0B200D5F2D9 /* BubbleView */,
 				86A06AEE1FB04A1A0000A53F /* MessageCell */,
@@ -642,6 +668,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				863494D71FBD4184001D293C /* ChatAlertView.xib in Resources */,
 				862F493F1FA6F9A600D0526C /* LaunchScreen.storyboard in Resources */,
 				86C1CB361FB42ADA00D5F2D9 /* Localizable.strings in Resources */,
 				862F493C1FA6F9A600D0526C /* Assets.xcassets in Resources */,
@@ -730,6 +757,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				86C1CB211FB4041500D5F2D9 /* MessageTimeCell.m in Sources */,
+				863494D31FBD3DD9001D293C /* ChatAlertView.m in Sources */,
 				86C1CB181FB3F0B200D5F2D9 /* MJBubbleView+Image.m in Sources */,
 				8689588F1FA70D7A00BC0619 /* TabBarViewController.m in Sources */,
 				860631841FA7022F00D4542A /* FriendListViewController.m in Sources */,
@@ -757,6 +785,7 @@
 				86CAB3AE1FB59098009DC044 /* MessageReadManager.m in Sources */,
 				86E1FBF21FB978C200229FF1 /* EMCDDeviceManager+Media.m in Sources */,
 				86E1FBF01FB978C200229FF1 /* EMCDDeviceManager+Remind.m in Sources */,
+				863494CC1FBD2AA0001D293C /* ChatAlertImageController.m in Sources */,
 				86969CFD1FAAC4E700AD55B7 /* VoiceRecordController.m in Sources */,
 				8606ED611FA87B380023B9DE /* UIView+Sugar.m in Sources */,
 				86E1FBF31FB978C200229FF1 /* EMCDDeviceManager+Microphone.m in Sources */,
@@ -766,6 +795,7 @@
 				867B14BB1FA9BF7000437544 /* VoiceRecordButton.m in Sources */,
 				86E1FBF61FB978C200229FF1 /* EMCDDeviceManagerBase.m in Sources */,
 				86A06AF11FB04A530000A53F /* MessageBaseCell.m in Sources */,
+				863494DA1FBD46CF001D293C /* ChatAlertAnimator.m in Sources */,
 				86C1CB1B1FB3F0B200D5F2D9 /* MJBubbleView.m in Sources */,
 				86A06AE81FB0098B0000A53F /* ChatToolBarItem.m in Sources */,
 				86A06AE91FB0098B0000A53F /* ChatToolInputView.m in Sources */,

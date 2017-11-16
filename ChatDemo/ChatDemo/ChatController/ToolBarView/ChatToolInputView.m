@@ -76,9 +76,8 @@
     }
     
     if (pasteboard.image != nil) {
-//        [NSNotificationCenter defaultCenter] postNotificationName:kChatTextViewPasteboardImageNotification object:<#(nullable id)#>
-        
         [[NSNotificationCenter defaultCenter] postNotificationName:kChatTextViewPasteboardImageNotification object:pasteboard.image userInfo:nil];
+        [self resignFirstResponder];
     }
 }
 
