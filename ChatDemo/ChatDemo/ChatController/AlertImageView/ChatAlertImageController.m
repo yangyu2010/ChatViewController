@@ -8,6 +8,7 @@
 
 #import "ChatAlertImageController.h"
 #import "ChatAlertAnimator.h"
+#import "ChatControllerHeader.h"
 
 @interface ChatAlertImageController () <ChatAlertViewDelegate>
 {
@@ -125,7 +126,12 @@
 
 #pragma mark- ChatAlertViewDelegate
 - (void)chatAlertViewSendAction {
+
+    if (self.delegate && [self.delegate respondsToSelector:@selector(chatAlertImageControllerSendImage:)]) {
+        [self.delegate chatAlertImageControllerSendImage:_imageShow];
+    }
     
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)chatAlertViewCancelAction {

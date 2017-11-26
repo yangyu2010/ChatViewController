@@ -43,7 +43,8 @@
                                 ChatToolBarMoreViewDelegate,
                                 UINavigationControllerDelegate,
                                 UIImagePickerControllerDelegate,
-                                MessageCellDelegate>
+                                MessageCellDelegate,
+                                ChatAlertImageControllerDelegate>
 
 
 {
@@ -815,9 +816,15 @@
     }
     
     ChatAlertImageController *alert = [[ChatAlertImageController alloc] initWithImage:image];
-    
+    alert.delegate = self;
     [self presentViewController:alert animated:YES completion:nil];
     
+}
+
+#pragma mark- 粘贴图片回调, 发送图片
+- (void)chatAlertImageControllerSendImage:(UIImage *)image {
+    
+    [self actionSendImageMessage:image];
 }
 
 #pragma mark- 聊天相关

@@ -31,9 +31,9 @@
     }
     
     if (self.isSender) {
-        self.imgView.frame = CGRectMake(kMessageCellBubbleMargin, kMessageCellBubbleMargin, self.bounds.size.width - 3 * kMessageCellBubbleMargin, self.bounds.size.height - 2 * kMessageCellBubbleMargin);
+        self.imgView.frame = CGRectMake(kMessageCellBubbleMargin, kMessageCellBubbleMargin, self.bounds.size.width - 3 * kMessageCellBubbleMargin + 2, self.bounds.size.height - 2 * kMessageCellBubbleMargin);
     } else {
-        self.imgView.frame = CGRectMake(kMessageCellBubbleMargin * 2, kMessageCellBubbleMargin, self.bounds.size.width - 3 * kMessageCellBubbleMargin, self.bounds.size.height - 2 * kMessageCellBubbleMargin);
+        self.imgView.frame = CGRectMake(kMessageCellBubbleMargin * 2 - 2, kMessageCellBubbleMargin, self.bounds.size.width - 3 * kMessageCellBubbleMargin + 2, self.bounds.size.height - 2 * kMessageCellBubbleMargin);
     }
 }
 
