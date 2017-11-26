@@ -25,7 +25,7 @@
 #import "MJBubbleView.h"
 #import "ChatControllerHeader.h"
 #import "ChatAlertImageController.h"
-
+#import "PhotoBrowserController.h"
 
 
 /// 录音定时器 间隔
@@ -647,6 +647,7 @@
             
         case EMMessageBodyTypeImage: {
             NSLog(@"点击了图片");
+            [self actionPictureDidSelectedModel:model];
         }
             break;
         default:
@@ -819,6 +820,18 @@
     alert.delegate = self;
     [self presentViewController:alert animated:YES completion:nil];
     
+}
+
+/// 点击图片
+- (void)actionPictureDidSelectedModel:(MessageModel *)model {
+    
+    PhotoModel *photo = [[PhotoModel alloc] init];
+    photo.imageSize = model.imageSize;
+    photo.placeholderImage = model.thumbnailImage;
+    photo.imageURLString = model.remotePath;
+    
+    PhotoBrowserController *photoBrowser = [[PhotoBrowserController alloc] initWithPhotos:@[photo] index:0];
+    [self presentViewController:photoBrowser animated:YES completion:nil];
 }
 
 #pragma mark- 粘贴图片回调, 发送图片

@@ -65,6 +65,8 @@
 @property (nonatomic, copy) NSString *thumbnailFileLocalPath;
 /// 图片消息(或视频消息)的缩略图远程地址
 @property (nonatomic, copy) NSString *thumbnailFileURLPath;
+/// 图片远程地址
+@property (nonatomic, copy) NSString *remotePath;
 
 
 

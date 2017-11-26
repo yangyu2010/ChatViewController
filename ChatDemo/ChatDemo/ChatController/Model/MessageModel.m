@@ -38,6 +38,7 @@
                 EMImageMessageBody *imgMessageBody = (EMImageMessageBody *)_firstMessageBody;
                 
                 self.imageSize = imgMessageBody.size;
+                self.remotePath = imgMessageBody.remotePath;
                 
                 NSData *imageData = [NSData dataWithContentsOfFile:imgMessageBody.localPath];
                 

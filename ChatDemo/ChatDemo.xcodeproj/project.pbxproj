@@ -23,6 +23,10 @@
 		863494D71FBD4184001D293C /* ChatAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 863494D61FBD4184001D293C /* ChatAlertView.xib */; };
 		863494DA1FBD46CF001D293C /* ChatAlertAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 863494D91FBD46CF001D293C /* ChatAlertAnimator.m */; };
 		8642AA771FB312D800E81849 /* ChatHelp.m in Sources */ = {isa = PBXBuildFile; fileRef = 8642AA761FB312D800E81849 /* ChatHelp.m */; };
+		865CD0211FCA6388001D3FFC /* PhotoBrowserController.m in Sources */ = {isa = PBXBuildFile; fileRef = 865CD0201FCA6388001D3FFC /* PhotoBrowserController.m */; };
+		865CD0241FCA98FF001D3FFC /* PhotosCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 865CD0231FCA98FF001D3FFC /* PhotosCell.m */; };
+		865CD0271FCA9C0C001D3FFC /* PhotoLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 865CD0251FCA9C0C001D3FFC /* PhotoLoadingView.m */; };
+		865CD02A1FCAA643001D3FFC /* PhotoModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 865CD0291FCAA643001D3FFC /* PhotoModel.m */; };
 		8666FD991FAAD3CC00CD12C7 /* ChatToolBarMoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666FD981FAAD3CC00CD12C7 /* ChatToolBarMoreView.m */; };
 		8666FD9C1FAAD3FF00CD12C7 /* ChatToolBarMoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666FD9B1FAAD3FF00CD12C7 /* ChatToolBarMoreCell.m */; };
 		8666FD9F1FAAD7B600CD12C7 /* ChatToolBarMoreModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8666FD9E1FAAD7B600CD12C7 /* ChatToolBarMoreModel.m */; };
@@ -115,6 +119,14 @@
 		863494D91FBD46CF001D293C /* ChatAlertAnimator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatAlertAnimator.m; sourceTree = "<group>"; };
 		8642AA751FB312D800E81849 /* ChatHelp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatHelp.h; sourceTree = "<group>"; };
 		8642AA761FB312D800E81849 /* ChatHelp.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatHelp.m; sourceTree = "<group>"; };
+		865CD01F1FCA6388001D3FFC /* PhotoBrowserController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotoBrowserController.h; sourceTree = "<group>"; };
+		865CD0201FCA6388001D3FFC /* PhotoBrowserController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotoBrowserController.m; sourceTree = "<group>"; };
+		865CD0221FCA98FF001D3FFC /* PhotosCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotosCell.h; sourceTree = "<group>"; };
+		865CD0231FCA98FF001D3FFC /* PhotosCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotosCell.m; sourceTree = "<group>"; };
+		865CD0251FCA9C0C001D3FFC /* PhotoLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoLoadingView.m; sourceTree = "<group>"; };
+		865CD0261FCA9C0C001D3FFC /* PhotoLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoLoadingView.h; sourceTree = "<group>"; };
+		865CD0281FCAA643001D3FFC /* PhotoModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhotoModel.h; sourceTree = "<group>"; };
+		865CD0291FCAA643001D3FFC /* PhotoModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PhotoModel.m; sourceTree = "<group>"; };
 		8666FD971FAAD3CC00CD12C7 /* ChatToolBarMoreView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatToolBarMoreView.h; sourceTree = "<group>"; };
 		8666FD981FAAD3CC00CD12C7 /* ChatToolBarMoreView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatToolBarMoreView.m; sourceTree = "<group>"; };
 		8666FD9A1FAAD3FF00CD12C7 /* ChatToolBarMoreCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatToolBarMoreCell.h; sourceTree = "<group>"; };
@@ -345,6 +357,21 @@
 			path = AlertImageView;
 			sourceTree = "<group>";
 		};
+		865CD01E1FCA636C001D3FFC /* PhotoBrowser */ = {
+			isa = PBXGroup;
+			children = (
+				865CD01F1FCA6388001D3FFC /* PhotoBrowserController.h */,
+				865CD0201FCA6388001D3FFC /* PhotoBrowserController.m */,
+				865CD0221FCA98FF001D3FFC /* PhotosCell.h */,
+				865CD0231FCA98FF001D3FFC /* PhotosCell.m */,
+				865CD0261FCA9C0C001D3FFC /* PhotoLoadingView.h */,
+				865CD0251FCA9C0C001D3FFC /* PhotoLoadingView.m */,
+				865CD0281FCAA643001D3FFC /* PhotoModel.h */,
+				865CD0291FCAA643001D3FFC /* PhotoModel.m */,
+			);
+			path = PhotoBrowser;
+			sourceTree = "<group>";
+		};
 		8666FD961FAAD3CC00CD12C7 /* MoreView */ = {
 			isa = PBXGroup;
 			children = (
@@ -381,6 +408,7 @@
 		868958931FA7164300BC0619 /* ChatController */ = {
 			isa = PBXGroup;
 			children = (
+				865CD01E1FCA636C001D3FFC /* PhotoBrowser */,
 				863494C51FBD26D3001D293C /* AlertImageView */,
 				86C1CB221FB410F700D5F2D9 /* ChatLibs */,
 				86C1CB0F1FB3F0B200D5F2D9 /* BubbleView */,
@@ -777,10 +805,12 @@
 				8689589C1FA72D2A00BC0619 /* ChatController.m in Sources */,
 				862F49341FA6F9A600D0526C /* AppDelegate.m in Sources */,
 				86E1FBF51FB978C200229FF1 /* EMAudioPlayerUtil.m in Sources */,
+				865CD0271FCA9C0C001D3FFC /* PhotoLoadingView.m in Sources */,
 				86E1FBEF1FB978C200229FF1 /* EMVoiceConverter.mm in Sources */,
 				86E1FBF41FB978C200229FF1 /* EMAudioRecorderUtil.m in Sources */,
 				86E1FBF11FB978C200229FF1 /* EMCDDeviceManager+ProximitySensor.m in Sources */,
 				86C1CB2B1FB4281600D5F2D9 /* NSDateFormatter+Category.m in Sources */,
+				865CD02A1FCAA643001D3FFC /* PhotoModel.m in Sources */,
 				86C1CB1A1FB3F0B200D5F2D9 /* MJBubbleView+Text.m in Sources */,
 				86CAB3AE1FB59098009DC044 /* MessageReadManager.m in Sources */,
 				86E1FBF21FB978C200229FF1 /* EMCDDeviceManager+Media.m in Sources */,
@@ -792,10 +822,12 @@
 				867B14BE1FA9BFCF00437544 /* VoiceRecordContentView.m in Sources */,
 				86A06AE71FB0098B0000A53F /* ChatToolBar.m in Sources */,
 				8666FD9C1FAAD3FF00CD12C7 /* ChatToolBarMoreCell.m in Sources */,
+				865CD0241FCA98FF001D3FFC /* PhotosCell.m in Sources */,
 				867B14BB1FA9BF7000437544 /* VoiceRecordButton.m in Sources */,
 				86E1FBF61FB978C200229FF1 /* EMCDDeviceManagerBase.m in Sources */,
 				86A06AF11FB04A530000A53F /* MessageBaseCell.m in Sources */,
 				863494DA1FBD46CF001D293C /* ChatAlertAnimator.m in Sources */,
+				865CD0211FCA6388001D3FFC /* PhotoBrowserController.m in Sources */,
 				86C1CB1B1FB3F0B200D5F2D9 /* MJBubbleView.m in Sources */,
 				86A06AE81FB0098B0000A53F /* ChatToolBarItem.m in Sources */,
 				86A06AE91FB0098B0000A53F /* ChatToolInputView.m in Sources */,
@@ -977,7 +1009,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C83B88E6E305BB4C2E5E02C2 /* Pods-ChatDemo.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 76MM79XMJ9;
 				INFOPLIST_FILE = ChatDemo/Info.plist;
@@ -998,7 +1029,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5AB65D525956B301A38CF727 /* Pods-ChatDemo.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 76MM79XMJ9;
 				INFOPLIST_FILE = ChatDemo/Info.plist;

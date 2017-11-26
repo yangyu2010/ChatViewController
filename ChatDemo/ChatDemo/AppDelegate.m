@@ -32,7 +32,7 @@
     TabBarViewController *vc = [[TabBarViewController alloc] init];
 //    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     self.window.rootViewController = vc;
-    
+
     BOOL isAutoLogin = [EMClient sharedClient].options.isAutoLogin;
     if (!isAutoLogin) {
         [[EMClient sharedClient] loginWithUsername:@"yangyu" password:@"123456"];

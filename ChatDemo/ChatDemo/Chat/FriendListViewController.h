@@ -10,6 +10,6 @@
 
 @interface FriendListViewController : UIViewController
 
-@property (nonatomic, copy) NSString *strUsername;
+//@property (nonatomic, copy) NSString *strUsername;
 
 @end
