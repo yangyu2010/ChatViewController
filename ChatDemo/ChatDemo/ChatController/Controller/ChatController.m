@@ -100,6 +100,9 @@
 @property (nonatomic, strong) NSMutableArray <EMMessage *> *arrMessages;
 /// 时间间隔标记 默认是0, 如果记录了一次时间, 就把这个时间赋值给当前
 @property (nonatomic, assign) NSTimeInterval timeIntervalMessageTag;
+/// 图片的消息数组
+@property (nonatomic, strong) NSMutableArray <PhotoModel *> *arrImagesMessage;
+
 
 /// 长按手势出发的菜单
 @property (nonatomic, strong) UIMenuController *ctrMenu;
@@ -242,6 +245,7 @@
     
     self.arrModels = [NSMutableArray array];
     self.arrMessages = [NSMutableArray array];
+    self.arrImagesMessage = [NSMutableArray array];
     
     _queueMessage = dispatch_queue_create("com.musjoy.chat", NULL);
     
@@ -824,13 +828,24 @@
 
 /// 点击图片
 - (void)actionPictureDidSelectedModel:(MessageModel *)model {
+
+    __block NSUInteger index = NSNotFound;
+    index = NSNotFound;
+
+    [self.arrImagesMessage enumerateObjectsUsingBlock:^(PhotoModel *obj, NSUInteger idx, BOOL * _Nonnull stop) {
+
+        if ([obj isKindOfClass:[PhotoModel class]] &&
+            [obj.messageId isEqualToString:model.messageId]) {
+            index = idx;
+            *stop = YES;
+        }
+    }];
+
+    if (index == NSNotFound) {
+        return ;
+    }
     
-    PhotoModel *photo = [[PhotoModel alloc] init];
-    photo.imageSize = model.imageSize;
-    photo.placeholderImage = model.thumbnailImage;
-    photo.imageURLString = model.remotePath;
-    
-    PhotoBrowserController *photoBrowser = [[PhotoBrowserController alloc] initWithPhotos:@[photo] index:0];
+    PhotoBrowserController *photoBrowser = [[PhotoBrowserController alloc] initWithPhotos:self.arrImagesMessage.copy index:index];
     [self presentViewController:photoBrowser animated:YES completion:nil];
 }
 
@@ -874,6 +889,14 @@
                 
                 [self.arrModels addObject:model];
                 [self.arrMessages addObject:message];
+                
+                /// 添加图片数组
+                if (message.body.type == EMMessageBodyTypeImage) {
+                    dispatch_async(_queueMessage, ^{
+                        PhotoModel *photo = [[PhotoModel alloc] initWithMessageModel:model];
+                        [self.arrImagesMessage addObject:photo];
+                    });
+                }
             }
         }
         
@@ -973,6 +996,11 @@
         MessageModel *model = [[MessageModel alloc] initWithMessage:message];
         [arrFormatted addObject:model];
         
+//        /// 3.添加图片数组
+//        if (message.body.type == EMMessageBodyTypeImage) {
+//            PhotoModel *photo = [[PhotoModel alloc] initWithMessageModel:model];
+//            [self.arrImagesMessage addObject:photo];
+//        }
     }
     
     return arrFormatted;
@@ -1005,6 +1033,12 @@
     MessageModel *newModel = [[MessageModel alloc] initWithMessage:message];
     [self.arrModels replaceObjectAtIndex:index withObject:newModel];
     [self.tableChat reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForItem:index inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+    
+    /// 3.添加图片数组
+    if (message.body.type == EMMessageBodyTypeImage) {
+        PhotoModel *photo = [[PhotoModel alloc] initWithMessageModel:newModel];
+        [self.arrImagesMessage addObject:photo];
+    }
 }
 
 /// 发送文字消息方法

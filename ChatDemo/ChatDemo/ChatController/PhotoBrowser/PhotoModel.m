@@ -10,4 +10,21 @@
 
 @implementation PhotoModel
 
+- (instancetype)initWithMessageModel:(MessageModel *)model {
+    self = [super init];
+    if (self) {
+        
+        self.placeholderImage = model.thumbnailImage;
+        if (self.placeholderImage == nil) {
+            self.placeholderImage = [UIImage imageWithContentsOfFile:model.thumbnailFileLocalPath];
+        }
+        
+        self.imageSize = model.imageSize;
+        self.imageURLString = model.remotePath;
+        self.image = model.image;
+        self.messageId = model.messageId;
+    }
+    return self;
+}
+
 @end

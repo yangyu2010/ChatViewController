@@ -49,8 +49,10 @@
     
     self = [super init];
     if (self) {
+        
         _arrPhotos = arrPhotos;
         _index = index;
+        
     }
     return self;
 }
@@ -71,7 +73,8 @@
     self.view.backgroundColor = [UIColor blackColor];
     
     [self.view addSubview:self.collectionViewPhotos];
-    
+    [self.collectionViewPhotos reloadData];
+
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     btn.frame = CGRectMake(20, 20, 80, 30);
     btn.backgroundColor = [UIColor whiteColor];
@@ -79,6 +82,7 @@
     [btn setTitle:@"Close" forState:UIControlStateNormal];
     [btn addTarget:self action:@selector(btnClick) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:btn];
+    
 }
 
 - (void)viewWillLayoutSubviews {
@@ -91,6 +95,12 @@
     layout.minimumLineSpacing = 0;
     layout.minimumInteritemSpacing = 0;
     [self.collectionViewPhotos setCollectionViewLayout:layout];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    [self.collectionViewPhotos scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:_index inSection:0] atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
 }
 
 #pragma mark- Data

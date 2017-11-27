@@ -35,7 +35,7 @@
 
     BOOL isAutoLogin = [EMClient sharedClient].options.isAutoLogin;
     if (!isAutoLogin) {
-        [[EMClient sharedClient] loginWithUsername:@"yangyu" password:@"123456"];
+        [[EMClient sharedClient] loginWithUsername:@"xmg1" password:@"123456"];
     }
     
     return YES;

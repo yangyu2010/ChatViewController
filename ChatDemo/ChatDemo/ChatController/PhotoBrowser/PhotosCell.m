@@ -50,14 +50,28 @@
 - (void)setModel:(PhotoModel *)model {
     _model = model;
     
-    self.loadingView.hidden = NO;
-    [self.imageView sd_setImageWithURL:[NSURL URLWithString:model.imageURLString] placeholderImage:model.placeholderImage options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.loadingView.progress = receivedSize / (CGFloat)expectedSize;
-        });
-    } completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
-        self.loadingView.hidden = YES;
-    }];
+    if (model.image) {
+        self.imageView.image = model.image;
+    } else {
+        self.loadingView.hidden = NO;
+        [self.imageView sd_setImageWithURL:[NSURL URLWithString:model.imageURLString] placeholderImage:model.placeholderImage options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize, NSURL * _Nullable targetURL) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.loadingView.progress = receivedSize / (CGFloat)expectedSize;
+            });
+        } completed:^(UIImage * _Nullable image, NSError * _Nullable error, SDImageCacheType cacheType, NSURL * _Nullable imageURL) {
+            self.loadingView.hidden = YES;
+        }];
+    }
+
+    CGFloat width = [UIScreen mainScreen].bounds.size.width;
+    CGFloat height = (width / model.imageSize.width) * model.imageSize.height;
+    CGFloat y = 0;
+    if (height < [UIScreen mainScreen].bounds.size.height) {
+        y = ([UIScreen mainScreen].bounds.size.height - height) * 0.5;
+    }
+    
+    self.imageView.frame = CGRectMake(0, y, width, height);
+    self.scrollView.contentSize = CGSizeMake(0, height);
 }
 
 #pragma mark- Init
